@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0b10">
-<title>Blackjack 33 · Myla's Casino</title>
+<title>Whylo's Casino</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Creepster&family=Pacifico&family=Playfair+Display:wght@700&family=Rubik:wght@400;500;700;800&family=Special+Elite&display=swap" rel="stylesheet">
@@ -778,6 +778,127 @@ body::before{display:none}
 .shoe::after{right:6%;top:10%;bottom:10%;width:13%;border-radius:3px;background:linear-gradient(90deg,#6e4c0e,#fff1c2 42%,#d4a446 58%,#5e400c);box-shadow:0 1px 3px rgba(0,0,0,.6)}
 .discard{background:linear-gradient(160deg,rgba(255,255,255,.34),rgba(200,220,255,.1) 50%,rgba(255,255,255,.22))}
 .discard i{inset:20% 16% 22%;box-shadow:0 0 0 2px #f4ecd8,0 3px 0 1px #e8e0cc,0 4px 0 1px #b9b09a,0 6px 0 1px #e8e0cc,0 7px 0 1px #9d947e,0 8px 6px 1px rgba(0,0,0,.35)}
+
+/* ===================== WHYLO'S CASINO TITLE SCREEN ===================== */
+.title{width:100%;max-width:1080px;margin:0 auto;padding:22px 16px 40px;display:grid;gap:26px;grid-template-columns:minmax(0,1fr);grid-template-areas:"marq" "lineup" "panel" "rules"}
+.title.joining{grid-template-areas:"marq" "panel" "lineup" "rules"}
+.marqWrap{grid-area:marq;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"sign myla" "say myla";gap:12px 10px;align-items:end;max-width:780px;width:100%;margin:0 auto}
+.marq{grid-area:sign;position:relative;border-radius:24px;padding:30px 22px 26px;text-align:center;isolation:isolate;
+  background:radial-gradient(120% 150% at 50% 0%,#5a1338 0%,#2a0720 55%,#14030e 100%);
+  box-shadow:0 0 0 3px #f1cf78,0 0 0 8px #3b0a23,0 0 0 10px #b8862b,0 22px 44px rgba(0,0,0,.6),inset 0 0 50px rgba(255,170,60,.16)}
+.marq svg.bulbRing{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:-1}
+.bulbRing .bl{opacity:1;animation:bulbA 1.1s steps(1,end) infinite}
+.bulbRing .bl.o{animation-name:bulbB}
+@keyframes bulbA{0%{opacity:1}50%{opacity:.28}}
+@keyframes bulbB{0%{opacity:.28}50%{opacity:1}}
+.mqIn{display:flex;flex-direction:column;align-items:center;gap:2px}
+.mqPre{font-family:var(--serif);font-style:italic;font-size:clamp(15px,3.6vw,20px);color:#f7dc9a;letter-spacing:.04em}
+.mqName{margin:0;font-family:Pacifico,'Brush Script MT',cursive;font-weight:400;font-size:clamp(60px,15vw,112px);line-height:1.15;color:#fff1c4;padding:0 .12em;
+  text-shadow:0 0 4px #fff3c0,0 0 14px #ffc24d,0 0 34px rgba(255,120,40,.85),0 4px 0 #9a6a14;animation:neonHum 5.5s infinite}
+@keyframes neonHum{0%,100%{opacity:1}46%{opacity:1}47%{opacity:.78}48%{opacity:1}72%{opacity:1}73%{opacity:.86}74%{opacity:1}}
+.mqCas{display:flex;align-items:center;gap:14px;width:min(100%,420px);font-family:var(--display);font-size:clamp(18px,4.8vw,28px);letter-spacing:.55em;padding-left:.55em;color:#f1cf78;text-shadow:0 2px 0 #6e4a0e}
+.mqCas i{flex:1;height:2px;background:linear-gradient(90deg,transparent,#f1cf78)}
+.mqCas i:last-child{background:linear-gradient(90deg,#f1cf78,transparent)}
+.tMyla{grid-area:myla;position:relative;width:136px;height:170px;margin-bottom:-6px}
+.tSay{grid-area:say;position:relative;margin:0;background:#fff8e6;color:#3a1020;border-radius:16px 16px 4px 16px;padding:12px 16px;font-size:15px;line-height:1.45;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.tSay b{display:block;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.14em;color:#b0204f;margin-bottom:2px}
+.tSay .code{font-family:var(--display);letter-spacing:.12em;color:#b0204f}
+.tSay::after{content:'';position:absolute;right:-8px;bottom:6px;border:8px solid transparent;border-left-color:#fff8e6;border-right:0}
+.lineup{grid-area:lineup;min-width:0}
+.lineup h2,.tRules h3{font-family:var(--display);font-weight:400;letter-spacing:.12em;color:var(--gold);margin:0}
+.lineup h2{font-size:15px;text-align:center;margin-bottom:12px}
+.gtiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.gtile{appearance:none;-webkit-appearance:none;position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:16px 12px 14px;border-radius:18px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border:1px solid rgba(241,207,120,.25);box-shadow:0 10px 24px rgba(0,0,0,.35);transition:transform .18s,box-shadow .18s,border-color .18s;color:var(--ink)}
+.gtile:hover{transform:translateY(-3px);border-color:rgba(241,207,120,.6)}
+.gtile:focus-visible{outline:3px solid #fff1c4;outline-offset:2px}
+.gtile.on{border-color:#f1cf78;background:linear-gradient(180deg,rgba(241,207,120,.22),rgba(241,207,120,.06));box-shadow:0 0 0 2px #f1cf78,0 0 26px rgba(255,200,90,.45),0 12px 26px rgba(0,0,0,.4)}
+.title.joining .gtile{cursor:default}
+.title.joining .gtile:hover{transform:none}
+.title.joining .gtile.on{border-color:rgba(241,207,120,.25);background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.title.joining .gpick{display:none}
+.gpick{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:13px;font-weight:800;background:#f1cf78;color:#3a2600;opacity:0;transform:scale(.6);transition:.18s}
+.gtile.on .gpick{opacity:1;transform:none}
+.gtext{display:flex;flex-direction:column;gap:4px;min-width:0}
+.gtext b{font-family:var(--display);font-weight:400;font-size:17px;letter-spacing:.06em;color:#fff1c4}
+.gline{font-size:13.5px;line-height:1.35;color:#e7d9e0}
+.gmeta{font-size:11.5px;letter-spacing:.04em;color:var(--muted)}
+.gi{height:76px;display:grid;place-items:center;flex:none}
+.giCards{display:flex;align-items:center}
+.giCards .card{--cw:46px;transform:rotate(-9deg) translateY(4px)}
+.giCards .card+.card{margin-left:-16px;transform:rotate(8deg)}
+.giWheel svg{width:76px;height:76px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5))}
+.giBac{display:flex;gap:6px}
+.giBac span{display:flex;flex-direction:column;align-items:center;gap:2px;width:52px;padding:8px 0 6px;border-radius:10px;font-size:8.5px;font-weight:800;letter-spacing:.08em;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.45),0 6px 12px rgba(0,0,0,.35)}
+.giBac b{font-family:var(--display);font-weight:400;font-size:28px;line-height:1}
+.giBac .p{background:linear-gradient(180deg,#3f86f2,#1b4fb8)}
+.giBac .b{background:linear-gradient(180deg,#e2416a,#9c1236)}
+.giShells{display:flex;gap:7px;align-items:flex-end}
+.giShells .shl{width:15px;height:44px;border-radius:4px 4px 3px 3px;transform:rotate(-6deg)}
+.giShells .shl:nth-child(even){transform:rotate(7deg) translateY(-3px)}
+.giImp svg{width:92px;height:62px}
+.tPanel{grid-area:panel;width:100%;max-width:460px;justify-self:center}
+.tPanel .btn.xl{max-width:none}
+.tNote{margin:0;font-size:13px;line-height:1.45;color:var(--muted);text-align:center}
+.tRules{grid-area:rules}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px 22px;margin-top:12px}
+.tRules h3{font-size:13px;margin-bottom:4px}
+.tRules p{margin:0;font-size:14px;line-height:1.5;color:#e2d6dc}
+.tRules p b{color:var(--gold)}
+@media (min-width:900px){
+  .title{grid-template-columns:minmax(0,1fr) 460px;grid-template-areas:"marq marq" "lineup lineup" "rules panel";align-items:start;gap:30px 28px}
+  .title.joining{grid-template-areas:"marq marq" "lineup lineup" "rules panel"}
+  .tRules{align-self:start}
+  .tRules[open]{grid-row:span 1}
+}
+@media (max-width:899px){
+  .gtiles{grid-template-columns:minmax(0,1fr)}
+  .gtile{flex-direction:row;text-align:left;padding:12px 44px 12px 12px;gap:14px}
+  .gi{width:92px;height:68px}
+  .giCards .card{--cw:40px}
+  .giWheel svg{width:66px;height:66px}
+  .gpick{top:50%;right:12px;margin-top:-12px}
+}
+@media (max-width:560px){
+  .marqWrap{grid-template-columns:minmax(0,1fr) 92px;grid-template-areas:"sign sign" "say myla"}
+  .tMyla{width:92px;height:116px}
+  .tMyla .mylaStand{transform:translateX(-50%) scale(.68);transform-origin:50% 100%}
+  .marq{padding:24px 14px 20px}
+  .tSay{font-size:14px;padding:10px 13px}
+}
+@media (prefers-reduced-motion:reduce){.bulbRing .bl,.mqName{animation:none}}
+
+/* ===================== TABLE BAR (everyone + whose turn) ===================== */
+.tbar{position:relative;z-index:6;padding:6px 10px 4px;background:linear-gradient(180deg,rgba(20,4,14,.85),rgba(20,4,14,.55));border-bottom:1px solid rgba(232,192,96,.18)}
+.tps{display:flex;gap:8px;justify-content:center;overflow-x:auto;scrollbar-width:none;padding:2px 2px 4px}
+.tps::-webkit-scrollbar{display:none}
+.tp{position:relative;display:flex;align-items:center;gap:7px;flex:none;padding:4px 10px 4px 4px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);transition:background .25s,border-color .25s,box-shadow .25s;max-width:170px}
+.tp .av{width:30px;height:30px;font-size:14px;flex:none}
+.tn{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+.tn b{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+.tn small{font-size:9.5px;font-weight:800;letter-spacing:.06em;white-space:nowrap}
+.s-dim{color:var(--muted)}.s-ok{color:#7dffb3}.s-bad{color:#ff8a96}.s-away{color:#9a8f95}.s-turn{color:#2a1d00}
+.tp.me{border-color:rgba(232,192,96,.55)}
+.tp.away{opacity:.5}
+.tp.turn{background:linear-gradient(180deg,#ffe7a0,#e8c060);border-color:#fff1c4;color:#2a1d00;box-shadow:0 0 0 2px rgba(255,231,160,.35),0 0 18px rgba(255,200,90,.6);animation:turnGlow 1.4s ease-in-out infinite alternate}
+.tp.turn .tn b{color:#2a1d00}
+.tp.turn.me{background:linear-gradient(180deg,#9dffc8,#3fdc8a);border-color:#d9ffe9;box-shadow:0 0 0 2px rgba(157,255,200,.4),0 0 22px rgba(63,220,138,.75)}
+@keyframes turnGlow{from{box-shadow:0 0 0 2px rgba(255,231,160,.35),0 0 10px rgba(255,200,90,.4)}to{box-shadow:0 0 0 3px rgba(255,231,160,.55),0 0 22px rgba(255,200,90,.85)}}
+.tt{position:absolute;left:14px;right:14px;bottom:-3px;height:3px;border-radius:2px;background:rgba(0,0,0,.35);overflow:hidden}
+.tt i{display:block;height:100%;background:#fff;transform-origin:0 50%}
+.tt i.low{background:#ff4d5e}
+.tp.dealer .av.skull{display:grid;place-items:center;font-size:17px;font-style:normal;color:#e8dcc4;background:radial-gradient(circle at 40% 35%,#4a1515,#140606);box-shadow:0 0 0 1.5px #7a1d1d}
+body.horror .tbar{background:linear-gradient(180deg,rgba(6,2,2,.92),rgba(6,2,2,.6));border-bottom-color:rgba(160,30,30,.35)}
+body.horror .tp.turn{background:linear-gradient(180deg,#ff8a7a,#c21d1d);border-color:#ffb3a8;color:#fff;box-shadow:0 0 18px rgba(255,40,30,.7);animation:none}
+body.horror .tp.turn .tn b,body.horror .tp.turn .s-turn{color:#fff}
+.shootBtn{background:linear-gradient(180deg,#9dffc8,#3fdc8a 55%,#22b56a)!important;box-shadow:0 4px 0 #14703f,0 0 24px rgba(63,220,138,.6)!important;color:#04301a!important;animation:shootPulse 1s ease-in-out infinite alternate;margin:4px auto}
+@keyframes shootPulse{from{transform:scale(1)}to{transform:scale(1.035)}}
+.msg.big{font-size:18px;font-weight:800;color:#fff1c4}
+@media (prefers-reduced-motion:reduce){.tp.turn,.shootBtn{animation:none}}
+@media (max-width:560px){.tps{justify-content:flex-start}.tp{padding-right:8px}.tn b{max-width:76px}}
+.shootBtn.fab{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));z-index:60;width:min(88vw,380px);max-width:none;margin:0;font-size:19px;min-height:62px;animation:fabPulse 1s ease-in-out infinite alternate}
+@keyframes fabPulse{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(1.04)}}
+@media (prefers-reduced-motion:reduce){.shootBtn.fab{animation:none;transform:translateX(-50%)}}
 </style>
 </head>
 <body>
@@ -798,15 +919,14 @@ body::before{display:none}
 <div id="fx"></div>
 <div id="toasts"></div>
 <div id="modal"></div>
-<script>function bj33PeerFallback(){var s=document.createElement('script');s.src='https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js';s.async=true;document.head.appendChild(s);}</script>
-<script async src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js" onerror="bj33PeerFallback()"></script>
 <script>
 'use strict';
 /* =====================================================================
-   MYLA'S TABLE: Blackjack 33 / Blackjack 21 / Roulette / Baccarat
-   Online multiplayer is peer-to-peer (PeerJS). Whoever creates the
-   table is the "host": their browser runs the game, everyone else
-   connects to it with the 5-letter table code.
+   WHYLO'S CASINO (dealer: Myla): Blackjack 33/21, Roulette, Baccarat,
+   Buckshot, Imposter.
+   Online play goes through public relay servers (see RELAY NETWORK).
+   Whoever creates the table is the "host": their browser runs the game,
+   everyone else joins with the 5-character table code.
    ===================================================================== */
 
 /* ---------- rules & timing (tweak these!) ---------- */
@@ -824,6 +944,7 @@ const DEAL_ANIM = 1800;     // extra time on the first turn for the deal animati
 const PEEK_TIME = 1700;     // dealer checking for blackjack
 const SPIN_TIME = 8000;     // roulette spin
 const BAC_STEP = 950;       // baccarat: time between cards
+const SHOOT_TIME = 12000;   // roulette/baccarat: time the player whose turn it is gets to spin / deal
 const PREFIX = 'blackjack33-v1-';
 
 const SUITS = ['♠','♥','♦','♣'];
@@ -984,7 +1105,7 @@ let hostTimer = null, lastBroadcast = 0;
 function newGame(code){
   return {code, round:0, phase:'lobby', settings:{game:'blackjack', target:33, doom:true, impHint:true}, bs:null, imp:null,
     players:[], dealer:{hand:[],hidden:true}, dealerBJ:false,
-    say:"Welcome to my table. I'm Myla. Take a seat.", sayId:1,
+    say:"Welcome to Whylo's. I'm Myla, your dealer tonight. Take a seat.", sayId:1,
     turn:null, turnOrder:[], turnEnds:0, turnTotal:TURN_TIME, phaseEnds:0, phaseTotal:1,
     shoe:newShoe(), cardSeq:0, events:[], evSeq:0, hostId:MY_ID, ghosts:{},
     rl:{result:null, spinId:0, history:[]},
@@ -1005,7 +1126,7 @@ function pv(p){ return handValue(p.hand, limitOf(p), activeCurse(p) === 'aces').
 function pNatural(p){ return isNatural(p.hand, activeCurse(p) === 'aces'); }
 function turnTime(p){ return activeCurse(p) === 'speed' ? SPEED_TIME : TURN_TIME; }
 function cleanName(n){ n = String(n || '').replace(/\s+/g,' ').trim().slice(0,14); return n || 'Player'; }
-const LOCKED = ['playing','peek','dealer','spinning','dealing','shotgun','imp'];
+const LOCKED = ['playing','peek','dealer','spinning','dealing','shotgun','imp','shooter'];
 
 function handleJoin(msg, conn){
   if(!G) return;
@@ -1059,6 +1180,7 @@ function hostHandle(fromId, msg){
     case 'clearbets': changed = clearChips(p) || changed; break;
     case 'done': changed = doneBetting(p, !!msg.out) || changed; break;
     case 'act': changed = playerAct(p, msg.a) || changed; break;
+    case 'shoot': if(G.phase === 'shooter' && G.turn === fromId) changed = shooterGo(false) || changed; break;
     case 'bs': changed = bsAct(p, msg) || changed; break;
     case 'imp': changed = impAct(p, msg) || changed; break;
     case 'beg': changed = beg(p) || changed; break;
@@ -1129,10 +1251,37 @@ function closeBetting(){
   if(!G.players.some(p => p.inRound)){ G.phaseTotal = BET_TIME; G.phaseEnds = Date.now() + BET_TIME; say(pick(LINES.idle)); return; }
   const g = GAME();
   if(g === 'blackjack') deal();
-  else if(g === 'roulette') rlSpin();
+  else if(g === 'roulette') awaitShooter('spin');
   else if(g === 'buckshot') bsStart();
   else if(g === 'imposter') impStart();
-  else bacDeal();
+  else awaitShooter('deal');
+}
+
+/* ---------- taking turns at roulette + baccarat: one player spins the wheel / deals the cards, then the job passes on ---------- */
+function nextShooter(){
+  const ps = G.players.filter(p => p.inRound && p.connected && !p.left);
+  if(!ps.length) return null;
+  const order = G.players.filter(p => ps.includes(p));
+  const last = G.players.findIndex(p => p.id === G.lastShooter);
+  if(last < 0) return order[0];
+  for(let k = 1; k <= G.players.length; k++){ const q = G.players[(last + k) % G.players.length]; if(ps.includes(q)) return q; }
+  return order[0];
+}
+function awaitShooter(kind){
+  const s = nextShooter();
+  if(!s){ if(kind === 'spin') rlSpin(); else { bacDeal(); G.bac.by = null; } return; }
+  G.phase = 'shooter'; G.shoot = kind; G.lastShooter = s.id;
+  G.turn = s.id; G.turnTotal = SHOOT_TIME; G.turnEnds = Date.now() + SHOOT_TIME;
+  say(kind === 'spin' ? `No more bets! ${s.name}, you spin the wheel.` : `No more bets! ${s.name}, you deal the cards.`);
+}
+function shooterGo(auto){
+  if(G.phase !== 'shooter') return false;
+  const s = P(G.turn), kind = G.shoot;
+  G.turn = null; G.turnEnds = 0;
+  G.shotBy = s ? s.name : null;
+  if(kind === 'spin'){ rlSpin(); if(s) say(auto ? `I'll spin for ${s.name}.` : `${s.name} spins!`); }
+  else { bacDeal(); G.bac.by = G.shotBy; G.shotBy = null; if(s) say(auto ? `I'll deal for ${s.name}.` : `${s.name} deals. Cards out!`); }
+  return true;
 }
 
 // chips on spots. Blackjack spots: main / pp / p21. Roulette + baccarat: their layouts.
@@ -1312,6 +1461,7 @@ function rlSpin(){
   G.rl.result = rnd(37); G.rl.spinId++;
   G.phaseTotal = SPIN_TIME; G.phaseEnds = Date.now() + SPIN_TIME;
   say('No more bets!');
+  G.rl.by = G.shotBy || null; G.shotBy = null;
 }
 function rlFinish(){
   const n = G.rl.result;
@@ -1481,6 +1631,9 @@ function tick(){
     case 'spinning':
       if(now >= G.phaseEnds){ rlFinish(); ch = true; }
       break;
+    case 'shooter':
+      if(now >= G.turnEnds || !P(G.turn) || !P(G.turn).connected){ shooterGo(true); ch = true; }
+      break;
     case 'dealing':
       if(now >= G.bac.nextAt){ bacStep(now); ch = true; }
       break;
@@ -1498,7 +1651,7 @@ function viewFor(rid){
   const now = Date.now(), g = GAME();
   const v = {
     code:G.code, round:G.round, phase:G.phase, hostId:G.hostId, say:G.say, sayId:G.sayId, settings:{...G.settings},
-    turn:G.turn, turnLeft:G.turn ? Math.max(0, G.turnEnds - now) : 0, turnTotal:G.turnTotal,
+    turn:G.turn, turnLeft:G.turn ? Math.max(0, G.turnEnds - now) : 0, turnTotal:G.turnTotal, shoot:G.phase === 'shooter' ? G.shoot : null, nextShooter:G.phase === 'betting' && (g === 'roulette' || g === 'baccarat') ? ((nextShooter() || {}).id || null) : null,
     phaseLeft:Math.max(0, G.phaseEnds - now), phaseTotal:G.phaseTotal,
     dealer:{hidden:G.dealer.hidden, bj:G.dealerBJ, hand:G.dealer.hand.map((c,i) => (G.dealer.hidden && i === 1) ? {back:true, id:c.id} : c)},
     players:G.players.map(p => {
@@ -1518,12 +1671,12 @@ function viewFor(rid){
   };
   if(g === 'buckshot') v.bs = bsView(rid);
   if(g === 'imposter') v.imp = impView(rid);
-  if(g === 'roulette') v.rl = {spinId:G.rl.spinId, result:(G.phase === 'spinning' || G.phase === 'results') ? G.rl.result : null, history:G.rl.history};
+  if(g === 'roulette') v.rl = {spinId:G.rl.spinId, result:(G.phase === 'spinning' || G.phase === 'results') ? G.rl.result : null, history:G.rl.history, by:G.rl.by || null};
   if(g === 'baccarat'){
     const shown = G.bac.seq.slice(0, G.bac.shown);
     v.bac = {player:shown.filter(x => x[0] === 'P').map(x => x[1]), banker:shown.filter(x => x[0] === 'B').map(x => x[1]),
       winner:G.phase === 'results' ? G.bac.winner : null, pPair:G.phase === 'results' && G.bac.pPair, bPair:G.phase === 'results' && G.bac.bPair,
-      history:G.bac.history.slice(-36)};
+      history:G.bac.history.slice(-36), by:G.bac.by || null};
   }
   return v;
 }
@@ -1535,7 +1688,7 @@ function broadcast(){
   }
   onState(viewFor(MY_ID));
 }
-function startHostLoop(){ clearInterval(hostTimer); hostTimer = setInterval(tick, 250); }
+function startHostLoop(){ bgClear(hostTimer); hostTimer = bgEvery(tick, 250); }
 /* =====================================================================
    BUCKSHOT (host engine)
    A shotgun is loaded with a hidden mix of live and blank shells.
@@ -2309,7 +2462,7 @@ const CARD_BACK = (() => {
     <rect x="21" y="21" width="208" height="308" rx="6" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="2.2"/><rect x="26.5" y="26.5" width="197" height="297" rx="4" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1"/>
     ${corner(31, 31, 0)}${corner(219, 31, 90)}${corner(219, 319, 180)}${corner(31, 319, 270)}
     <g transform="translate(125 175)"><ellipse rx="60" ry="80" fill="#a50f29" stroke="#fff" stroke-opacity=".9" stroke-width="2.4"/><ellipse rx="54" ry="74" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1"/>${pet}
-      <circle r="24" fill="#8c0b22" stroke="#fff" stroke-opacity=".9" stroke-width="1.8"/><text y="11" font-size="32" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="700" font-style="italic" fill="#fff" fill-opacity=".92">M</text></g>
+      <circle r="24" fill="#8c0b22" stroke="#fff" stroke-opacity=".9" stroke-width="1.8"/><text y="11" font-size="32" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-weight="700" font-style="italic" fill="#fff" fill-opacity=".92">W</text></g>
     <rect x="2" y="2" width="246" height="346" rx="18" fill="url(#txPaperSm)"/></svg>`;
 })();
 
@@ -2370,6 +2523,7 @@ function transitions(prev, s){
   const nNew = cardCount(s) - cardCount(prev);
   for(let i=0;i<Math.min(nNew,12);i++) setTimeout(() => sfx('card'), i*170);
   if(s.phase === 'playing' && s.turn === MY_ID && prev.turn !== MY_ID) setTimeout(() => { sfx('turn'); buzz(60); }, nNew > 3 ? 1200 : 150);
+  if(s.phase === 'shooter' && s.turn === MY_ID && (prev.phase !== 'shooter' || prev.turn !== MY_ID)){ sfx('turn'); buzz(80); }
   if(me && pm && me.status === 'bust' && pm.status !== 'bust') sfx('bust');
   if(me && pm && me.status === 'blackjack' && pm.status !== 'blackjack') setTimeout(() => { banner('BLACKJACK!'); sfx('big'); confetti(90); }, 900);
   if(s.dealer.bj && !prev.dealer.bj) sfx('bust');
@@ -2693,7 +2847,7 @@ function studioFxSVG(W, H){
   const defs = `<defs><radialGradient id="bulbGlass" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#fff2c8"/><stop offset="1" stop-color="#e8b24a"/></radialGradient><radialGradient id="bulbHalo"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".85"/><stop offset=".45" stop-color="#ffc864" stop-opacity=".3"/><stop offset="1" stop-color="#ffc864" stop-opacity="0"/></radialGradient></defs>`;
   const bulbs = ph.map((c, k) => `<svg class="bulbs ph${k}" width="${W}" height="18" viewBox="0 0 ${W} 18" aria-hidden="true">${k ? '' : defs}${c}</svg>`).join('');
   const flames = wide ? chandelierFlames(W*.2, 1) + chandelierFlames(W*.8, 1) : chandelierFlames(W*.88, .62);
-  const neon = wide ? `<svg class="neonSign" style="left:${(W*.33 - 70).toFixed(1)}px;top:${(H*.38 - 36).toFixed(1)}px" width="140" height="56" viewBox="-70 -36 140 56" aria-hidden="true"><defs><filter id="neonGlow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><text text-anchor="middle" font-size="30" font-family="Pacifico, Brush Script MT, cursive" fill="none" stroke="#ff3fb8" stroke-width="5" stroke-opacity=".4" filter="url(#neonGlow)">Myla's</text><text text-anchor="middle" font-size="30" font-family="Pacifico, Brush Script MT, cursive" fill="none" stroke="#ffd6f2" stroke-width="1.6">Myla's</text></svg>` : '';
+  const neon = wide ? `<svg class="neonSign" style="left:${(W*.33 - 70).toFixed(1)}px;top:${(H*.38 - 36).toFixed(1)}px" width="140" height="56" viewBox="-70 -36 140 56" aria-hidden="true"><defs><filter id="neonGlow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="3.2"/></filter></defs><text text-anchor="middle" font-size="30" font-family="Pacifico, Brush Script MT, cursive" fill="none" stroke="#ff3fb8" stroke-width="5" stroke-opacity=".4" filter="url(#neonGlow)">Whylo's</text><text text-anchor="middle" font-size="30" font-family="Pacifico, Brush Script MT, cursive" fill="none" stroke="#ffd6f2" stroke-width="1.6">Whylo's</text></svg>` : '';
   return `<div class="fxl">${bulbs}${flames}${neon}</div>`;
 }
 function sparklesHTML(n, seed){
@@ -2986,7 +3140,8 @@ function ensureSkeleton(){
     mid = `<div class="railbox rb-bac"><div class="feltbox bacTable" id="tbl"><div class="shoe" id="shoe" style="width:${sw}px;height:${Math.round(sw*.74)}px"><i></i></div><div class="bacPrint" id="bprint"></div><div class="bacHands" id="bhands"></div><div class="bacBets" id="bbets"></div><div class="roadwrap"><span class="roadlbl">BEAD ROAD</span><div class="road" id="road"></div></div><div class="pstrip" id="pstrip"></div></div></div>`;
   }
   $('#stage').dataset.game = st.game;
-  $('#stage').innerHTML = `<header class="top" id="hdr"></header>${studioHTML()}<div class="tableWrap" style="margin-top:${-studioDims().ov}px">${mid}</div><div class="console" id="cons"></div>`;
+  lastTbar = '';
+  $('#stage').innerHTML = `<header class="top" id="hdr"></header><div class="tbar" id="tbar" hidden></div>${studioHTML()}<div class="tableWrap" style="margin-top:${-studioDims().ov}px">${mid}</div><div class="console" id="cons"></div>`;
 }
 
 /* =====================================================================
@@ -2994,7 +3149,7 @@ function ensureSkeleton(){
    ===================================================================== */
 function headerHTML(){
   const isHost = S.hostId === MY_ID, st = S.settings;
-  return `<div class="brand">Myla's</div>
+  return `<div class="brand">Whylo's Casino</div>
     <button class="roomchip" data-act="invite" title="Invite friends"><span class="lb">TABLE</span><b>${esc(S.code)}</b><span class="inv">INVITE</span></button>
     <button class="gamechip" data-act="${isHost ? 'settings' : 'rules'}" title="${isHost ? 'Table settings' : 'How to play'}">${gameLabel(st)}${st.doom ? '<em>DOOM</em>' : ''}</button>
     <div class="topright">
@@ -3184,7 +3339,7 @@ function renderBaccarat(){
   const b = S.bac || {player:[], banker:[], history:[]};
   const cw = isWide() ? 64 : 46, w = b.winner;
   const side = (k, label, cards) => `<div class="bh ${k}${w === k ? ' won' : ''}" style="--cw:${cw}px"><div class="bl">${label}</div>${handHTML(cards, false, 2)}<div class="bt">${cards.length ? bacTotal(cards) : '&ndash;'}</div></div>`;
-  $('#bprint').innerHTML = S.phase === 'betting' ? pybHTML() : "MYLA'S BACCARAT";
+  $('#bprint').innerHTML = S.phase === 'betting' ? pybHTML() : "WHYLO'S BACCARAT";
   $('#bhands').innerHTML = side('P', 'PLAYER', b.player) + side('B', 'BANKER', b.banker);
   const {tot, mine} = betTotals();
   const won = k => w && ((k === 'P' && w === 'P') || (k === 'B' && w === 'B') || (k === 'T' && w === 'T') || (k === 'PP' && b.pPair) || (k === 'BP' && b.bPair));
@@ -3214,15 +3369,16 @@ function chipTray(me){
   return `<div class="tray">${CHIP_VALS.map(v => `<button class="chip c${v}${selChip === v ? ' sel' : ''}" data-act="sel" data-v="${v}" ${me.chips < v && selChip !== v ? 'data-short="1"' : ''} aria-label="Use ${v} chips"><span>${short(v)}</span></button>`).join('')}</div>`;
 }
 // chip tray + Undo / Clear / Rebet or 2x / Deal (all games)
+function shooterNext(){ const id = S.nextShooter; if(id === MY_ID) return 'your'; if(!id) return "the next player's"; const p = S.players.find(x => x.id === id); return p ? esc(p.name) + "'s" : "the next player's"; }
 function bettingHTML(me){
   const g = S.settings.game, has = me.bet > 0;
-  const okLabel = g === 'roulette' ? 'SPIN' : g === 'buckshot' ? 'PLAY' : 'DEAL';
+  const okLabel = g === 'buckshot' ? 'PLAY' : g === 'blackjack' ? 'DEAL' : 'READY';
   const canGo = g === 'blackjack' ? (me.bets.main || 0) >= MIN_BET : true;
   const rebetBtn = has ? rbtn('x2', 'x2', '<b>2&times;</b>', 'DOUBLE', me.chips < me.bet) : rbtn('rebet', 'rebet', IC.rebet, 'REBET', !me.canRebet);
   const hint = g === 'blackjack'
     ? (has ? (canGo ? 'Add side bets if you like, then deal.' : `Main bet needs at least ${MIN_BET}.`) : 'Pick a chip, then tap a circle on the table.')
     : g === 'buckshot' ? (has ? 'Add more, or take your seat. You can lose it all.' : 'Pick a chip, then tap the STAKE circle.')
-    : (has ? `Add more, or ${g === 'roulette' ? 'spin' : 'deal'}.` : `Pick a chip, then tap the ${g === 'roulette' ? 'layout' : 'table'}.`);
+    : (has ? `Add more, or tap READY. Then it's ${shooterNext()} turn to ${g === 'roulette' ? 'spin' : 'deal'}.` : `Pick a chip, then tap the ${g === 'roulette' ? 'layout' : 'table'}.`);
   const goBtn = g === 'blackjack'
     ? rbtn('done', 'go', IC.ok, okLabel, !canGo)
     : rbtn('done', 'go', has ? IC.ok : IC.clear, has ? okLabel : 'SIT OUT', false);
@@ -3289,8 +3445,13 @@ function multiControls(me){
       if(me.chips < MIN_BET && !me.bet) return begHTML();
       return bettingHTML(me);
     }
-    case 'spinning': return `<div class="msg">No more bets! The ball is rolling...</div>`;
-    case 'dealing': return `<div class="msg">Myla is dealing...</div>`;
+    case 'shooter': {
+      const spin = S.shoot === 'spin', who = S.players.find(p => p.id === S.turn);
+      if(S.turn === MY_ID) return `<div class="msg big">${spin ? 'Your turn to spin the wheel!' : 'Your turn to deal the cards!'}</div><div class="msg">Tap the green button. Myla does it for you if time runs out.</div>${timerBar('turn')}`;
+      return `<div class="msg">No more bets! Waiting for <b>${who ? esc(who.name) : 'the next player'}</b> to ${spin ? 'spin the wheel' : 'deal the cards'}...</div>${timerBar('turn')}`;
+    }
+    case 'spinning': return `<div class="msg">${S.rl && S.rl.by ? `<b>${esc(S.rl.by)}</b> spun the wheel. ` : 'No more bets! '}The ball is rolling...</div>`;
+    case 'dealing': return `<div class="msg">${S.bac && S.bac.by ? `<b>${esc(S.bac.by)}</b> is dealing` : 'Myla is dealing'}...</div>`;
     case 'results': {
       let head = '';
       if(g === 'roulette' && S.rl && S.rl.result != null){ const n = S.rl.result; head = `<div class="msg"><b>${n} ${rlColor(n).toUpperCase()}</b></div>`; }
@@ -3615,7 +3776,9 @@ function bsAnimateShot(shot){
    ===================================================================== */
 let impHide = false;
 const avHue = s => { let h = 0; for(const ch of String(s)) h = (h*31 + ch.charCodeAt(0)) % 360; return h; };
-const avatar = p => `<i class="av" style="--h:${avHue(p.baseName || p.name)}">${esc((p.baseName || p.name).trim()[0] || '?').toUpperCase()}</i>`;
+const AV_HUES = [205, 330, 42, 140, 8, 275, 175, 95];
+const avSeatHue = p => { const i = S && S.players ? S.players.findIndex(x => x.id === p.id) : -1; return i >= 0 ? AV_HUES[i % AV_HUES.length] : avHue(p.baseName || p.name); };
+const avatar = p => `<i class="av" style="--h:${avSeatHue(p)}">${esc((p.baseName || p.name).trim()[0] || '?').toUpperCase()}</i>`;
 function impStageLabel(m){
   switch(m.stage){
     case 'reveal': return 'LOOK AT YOUR CARD';
@@ -3707,6 +3870,67 @@ function impTransitions(prev, s){
   }
 }
 /* =====================================================================
+   TABLE BAR: everyone at the table, always on screen, with whose turn it is
+   ===================================================================== */
+let lastTbar = '';
+function turnIdNow(){
+  if(!S || !S.turn) return null;
+  if(S.settings.game === 'blackjack' && S.phase !== 'playing') return null;
+  return S.turn;
+}
+function tbarStatus(p, isTurn){
+  const g = S.settings.game, me = p.id === MY_ID;
+  if(!p.connected) return ['away', 'AWAY'];
+  if(isTurn){
+    const verb = S.phase === 'shooter' ? (S.shoot === 'spin' ? 'SPINNING' : 'DEALING')
+      : g === 'buckshot' ? 'SHOOTING' : g === 'imposter' ? (S.imp && S.imp.stage === 'guess' ? 'GUESSING' : 'GIVING A CLUE') : 'PLAYING';
+    return ['turn', me ? 'YOUR TURN' : verb];
+  }
+  if(S.phase === 'betting') return p.ready ? (p.bet || FREE_GAMES.includes(g) ? ['ok', 'READY'] : ['dim', 'SITTING OUT']) : ['dim', g === 'imposter' ? 'JOINING...' : 'BETTING...'];
+  if(g === 'imposter' && S.imp && S.imp.stage === 'vote' && S.imp.order.includes(p.id)) return S.imp.voted.includes(p.id) ? ['ok', 'VOTED'] : ['dim', 'VOTING...'];
+  if(g === 'buckshot' && S.bs && p.inRound && S.bs.lives && S.bs.lives[p.id] != null && S.phase === 'shotgun') return S.bs.lives[p.id] > 0 ? ['dim', S.bs.lives[p.id] + (S.bs.lives[p.id] === 1 ? ' LIFE' : ' LIVES')] : ['bad', 'DOWN'];
+  if(S.phase === 'results' && p.inRound){
+    if(g === 'imposter') return ['dim', short(p.chips) + ' chips'];
+    return p.delta > 0 ? ['ok', '+' + short(p.delta)] : p.delta < 0 ? ['bad', '-' + short(-p.delta)] : ['dim', 'PUSH'];
+  }
+  if(!p.inRound) return ['dim', 'WATCHING'];
+  if(g === 'blackjack' && p.status === 'bust') return ['bad', 'BUST'];
+  if(g === 'blackjack' && p.status === 'blackjack') return ['ok', 'BLACKJACK'];
+  if(g === 'blackjack' && S.phase === 'playing' && p.status === 'stand') return ['dim', 'STANDS ' + (p.total || '')];
+  return ['dim', g === 'imposter' ? 'IN THE GAME' : 'BET ' + short(p.bet)];
+}
+function tbarHTML(){
+  if(!S || S.phase === 'lobby') return '';
+  const tid = turnIdNow(), g = S.settings.game;
+  let html = S.players.filter(p => !p.left).map(p => {
+    const isTurn = p.id === tid, [cls, st] = tbarStatus(p, isTurn), me = p.id === MY_ID;
+    return `<div class="tp${me ? ' me' : ''}${isTurn ? ' turn' : ''}${!p.connected ? ' away' : ''}">${avatar(p)}<span class="tn"><b>${me ? 'You' : esc(p.name)}</b><small class="s-${cls}">${st}</small></span>${isTurn && S.turnLeft > 0 ? '<i class="tt"><i data-timer="turn"></i></i>' : ''}</div>`;
+  }).join('');
+  if(g === 'buckshot' && S.bs && S.phase === 'shotgun'){
+    const dt = S.bs.turn === 'dealer' && S.bs.stage === 'turn';
+    html = `<div class="tp dealer${dt ? ' turn' : ''}"><i class="av skull" aria-hidden="true">&#9760;</i><span class="tn"><b>The Dealer</b><small class="s-${dt ? 'turn' : 'dim'}">${dt ? 'SHOOTING' : 'WAITING'}</small></span></div>` + html;
+  }
+  return `<div class="tps" role="list" aria-label="Players at the table">${html}</div>`;
+}
+function renderTbar(){
+  const el = $('#tbar'); if(!el) return;
+  const h = tbarHTML();
+  if(h !== lastTbar){
+    lastTbar = h; el.innerHTML = h; el.hidden = !h;
+    const t = el.querySelector('.tp.turn');
+    const row = el.firstChild;
+    if(t && row && row.scrollWidth > row.clientWidth) row.scrollLeft = t.offsetLeft - row.clientWidth/2 + t.offsetWidth/2;
+  }
+  // your turn to spin / deal: a big button that floats on screen wherever you've scrolled
+  const fabOn = S && S.phase === 'shooter' && S.turn === MY_ID;
+  let fab = $('#shootFab');
+  if(fabOn){
+    const label = S.shoot === 'spin' ? 'Spin the wheel' : 'Deal the cards';
+    if(!fab){ fab = document.createElement('button'); fab.id = 'shootFab'; fab.className = 'btn xl shootBtn fab'; fab.dataset.act = 'shoot'; $('#stage').appendChild(fab); }
+    if(fab.textContent !== label) fab.textContent = label;
+  } else if(fab) fab.remove();
+}
+/* =====================================================================
    MAIN RENDER
    ===================================================================== */
 function applyCurseFx(me){
@@ -3737,6 +3961,7 @@ function render(){
   applyCurseFx(me);
   prepareCardMeta();
   $('#hdr').innerHTML = headerHTML();
+  renderTbar();
   updateMyla();
   const g = S.settings.game;
   if(g === 'blackjack') renderBlackjack(me);
@@ -3818,6 +4043,7 @@ function act(a, b){
     case 'sethint': send({t:'settings', impHint:v === 'on'}); break;
     case 'clearbets': send({t:'clearbets'}); break;
     case 'done': send({t:'done'}); sfx('chip'); break;
+    case 'shoot': send({t:'shoot'}); sfx('chip'); b.disabled = true; break;
     case 'hit': case 'stand': case 'double': {
       const now = Date.now(); if(now - lastActAt < 280) return; lastActAt = now;
       send({t:'act', a}); break;
@@ -3844,7 +4070,7 @@ async function invite(){
   const link = location.origin + location.pathname + '?room=' + S.code;
   const touch = window.matchMedia && matchMedia('(pointer:coarse)').matches;
   if(navigator.share && touch){
-    try{ await navigator.share({title:"Myla's Table", text:`Join my table! Code: ${S.code}`, url:link}); return; }
+    try{ await navigator.share({title:"Whylo's Casino", text:`Join my table at Whylo's Casino! Code: ${S.code}`, url:link}); return; }
     catch(e){ if(e && e.name === 'AbortError') return; }
   }
   try{ await navigator.clipboard.writeText(link); toast('Invite link copied. Send it to your friends!'); }
@@ -3852,62 +4078,287 @@ async function invite(){
 }
 
 /* =====================================================================
-   NETWORK (PeerJS, peer-to-peer; the host's browser runs the game)
+   RELAY NETWORK
+   Game messages travel through public MQTT relay servers over secure
+   WebSockets, so friends on any network (home Wi-Fi, school, 4G/5G,
+   other countries) can reach each other. Three relays are used at once:
+   every message goes to all of them and duplicates are dropped, so the
+   table keeps working if one relay is slow or down.
+   Messages are compressed and encrypted with a key made from the table
+   code, so other people on the public relays can't read or fake them.
    ===================================================================== */
-let peer = null, hostConn = null, isHost = false, joinCode = null, myName = '';
+// The last one runs on the normal web port (443), for school/work Wi-Fi that blocks the others.
+const RELAY_443 = {url:'wss://public.cloud.shiftr.io', user:'public', pass:'public'};
+const RELAYS = Array.isArray(window.WC_RELAYS) ? window.WC_RELAYS : /[?&]relay=443\b/.test(location.search) ? [RELAY_443] : [
+  'wss://broker.emqx.io:8084/mqtt',
+  'wss://broker.hivemq.com:8884/mqtt',
+  'wss://test.mosquitto.org:8081/mqtt',
+  RELAY_443,
+];
+const RELAY_NS = 'whyloscasino/v1/';
+const TE = new TextEncoder(), TD = new TextDecoder();
+
+/* Repeating timers that keep running when the tab is in the background.
+   Browsers slow normal timers in hidden tabs to once a minute after a while,
+   which would freeze the table for everyone if the host switches apps.
+   Timers inside a Web Worker aren't slowed, so the worker does the ticking. */
+const bgTimers = new Map(); let bgWorker = null, bgSeq = 0;
+function bgEvery(fn, ms){
+  const id = ++bgSeq;
+  try{
+    if(!bgWorker){
+      const src = 'const t={};onmessage=e=>{const d=e.data;if(d.on)t[d.id]=setInterval(()=>postMessage(d.id),d.ms);else{clearInterval(t[d.id]);delete t[d.id];}};';
+      bgWorker = new Worker(URL.createObjectURL(new Blob([src], {type:'text/javascript'})));
+      bgWorker.onmessage = e => { const f = bgTimers.get(e.data); if(f) try{ f(); }catch(err){ console.warn(err); } };
+    }
+    bgTimers.set(id, fn); bgWorker.postMessage({on:true, id, ms});
+  }catch(e){ bgTimers.set(id, setInterval(fn, ms)); }
+  return id;
+}
+function bgClear(id){
+  if(!id) return;
+  const f = bgTimers.get(id); bgTimers.delete(id);
+  if(typeof f === 'number') clearInterval(f);
+  else if(bgWorker) bgWorker.postMessage({on:false, id});
+}
+
+function mqttLen(n){ const out = []; do{ let b = n % 128; n = Math.floor(n / 128); if(n > 0) b |= 128; out.push(b); }while(n > 0); return out; }
+function mqttStr(s){ const b = TE.encode(s); return [b.length >> 8, b.length & 255, ...b]; }
+function mqttPacket(head, body){
+  const len = mqttLen(body.length), out = new Uint8Array(1 + len.length + body.length);
+  out[0] = head; out.set(len, 1); out.set(body, 1 + len.length); return out;
+}
+
+/* One connection to one relay server, with automatic reconnect. */
+class MqttLink {
+  constructor(relay, onMsg, onChange){
+    const r = typeof relay === 'string' ? {url:relay} : relay;
+    this.url = r.url; this.user = r.user || ''; this.pass = r.pass || ''; this.onMsg = onMsg; this.onChange = onChange;
+    this.subs = new Set(); this.ws = null; this.ready = false; this.closed = false;
+    this.buf = new Uint8Array(0); this.pid = 1; this.backoff = 800; this.lastIn = 0;
+    this.cid = 'wc' + Math.random().toString(36).slice(2, 12);
+    this.open();
+    this.timer = bgEvery(() => this.keepAlive(), 10000);
+  }
+  open(){
+    if(this.closed) return;
+    let ws;
+    try{ ws = new WebSocket(this.url, 'mqtt'); }catch(e){ return this.retry(); }
+    ws.binaryType = 'arraybuffer'; this.ws = ws; this.buf = new Uint8Array(0);
+    const giveUp = setTimeout(() => { if(this.ws === ws && !this.ready){ try{ ws.close(); }catch(e){} } }, 9000);
+    ws.onopen = () => {
+      if(this.ws !== ws) return;
+      // CONNECT: MQTT 3.1.1, clean session, keep-alive 45s (+ username/password if the relay wants one)
+      const fl = 2 | (this.user ? 128 : 0) | (this.pass ? 64 : 0);
+      this.raw(mqttPacket(0x10, [...mqttStr('MQTT'), 4, fl, 0, 45, ...mqttStr(this.cid), ...(this.user ? mqttStr(this.user) : []), ...(this.pass ? mqttStr(this.pass) : [])]));
+    };
+    ws.onmessage = e => { if(this.ws === ws){ this.lastIn = Date.now(); this.feed(new Uint8Array(e.data)); } };
+    ws.onclose = () => { clearTimeout(giveUp); if(this.ws !== ws) return; this.ws = null; this.setReady(false); this.retry(); };
+    ws.onerror = () => {};
+  }
+  retry(){
+    if(this.closed) return;
+    clearTimeout(this.rt);
+    this.rt = setTimeout(() => this.open(), this.backoff);
+    this.backoff = Math.min(this.backoff * 2, 8000);
+  }
+  setReady(v){ if(this.ready !== v){ this.ready = v; this.onChange && this.onChange(); } }
+  raw(bytes){ const ws = this.ws; if(ws && ws.readyState === 1){ try{ ws.send(bytes); return true; }catch(e){} } return false; }
+  feed(chunk){
+    let b = this.buf.length ? (() => { const x = new Uint8Array(this.buf.length + chunk.length); x.set(this.buf); x.set(chunk, this.buf.length); return x; })() : chunk;
+    let i = 0;
+    while(true){
+      if(b.length - i < 2) break;
+      let mult = 1, len = 0, j = i + 1, byte;
+      do{ if(j >= b.length){ len = -1; break; } byte = b[j++]; len += (byte & 127) * mult; mult *= 128; }while(byte & 128);
+      if(len < 0 || j + len > b.length) break;
+      this.packet(b[i], b.subarray(j, j + len));
+      i = j + len;
+    }
+    this.buf = i < b.length ? b.slice(i) : new Uint8Array(0);
+  }
+  packet(h, body){
+    const type = h >> 4;
+    if(type === 2){ // CONNACK
+      if(body[1] === 0){
+        this.backoff = 800; this.setReady(true);
+        for(const t of this.subs) this.sendSub(t);
+      } else { try{ this.ws.close(); }catch(e){} }
+    } else if(type === 3){ // PUBLISH
+      const qos = (h >> 1) & 3, tl = (body[0] << 8) | body[1];
+      const topic = TD.decode(body.subarray(2, 2 + tl));
+      const start = 2 + tl + (qos ? 2 : 0);
+      try{ this.onMsg(topic, body.slice(start)); }catch(e){ console.warn(e); }
+    }
+  }
+  sendSub(topic){ const id = this.pid = (this.pid % 65000) + 1; this.raw(mqttPacket(0x82, [id >> 8, id & 255, ...mqttStr(topic), 0])); }
+  subscribe(topic){ this.subs.add(topic); if(this.ready) this.sendSub(topic); }
+  publish(topic, payload){
+    if(!this.ready) return false;
+    const t = mqttStr(topic), body = new Uint8Array(t.length + payload.length);
+    body.set(t); body.set(payload, t.length);
+    return this.raw(mqttPacket(0x30, body));
+  }
+  keepAlive(){
+    if(!this.ws || this.ws.readyState !== 1) return;
+    if(this.ready && Date.now() - this.lastIn > 50000){ try{ this.ws.close(); }catch(e){} return; } // dead link
+    this.raw(new Uint8Array([0xC0, 0]));
+  }
+  close(){
+    this.closed = true; bgClear(this.timer); clearTimeout(this.rt);
+    const ws = this.ws; this.ws = null; this.ready = false;
+    if(ws){ try{ if(ws.readyState === 1) ws.send(new Uint8Array([0xE0, 0])); ws.close(); }catch(e){} }
+  }
+}
+
+/* ---------- table crypto: key and topic names come from the table code ---------- */
+async function sha256(s){ return new Uint8Array(await crypto.subtle.digest('SHA-256', TE.encode(s))); }
+const hex = b => Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+async function roomSecrets(code){
+  const t = await sha256('whylos-casino-topic:' + code), k = await sha256('whylos-casino-key:' + code);
+  return {topic: RELAY_NS + hex(t).slice(0, 24), key: await crypto.subtle.importKey('raw', k, 'AES-GCM', false, ['encrypt', 'decrypt'])};
+}
+async function streamBytes(bytes, stream){ return new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(stream)).arrayBuffer()); }
+const CAN_ZIP = typeof CompressionStream === 'function' && typeof DecompressionStream === 'function';
+async function sealMsg(key, obj){
+  let data = TE.encode(JSON.stringify(obj)), flag = 0;
+  if(CAN_ZIP && data.length > 300){ try{ data = await streamBytes(data, new CompressionStream('deflate-raw')); flag = 1; }catch(e){} }
+  const plain = new Uint8Array(data.length + 1); plain[0] = flag; plain.set(data, 1);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, plain));
+  const out = new Uint8Array(12 + ct.length); out.set(iv); out.set(ct, 12); return out;
+}
+async function openMsg(key, bytes){
+  try{
+    if(bytes.length < 30) return null;
+    const plain = new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM', iv:bytes.subarray(0, 12)}, key, bytes.subarray(12)));
+    let data = plain.subarray(1);
+    if(plain[0] === 1){ if(!CAN_ZIP) return null; data = await streamBytes(data, new DecompressionStream('deflate-raw')); }
+    return JSON.parse(TD.decode(data));
+  }catch(e){ return null; }
+}
+
+/* ---------- a table's relay hub: every link, ordered sends, de-duplication ---------- */
+class RelayHub {
+  constructor(code, onEnvelope){
+    this.code = code; this.onEnvelope = onEnvelope; this.secrets = null;
+    this.nonce = Math.random().toString(36).slice(2, 10); this.seq = 0;
+    this.seen = new Map(); this.sendQ = Promise.resolve(); this.recvQ = Promise.resolve();
+    this.pending = new Map(); this.listeners = new Set(); this.closed = false; this.subs = [];
+    this.links = [];
+  }
+  async start(){
+    this.secrets = await roomSecrets(this.code);
+    if(this.closed) return;
+    this.links = RELAYS.map(u => new MqttLink(u, (t, b) => this.incoming(t, b), () => this.changed()));
+    for(const t of this.subs) this.links.forEach(l => l.subscribe(t));
+  }
+  topic(sub){ return this.secrets.topic + '/' + sub; }
+  listen(sub){ const t = this.topic(sub); this.subs.push(t); this.links.forEach(l => l.subscribe(t)); }
+  liveCount(){ return this.links.filter(l => l.ready).length; }
+  changed(){ for(const f of this.listeners) f(this.liveCount()); }
+  onLinks(f){ this.listeners.add(f); }
+  waitLive(ms){
+    return new Promise(res => {
+      if(this.liveCount()) return res(true);
+      const f = n => { if(n){ this.listeners.delete(f); clearTimeout(to); res(true); } };
+      const to = setTimeout(() => { this.listeners.delete(f); res(false); }, ms);
+      this.listeners.add(f);
+    });
+  }
+  /* send(sub, msg, key): with a key, a newer message replaces an older one still waiting (used for full table states) */
+  send(sub, msg, key){
+    if(this.closed || !this.secrets) return;
+    const env = {f:MY_ID, s:this.nonce, m:msg};
+    if(key){
+      const had = this.pending.has(key);
+      this.pending.set(key, env);
+      if(had) return;
+    }
+    this.sendQ = this.sendQ.then(async () => {
+      let e = env;
+      if(key){ e = this.pending.get(key); this.pending.delete(key); if(!e) return; }
+      e.n = ++this.seq;
+      const bytes = await sealMsg(this.secrets.key, e);
+      const t = this.topic(sub);
+      for(const l of this.links) l.publish(t, bytes);
+    }).catch(err => console.warn('relay send', err));
+  }
+  incoming(topic, bytes){
+    if(this.closed || !this.secrets) return;
+    this.recvQ = this.recvQ.then(async () => {
+      const env = await openMsg(this.secrets.key, bytes);
+      if(!env || typeof env !== 'object' || !env.f || !env.s || typeof env.n !== 'number' || env.f === MY_ID && env.s === this.nonce) return;
+      const k = env.f + '#' + env.s;
+      let s = this.seen.get(k);
+      if(!s){ s = {set:new Set(), max:0}; this.seen.set(k, s); if(this.seen.size > 200) this.seen.delete(this.seen.keys().next().value); }
+      if(s.set.has(env.n) || env.n < s.max - 400) return;
+      s.set.add(env.n); if(env.n > s.max) s.max = env.n;
+      if(s.set.size > 600){ for(const n of s.set){ if(n < s.max - 400) s.set.delete(n); } }
+      env.newest = env.n >= s.max;
+      this.onEnvelope(topic.slice(this.secrets.topic.length + 1), env);
+    }).catch(err => console.warn('relay recv', err));
+  }
+  close(){ this.closed = true; this.links.forEach(l => l.close()); this.links = []; this.listeners.clear(); }
+}
+
+/* A host-side stand-in for one player's connection (same shape the game engine already uses). */
+class RelayConn {
+  constructor(hub, clientId){ this.hub = hub; this.peerId = clientId; this.open = true; this.h = {}; }
+  on(ev, fn){ this.h[ev] = fn; return this; }
+  emit(ev, x){ const f = this.h[ev]; if(f) try{ f(x); }catch(e){ console.warn(e); } }
+  send(msg){ if(this.open) this.hub.send('c/' + this.peerId, msg, msg && msg.t === 'state' ? 'st:' + this.peerId : null); }
+  close(){ if(!this.open) return; this.open = false; this.emit('close'); }
+}
+/* =====================================================================
+   NETWORK (relay servers; the host's browser runs the game)
+   ===================================================================== */
+let hub = null, isHost = false, joinCode = null, myName = '', hostSender = null;
 let lastHostMsg = 0, pingTimer = null, joinTimer = null, lostShown = false;
 
-function peerReady(){
-  return new Promise((res, rej) => {
-    if(window.Peer) return res();
-    let n = 0;
-    const iv = setInterval(() => { if(window.Peer){ clearInterval(iv); res(); } else if(++n > 120){ clearInterval(iv); rej(new Error('lib')); } }, 100);
-  });
-}
-function netErrText(err){
-  const t = err && err.type;
-  if(t === 'peer-unavailable') return "No table found with that code. Check the code, and make sure the host still has the game open.";
-  if(t === 'browser-incompatible') return "This browser can't do online play. Try Chrome, Safari, or Firefox.";
-  if(['network','server-error','socket-error','socket-closed','disconnected'].includes(t)) return "Couldn't reach the game server. Check your internet and try again.";
-  return 'Connection problem' + (t ? ` (${t})` : '') + '. Try again.';
-}
+function netSupported(){ return !!(window.crypto && crypto.subtle && window.WebSocket && window.TextEncoder); }
+const NO_RELAY = "Couldn't reach the online game servers. Check your internet connection and try again.";
 function send(msg){
   if(isHost){ if(G) hostHandle(MY_ID, msg); return; }
-  if(hostConn && hostConn.open){ try{ hostConn.send(msg); }catch(e){} }
-  else if(S && !lostShown) showLost();
+  if(hub && hub.liveCount()) hub.send('h', msg);
+  else if(S && !lostShown && Date.now() - lastHostMsg > 6000) showLost();
 }
 function setRoomURL(code){ try{ history.replaceState(null, '', location.pathname + (code ? '?room=' + code : '')); }catch(e){} }
 
 /* ---------- hosting ---------- */
 async function createTable(){
   const name = readName(); if(!name) return;
-  setHomeBusy('Setting up your table...');
-  try{ await peerReady(); }catch(e){ return homeError("Couldn't load the online-play library. Check your internet and reload the page."); }
+  if(!netSupported()) return homeError("This browser can't do online play. Try Chrome, Safari, Edge, or Firefox.");
+  setHomeBusy('Opening your table...');
   myName = name;
-  let attempts = 0;
-  const attempt = () => {
-    const code = Array.from({length:5}, () => CODE_CHARS[rnd(CODE_CHARS.length)]).join('');
-    const p = new Peer(PREFIX + code, {debug:0});
-    peer = p;
-    p.on('open', () => {
-      if(peer !== p) return;
-      isHost = true; G = newGame(code);
-      setRoomURL(code);
-      handleJoin({id:MY_ID, name}, null);
-      startHostLoop();
-    });
-    p.on('connection', conn => setupHostConn(conn));
-    p.on('error', err => {
-      if(peer !== p) return;
-      if(err && err.type === 'unavailable-id' && attempts++ < 4){ try{ p.destroy(); }catch(e){} attempt(); return; }
-      if(!G) homeError(netErrText(err));
-      else console.warn('peer error', err);
-    });
-    p.on('disconnected', () => {
-      setTimeout(() => { try{ if(peer === p && !p.destroyed && p.disconnected) p.reconnect(); }catch(e){} }, 1500);
-    });
-  };
-  attempt();
+  const code = Array.from({length:5}, () => CODE_CHARS[rnd(CODE_CHARS.length)]).join('');
+  const h = new RelayHub(code, (sub, env) => hostEnvelope(h, sub, env));
+  hub = h;
+  try{ await h.start(); }catch(e){ if(hub === h){ hub = null; h.close(); homeError(NO_RELAY); } return; }
+  h.listen('h');
+  const ok = await h.waitLive(12000);
+  if(hub !== h) return;
+  if(!ok){ hub = null; h.close(); return homeError(NO_RELAY); }
+  isHost = true; G = newGame(code);
+  setRoomURL(code);
+  handleJoin({id:MY_ID, name}, null);
+  const sg = store.get('startGame', 'blackjack');
+  if(GAMES[sg] && sg !== G.settings.game){ G.settings.game = sg; G.events = []; broadcast(); }
+  startHostLoop();
+}
+function hostEnvelope(h, sub, env){
+  if(hub !== h || !G || sub !== 'h') return;
+  const msg = env.m; if(!msg || typeof msg !== 'object') return;
+  const id = String(env.f).slice(0, 40);
+  if(msg.t === 'join'){
+    if(String(msg.id) !== id) return;
+    const c = new RelayConn(h, id);
+    setupHostConn(c);
+    handleJoin(msg, c);
+    return;
+  }
+  const c = conns.get(id);
+  if(c) c.emit('data', msg);
 }
 function setupHostConn(conn){
   conn.on('data', msg => {
@@ -3921,7 +4372,6 @@ function setupHostConn(conn){
     const p = P(conn.clientId);
     if(p && p.connected){ markAway(p); broadcast(); }
   });
-  conn.on('error', () => {});
 }
 
 /* ---------- joining ---------- */
@@ -3929,81 +4379,86 @@ async function joinTable(code){
   const name = readName(); if(!name) return;
   code = String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
   if(code.length !== 5) return showHomeMsg('Table codes are 5 characters long.');
-  setHomeBusy(`Joining table ${code}...`);
-  try{ await peerReady(); }catch(e){ return homeError("Couldn't load the online-play library. Check your internet and reload the page."); }
-  joinCode = code; myName = name; isHost = false;
-  startClientPeer();
+  if(!netSupported()) return homeError("This browser can't do online play. Try Chrome, Safari, Edge, or Firefox.");
+  setHomeBusy(`Finding table ${code}...`);
+  joinCode = code; myName = name; isHost = false; hostSender = null;
+  startClient();
 }
-function startClientPeer(){
-  const p = new Peer({debug:0});
-  peer = p;
-  p.on('open', () => { if(peer === p) connectToHost(); });
-  p.on('error', err => {
-    if(peer !== p) return;
-    if(S){ if(err && err.type === 'peer-unavailable') showLost('Myla can\'t find the table anymore. The host may have closed it or lost connection.'); return; }
-    homeError(netErrText(err));
+async function startClient(){
+  if(hub){ const old = hub; hub = null; old.close(); }
+  const h = new RelayHub(joinCode, (sub, env) => clientEnvelope(h, sub, env));
+  hub = h;
+  try{ await h.start(); }catch(e){ if(hub === h){ if(!S) homeError(NO_RELAY); else showLost(); } return; }
+  h.listen('c/' + MY_ID);
+  let wasLive = false;
+  h.onLinks(n => {               // a relay came back after a drop: say hello again
+    if(hub !== h) return;
+    if(n && !wasLive && S) sendJoin();
+    wasLive = n > 0;
   });
-  p.on('disconnected', () => {
-    setTimeout(() => { try{ if(peer === p && !p.destroyed && p.disconnected) p.reconnect(); }catch(e){} }, 1500);
-  });
+  const ok = await h.waitLive(12000);
+  if(hub !== h) return;
+  if(!ok){ if(!S) homeError(NO_RELAY); else if(!lostShown) showLost(); return; }
+  wasLive = true;
+  sendJoin();
+  startPing();
 }
-function connectToHost(){
+function sendJoin(){
+  if(!hub) return;
+  hub.send('h', {t:'join', id:MY_ID, name:myName});
   clearTimeout(joinTimer);
-  if(hostConn){ const old = hostConn; hostConn = null; try{ old.close(); }catch(e){} }
-  const c = peer.connect(PREFIX + joinCode, {reliable:true, serialization:'json'});
-  hostConn = c;
-  c.on('open', () => {
-    if(hostConn !== c) return;
-    lastHostMsg = Date.now();
-    c.send({t:'join', id:MY_ID, name:myName});
-    startPing();
-  });
-  c.on('data', msg => {
-    if(hostConn !== c || !msg) return;
-    lastHostMsg = Date.now();
-    if(msg.t === 'state'){ clearTimeout(joinTimer); if(lostShown) hideLost(); onState(msg.s); }
-    else if(msg.t === 'reject'){ homeError(msg.reason || 'The host turned you away.'); }
-    else if(msg.t === 'closed'){ leaveLocal(); renderHome('The host closed the table. Thanks for playing!', true); }
-  });
-  c.on('close', () => { if(hostConn === c && S && !lostShown) showLost(); });
-  c.on('error', () => {});
   joinTimer = setTimeout(() => {
-    if(!S) homeError("Couldn't connect to that table. Check the code, or try a different Wi-Fi/cell network.");
-    else if(!lostShown) showLost();
-  }, 15000);
+    if(!S) homeError(`Couldn't find table ${joinCode}. Check the code, and make sure the host still has the game open.`);
+    else if(!lostShown && Date.now() - lastHostMsg > 9000) showLost();
+  }, 12000);
+}
+function clientEnvelope(h, sub, env){
+  if(hub !== h) return;
+  const msg = env.m; if(!msg || typeof msg !== 'object') return;
+  if(msg.t === 'state'){
+    if(hostSender && env.f !== hostSender) return;
+    if(!env.newest) return;
+    if(!msg.s || msg.s.hostId !== env.f) return;
+    hostSender = env.f;
+    lastHostMsg = Date.now();
+    clearTimeout(joinTimer); if(lostShown) hideLost(); onState(msg.s);
+  }
+  else if(hostSender && env.f !== hostSender) return;
+  else if(msg.t === 'reject'){ homeError(msg.reason || 'The host turned you away.'); }
+  else if(msg.t === 'closed'){ leaveLocal(); renderHome('The host closed the table. Thanks for playing!', true); }
 }
 function startPing(){
-  clearInterval(pingTimer);
-  pingTimer = setInterval(() => {
-    if(hostConn && hostConn.open){ try{ hostConn.send({t:'ping'}); }catch(e){} }
+  bgClear(pingTimer);
+  pingTimer = bgEvery(() => {
+    if(hub && hub.liveCount()) hub.send('h', {t:'ping'});
     if(S && !isHost && !lostShown && Date.now() - lastHostMsg > 15000) showLost();
   }, 3000);
 }
 function showLost(msg){
   lostShown = true;
   dialog({kind:'lost', title:'Connection lost', ok:'Reconnect', cancel:'Leave',
-    text: msg || "Lost connection to the table. This happens when the host's screen locks or someone's Wi-Fi drops.",
+    text: msg || "Lost connection to the table. This happens when the host's screen locks, their tab closes, or someone's internet drops. It reconnects by itself when things come back.",
     onOk: reconnect, onCancel: () => { leaveLocal(); renderHome(); }});
 }
 function hideLost(){ lostShown = false; if(modalKind === 'lost') closeModal(); }
 function reconnect(){
   lostShown = false; lastHostMsg = Date.now();
-  if(peer && !peer.destroyed && peer.open) connectToHost();
-  else { try{ peer && peer.destroy(); }catch(e){} startClientPeer(); }
+  if(hub && hub.liveCount()) sendJoin();
+  else startClient();
 }
 
 /* ---------- leaving ---------- */
 function leaveLocal(keepURL){
-  clearInterval(pingTimer); clearTimeout(joinTimer); clearInterval(hostTimer); clearInterval(chaosTimer);
+  bgClear(pingTimer); clearTimeout(joinTimer); bgClear(hostTimer); clearInterval(chaosTimer);
   if(isHost){ for(const c of conns.values()){ try{ c.send({t:'closed'}); }catch(e){} } }
-  const p = peer; peer = null; hostConn = null;
-  if(p) setTimeout(() => { try{ p.destroy(); }catch(e){} }, 300);
+  const h = hub; hub = null; hostSender = null;
+  if(h) setTimeout(() => h.close(), 700);
   conns.clear(); G = null; S = null; isHost = false; lostShown = false; joinCode = null;
   closeModal(); if(!keepURL) setRoomURL(null);
   $('#stage').className = ''; document.body.classList.remove('fx-blackout');
 }
 function leaveTable(){
-  if(!isHost && hostConn && hostConn.open){ try{ hostConn.send({t:'leave'}); }catch(e){} }
+  if(!isHost && hub){ hub.send('h', {t:'leave'}); }
   leaveLocal(); renderHome();
 }
 window.addEventListener('beforeunload', () => {
@@ -4013,41 +4468,100 @@ window.addEventListener('beforeunload', () => {
 /* =====================================================================
    HOME SCREEN
    ===================================================================== */
+const LINEUP = [
+  {k:'blackjack', name:'Blackjack', line:"Beat Myla to 21, or play the house special: 33.", who:'1-6 players', turns:'Take turns hitting and standing'},
+  {k:'roulette', name:'Roulette', line:'Bet on numbers and colors, then watch the ball drop.', who:'1-6 players', turns:'Take turns spinning the wheel'},
+  {k:'baccarat', name:'Baccarat', line:'Player or Banker? Closest to 9 wins.', who:'1-6 players', turns:'Take turns flipping the cards'},
+  {k:'buckshot', name:'Buckshot', line:'A shotgun, live shells and The Dealer. Survive.', who:'1-6 players', turns:'Take turns pulling the trigger'},
+  {k:'imposter', name:'Imposter', line:"One friend doesn't know the secret word. Find them.", who:'3-6 players', turns:'Take turns giving clues'},
+];
+function gameIcon(k){
+  if(k === 'blackjack') return `<div class="gi giCards"><div class="card">${cardFaceSVG({r:'A', s:'♠'}, true)}</div><div class="card">${cardFaceSVG({r:'K', s:'♥'}, true)}</div></div>`;
+  if(k === 'roulette') return `<div class="gi giWheel">${wheelSVG()}</div>`;
+  if(k === 'baccarat') return `<div class="gi giBac"><span class="p">PLAYER<b>9</b></span><span class="b">BANKER<b>7</b></span></div>`;
+  if(k === 'buckshot') return `<div class="gi giShells">${shellIcon(true)}${shellIcon(false)}${shellIcon(true)}${shellIcon(true)}</div>`;
+  return `<div class="gi giImp"><svg viewBox="0 0 96 64" aria-hidden="true"><g fill="#f3e3c4"><circle cx="18" cy="24" r="9"/><path d="M4 60c0-12 6-20 14-20s14 8 14 20z"/><circle cx="78" cy="24" r="9"/><path d="M64 60c0-12 6-20 14-20s14 8 14 20z"/></g><g fill="#ff4d5e"><circle cx="48" cy="20" r="11"/><path d="M31 62c0-14 7-23 17-23s17 9 17 23z"/></g><text x="48" y="25" text-anchor="middle" font-size="15" font-weight="800" fill="#2a0610" font-family="Rubik,Arial,sans-serif">?</text></svg></div>`;
+}
 function renderHome(msg, info){
   screen = 'home'; document.body.classList.remove('horror'); try{ horrorDrone(false); }catch(e){}
   $('#stage').className = ''; document.body.classList.remove('fx-blackout');
   const room = (new URLSearchParams(location.search).get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0,5);
   const name = store.get('name', '');
-  $('#stage').innerHTML = `<div class="home">
-    <div class="hstudio">${studioSVG(440, 150)}${studioFxSVG(440, 150)}<div class="mylaStand" style="--mx:50%;height:146px;width:117px">${MYLA_BIG()}</div><div class="hrim"><span>BLACKJACK PAYS 3 TO 2</span></div></div>
-    <div class="logo"><span class="n">33</span><span class="w">BLACKJACK</span><span class="s">ROULETTE &middot; BACCARAT &middot; BUCKSHOT &middot; IMPOSTER</span></div>
-    <p class="tag">Myla's casino for you and your friends: blackjack to 33 (or 21), roulette, baccarat, the Imposter party game... and Buckshot, if you dare.</p>
-    <div class="panel">
+  let pickG = store.get('startGame', 'blackjack'); if(!GAMES[pickG]) pickG = 'blackjack';
+  const tiles = LINEUP.map(g => `<button class="gtile${g.k === pickG ? ' on' : ''}" data-g="${g.k}" role="radio" aria-checked="${g.k === pickG}" ${room ? 'tabindex="-1"' : ''}>
+      ${gameIcon(g.k)}<span class="gtext"><b>${g.name}</b><span class="gline">${g.line}</span><span class="gmeta">${g.who} &middot; ${g.turns}</span></span><i class="gpick" aria-hidden="true">&#10003;</i></button>`).join('');
+  $('#stage').innerHTML = `<div class="title${room ? ' joining' : ''}">
+    <div class="marqWrap">
+      <div class="marq"><i class="mqb a"></i><i class="mqb b"></i>
+        <div class="mqIn"><span class="mqPre">Welcome to</span><h1 class="mqName">Whylo's</h1><span class="mqCas"><i></i>CASINO<i></i></span></div>
+      </div>
+      <div class="tMyla"><div class="mylaStand" style="--mx:50%;height:170px;width:136px">${MYLA_BIG()}</div></div>
+      <p class="tSay"><b>Myla</b>${room ? `Your friends are waiting at table <span class="code">${esc(room)}</span>. Pull up a chair.` : `Hi, I'm Myla, your dealer tonight. Pick a game and bring your friends. They can join from anywhere.`}</p>
+    </div>
+    <section class="lineup" aria-label="Games">
+      <h2>${room ? 'Games at Whylo\'s' : 'Pick a game to start'}</h2>
+      <div class="gtiles" role="radiogroup" aria-label="Starting game">${tiles}</div>
+    </section>
+    <section class="panel tPanel" aria-label="Play">
       <div class="field"><label for="nameIn">Your name</label><input id="nameIn" class="inp" maxlength="14" autocomplete="off" spellcheck="false" value="${esc(name)}" placeholder="Your name"></div>
       ${room
-        ? `<button class="btn xl" id="joinLinkBtn">Join table ${esc(room)}</button><div class="or">or</div><button class="btn ghost" id="createBtn">Start my own table</button>`
-        : `<button class="btn xl" id="createBtn">Create a table</button><div class="or">or join friends</div><div class="joinrow"><input id="codeIn" class="inp code" maxlength="5" placeholder="CODE" autocomplete="off" autocapitalize="characters" spellcheck="false"><button class="btn ghost" id="joinBtn">Join</button></div>`}
+        ? `<button class="btn xl" id="joinLinkBtn">Join table ${esc(room)}</button><div class="or">or</div><button class="btn ghost" id="createBtn">Open my own table</button>`
+        : `<button class="btn xl" id="createBtn">Open a <span id="createGame">${GAMES[pickG]}</span> table</button><div class="or">or join friends</div><div class="joinrow"><input id="codeIn" class="inp code" maxlength="5" placeholder="CODE" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Table code"><button class="btn ghost" id="joinBtn">Join</button></div>`}
       <div class="err${info ? ' info' : ''}" id="homeMsg">${esc(msg || '')}</div>
-    </div>
-    <details class="rules"><summary>How to play</summary><ul>
-      <li>Everyone plays against <b>Myla</b>, the dealer. In <b>Blackjack 33</b> you try to get closer to 33 than her without going over (she stands on 29). <b>Blackjack 21</b> is the classic game (she stands on 17).</li>
-      <li>Everybody gets <b>2 cards</b>. Myla's second card stays face-down until everyone is done. An Ace + a 10/J/Q/K is a <b>Blackjack</b> and pays 3:2.</li>
-      <li><b>Hit</b> to take a card, <b>Stand</b> to stop, <b>Double</b> to double your bet and take exactly one more card. In 33 mode, hitting <b>exactly 33 pays 2:1</b>.</li>
-      <li>Optional side bets: <b>Perfect Pairs</b> (your first two cards are a pair, up to 25:1) and <b>21+3</b> (your two cards + Myla's up card make a poker hand, up to 100:1).</li>
-      <li>The host can switch the table to <b>Roulette</b>, <b>Baccarat</b>, <b>Buckshot</b> (a shotgun showdown with The Dealer) or <b>Imposter</b> (find the friend who doesn't know the secret word). Your chips come with you.</li>
-      <li>With the <b>Wheel of Doom</b> on, losing means something crazy happens: taxes, earthquakes, upside-down screens, cursed aces, embarrassing new names... Turn it off for a normal game.</li>
-      <li>You start with <b>1,000 chips</b>. Go broke? You can beg Myla for more. Everyone will know.</li>
-      <li>Whoever creates the table is the host. Share the code or invite link, and keep the host's tab open.</li>
-    </ul></details>
+      <p class="tNote">You get 1,000 chips. The host can switch games between rounds, and your chips come with you.</p>
+    </section>
+    <details class="rules tRules"${isWide() && innerWidth >= 900 ? ' open' : ''}><summary>How to play</summary>
+      <div class="rgrid">
+        <div><h3>Playing with friends</h3><p>One person opens a table and shares the 5-character code or the invite link. Everyone joins from their own phone or computer, on any Wi-Fi or mobile data. You'll see everyone's seat, chips and bets, and the game shows whose turn it is. Keep the host's tab open.</p></div>
+        <div><h3>Blackjack</h3><p>Get closer to the target than Myla without going over: <b>21</b> (she stands on 17) or <b>33</b> (she stands on 29, and exactly 33 pays 2:1). Players take turns: hit, stand or double. Blackjack pays 3:2. Side bets: Perfect Pairs and 21+3.</p></div>
+        <div><h3>Roulette</h3><p>Everyone places chips on the layout. Then one player gets the honor of spinning, and the job passes to the next player each round. A single number pays 35:1, red/black and odd/even pay 1:1.</p></div>
+        <div><h3>Baccarat</h3><p>Bet on Player, Banker or Tie. One player flips the cards each round, taking turns around the table. Closest to 9 wins. Player 1:1, Banker 0.95:1, Tie 8:1.</p></div>
+        <div><h3>Buckshot</h3><p>Put down a stake and face The Dealer with a shotgun of live and blank shells. Players take turns: shoot The Dealer or yourself. Use items, survive all 3 rounds, and get paid.</p></div>
+        <div><h3>Imposter</h3><p>Free party game for 3 or more. Everyone gets the secret word except the imposter. Take turns giving one-word clues, then vote out the imposter.</p></div>
+        <div><h3>Wheel of Doom</h3><p>When it's on, losing spins the wheel: taxes, earthquakes, upside-down screens, cursed aces, embarrassing names. The host can turn it off.</p></div>
+      </div>
+    </details>
   </div>`;
   const createBtn = $('#createBtn'), joinBtn = $('#joinBtn'), joinLinkBtn = $('#joinLinkBtn'), codeIn = $('#codeIn'), nameIn = $('#nameIn');
+  document.querySelectorAll('.gtile').forEach(t => t.onclick = () => {
+    if(room) return;
+    pickG = t.dataset.g; store.set('startGame', pickG);
+    document.querySelectorAll('.gtile').forEach(x => { const on = x === t; x.classList.toggle('on', on); x.setAttribute('aria-checked', on); });
+    const cg = $('#createGame'); if(cg) cg.textContent = GAMES[pickG];
+    if(SFX.on) try{ actx(); sfx('chip'); }catch(e){}
+  });
   createBtn.onclick = () => { if(SFX.on) actx(); createTable(); };
   if(joinBtn) joinBtn.onclick = () => { if(SFX.on) actx(); joinTable(codeIn.value); };
   if(joinLinkBtn) joinLinkBtn.onclick = () => { if(SFX.on) actx(); joinTable(room); };
   if(codeIn) codeIn.addEventListener('keydown', e => { if(e.key === 'Enter') joinBtn.click(); });
   nameIn.addEventListener('keydown', e => { if(e.key === 'Enter') (joinLinkBtn || createBtn).click(); });
   if(!name) setTimeout(() => nameIn.focus(), 50);
+  marqueeBulbs();
 }
+/* Marquee bulbs: evenly spaced around the sign's rounded border, alternating so they chase. */
+function marqueeBulbs(){
+  const m = document.querySelector('.marq'); if(!m) return;
+  const old = m.querySelector('.bulbRing'); if(old) old.remove();
+  const W = m.clientWidth, H = m.clientHeight, inset = 11, r = 15;
+  if(W < 50 || H < 50) return;
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'bulbRing'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('aria-hidden', 'true');
+  const path = document.createElementNS(NS, 'path');
+  const x0 = inset, y0 = inset, x1 = W - inset, y1 = H - inset;
+  path.setAttribute('d', `M${x0 + r} ${y0}H${x1 - r}A${r} ${r} 0 0 1 ${x1} ${y0 + r}V${y1 - r}A${r} ${r} 0 0 1 ${x1 - r} ${y1}H${x0 + r}A${r} ${r} 0 0 1 ${x0} ${y1 - r}V${y0 + r}A${r} ${r} 0 0 1 ${x0 + r} ${y0}Z`);
+  svg.appendChild(path); m.prepend(svg);
+  const L = path.getTotalLength(), n = Math.max(12, Math.round(L / 19) & ~1);
+  let a = '', b = '';
+  for(let i = 0; i < n; i++){
+    const pt = path.getPointAtLength(L * i / n);
+    const c = `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="6.5" fill="url(#mqHalo)"/><circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="3" fill="url(#mqGlass)"/>`;
+    if(i % 2) b += c; else a += c;
+  }
+  svg.innerHTML = `<defs><radialGradient id="mqGlass" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff2c8"/><stop offset="1" stop-color="#e8b24a"/></radialGradient><radialGradient id="mqHalo"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".9"/><stop offset=".5" stop-color="#ffc864" stop-opacity=".3"/><stop offset="1" stop-color="#ffc864" stop-opacity="0"/></radialGradient></defs><g class="bl">${a}</g><g class="bl o">${b}</g>`;
+}
+let bulbRT = null;
+window.addEventListener('resize', () => { clearTimeout(bulbRT); bulbRT = setTimeout(() => { if(screen === 'home') marqueeBulbs(); }, 150); });
+document.fonts && document.fonts.ready && document.fonts.ready.then(() => { if(screen === 'home') marqueeBulbs(); });
 function readName(){
   const el = $('#nameIn'); const v = el ? el.value.replace(/\s+/g, ' ').trim().slice(0,14) : '';
   if(!v){ showHomeMsg('Type your name first.'); if(el) el.focus(); return null; }
@@ -4055,7 +4569,7 @@ function readName(){
 }
 function showHomeMsg(m, info){ const el = $('#homeMsg'); if(el){ el.textContent = m; el.classList.toggle('info', !!info); } }
 function setHomeBusy(m){
-  document.querySelectorAll('.home button, .home input').forEach(b => b.disabled = true);
+  document.querySelectorAll('.title button, .title input').forEach(b => b.disabled = true);
   showHomeMsg(m, true);
 }
 function homeError(m){ leaveLocal(true); renderHome(m); }
