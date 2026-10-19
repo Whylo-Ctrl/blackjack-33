@@ -5907,86 +5907,42 @@ const W3A = (() => {
   return {feltN, grainN, CARD_W, CARD_H, CHIP_R, CHIP_T, CHIP_COL, card, cardFace, cardBack, chipMat, stackGeo, pile, singleChip, splitAmount, feltNoise, carpetTex, woodTex, leatherTex, suitPath};
 })();
 /* =====================================================================
-   3D HANDS + ARMS: jointed fingers, poses, 2-bone arm IK
+   3D HANDS + ARMS: blocky toy hands (palm, index finger, a mitten block
+   for the other three fingers, thumb), poses, 2-bone arm IK.
    Hand frame: +Y along the fingers, +Z = back of the hand, X = Y x Z.
    ===================================================================== */
 const W3H = (() => {
   const {Node, geo, mat, V, qBasis, qMul, qInv, qRot} = G3;
   const geoCache = new Map();
   const cg = (key, f) => { if(!geoCache.has(key)) geoCache.set(key, f()); return geoCache.get(key); };
-  const FINGERS = [ // name, across-palm position (from thumb side), y of knuckle, lengths, radius
-    ['index', 0.74, 0.086, [0.041, 0.025, 0.021], 0.0093],
-    ['middle', 0.25, 0.091, [0.046, 0.028, 0.022], 0.0097],
-    ['ring', -0.24, 0.087, [0.043, 0.026, 0.021], 0.0091],
-    ['pinky', -0.72, 0.079, [0.034, 0.021, 0.019], 0.0081],
-  ];
-  const nailMat = mat({color:'#e8c2b6', rough:0.3, env:0.7, coat:0.3});
+  // a rounded box whose bottom sits at y=0 (so it hinges at its base)
+  const seg = (w, len, d, r) => cg(`hs${w}_${len}_${d}_${r}`, () => geo.transform(geo.roundBox(w, len, d, r, 3), [0, len/2, 0]));
+  // smooth plastic skin (toy look)
   const skinMats = new Map();
-  function skinNormal(){ return cg('skinN', () => G3.normalTex(128, 128, (x, y) => (G3.vnoise(x*0.7, y*0.7, 89.6, 3) - 0.5)*0.6 + (G3.vnoise(x*0.18, y*0.18, 23.04, 5) - 0.5), {strength:0.8, rough:(x, y) => 0.5 + (G3.vnoise(x*0.1, y*0.1, 12.8, 8) - 0.5)*0.2})); }
   function skinMaterial(hex){
-    if(!skinMats.has(hex)){ const c = G3.col(hex), l = (c[0] + c[1] + c[2])/3;
-      skinMats.set(hex, mat({color:c.map(v => v*0.74), kind:'skin', rough:0.5, env:0.45, sss:[0.95, 0.3 + l*0.1, 0.2], nmap:skinNormal(), nuv:[14, 14, 0, 0], nstr:0.3})); }
+    if(!skinMats.has(hex)){ const c = G3.col(hex); skinMats.set(hex, mat({color:c.map(v => v*0.78), rough:0.55, env:0.25, coat:0.08})); }
     return skinMats.get(hex);
   }
 
-  function seg(r, len, r2){ return cg(`s${r.toFixed(4)}_${len.toFixed(4)}_${(r2||r).toFixed(4)}`, () => geo.transform(geo.capsule(r, len, 12, 4, r2), [0,0,0], [0,0,0,1], [1, 1, 0.86])); }
-
-  // a limb along +Y with a radius profile [[t, scale]...] and round caps at both ends
-  function limbGeo(len, r, prof, flatZ = 1){
-    return cg(`limb${len.toFixed(4)}_${r.toFixed(4)}_${JSON.stringify(prof)}_${flatZ}`, () => {
-      const rad = (t) => { for(let k = 1; k < prof.length; k++) if(t <= prof[k][0]){ const a = prof[k-1], b = prof[k], u = (t - a[0])/(b[0] - a[0]), e = u*u*(3 - 2*u); return r*(a[1] + (b[1] - a[1])*e); } return r*prof[prof.length-1][1]; };
-      const pts = [], r0 = rad(0), r1 = rad(1);
-      for(let k = 0; k <= 5; k++){ const a = -Math.PI/2 + Math.PI/2*k/5; pts.push([Math.cos(a)*r0, Math.sin(a)*r0]); }
-      for(let k = 1; k < 12; k++){ const t = k/12; pts.push([rad(t), t*len]); }
-      for(let k = 0; k <= 5; k++){ const a = Math.PI/2*k/5; pts.push([Math.cos(a)*r1, len + Math.sin(a)*r1]); }
-      pts[0][0] = 0; pts[pts.length-1][0] = 0;
-      const g = geo.lathe(pts, 18); for(let k = 0; k < g.vc; k++) g.p[k*3+2] *= flatZ;
-      return geo.computeNormals(g);
-    });
-  }
   // side: 1 = right hand, -1 = left hand
   function buildHand(skin, side, s = 1){
     const root = new Node(); root.name = 'hand'; root.scl = [s, s, s];
-    const palmGeo = () => {
-      // a soft "pillow" (superellipsoid) shaped like a palm
-      const g = geo.sphere(1, 28, 20), sg = (v, e) => Math.sign(v)*Math.pow(Math.abs(v), e);
-      for(let k=0;k<g.vc;k++){
-        const nx = g.p[k*3], ny = g.p[k*3+1], nz = g.p[k*3+2];
-        let x = sg(nx, 0.5)*0.0415, y = sg(ny, 0.38)*0.051, z = sg(nz, 0.8)*0.0115;
-        const t = Math.max(0, Math.min(1, (y + 0.051)/0.102)), u = Math.min(1, Math.abs(x)/0.0415);
-        x *= 0.76 + 0.24*Math.sin(t*Math.PI/2);
-        if(z > 0) z += 0.006*(1 - u*u)*(0.55 + 0.45*t); else z -= 0.003*(1 - u*u);
-        g.p[k*3] = x; g.p[k*3+1] = y; g.p[k*3+2] = z;
-      }
-      return geo.computeNormals(g); };
-    // palm + thenar + knuckle bumps merged into one mesh (palm space)
-    const palm = new Node(cg('palmM' + side, () => {
-      const parts = [palmGeo(), geo.transform(geo.sphere(0.02, 14, 10), [-side*0.02, 0.03 - 0.037, -0.008], [0,0,0,1], [0.95, 1.3, 0.72])];
-      for(const fx of [0.74, 0.25, -0.24, -0.72]) parts.push(geo.transform(geo.sphere(0.0105, 10, 8), [-side*fx*0.041, 0.083 - Math.abs(fx)*0.006 - 0.037, 0.0048], [0,0,0,1], [0.95, 0.85, 0.5]));
-      return geo.merge(...parts); }), skin);
-    palm.pos = [0, 0.037, 0];
-    root.add(palm);
-    // thenar (thumb muscle) on the palm side
-    const fingers = {};
-    for(const [name, frac, ky, lens, r] of FINGERS){
-      const knuckle = new Node(); knuckle.pos = [-side*frac*0.041, ky - 0.037, 0.002]; palm.add(knuckle);
-      const chain = []; let parent = knuckle, rr = r;
-      lens.forEach((len, i) => {
-        const j = new Node(); if(i > 0) j.pos = [0, lens[i-1], 0]; parent.add(j);
-        const r2 = rr*0.93; const fs = new Node(seg(rr, len - (i === 2 ? r2 : 0), r2), skin); fs.castShadow = i === 0; j.add(fs);
-        if(i === 2){ const nail = new Node(cg('nail'+r.toFixed(4), () => geo.roundBox(rr*1.45, len*0.55, rr*0.3, rr*0.14, 2)), nailMat); nail.pos = [0, len*0.52, rr*0.78]; nail.rot = [-0.12, 0, 0]; nail.castShadow = false; j.add(nail); }
-        chain.push(j); parent = j; rr = r2;
-      });
-      fingers[name] = {knuckle, chain};
-    }
+    const palm = new Node(seg(0.074, 0.074, 0.034, 0.012), skin); root.add(palm);
+    // index finger on the thumb side, the other three fingers as one mitten block
+    const mk = (x, w, lens, d) => {
+      const knuckle = new Node(); knuckle.pos = [x, 0.066, 0.002]; root.add(knuckle);
+      const chain = []; let parent = knuckle;
+      lens.forEach((len, i) => { const j = new Node(); if(i > 0) j.pos = [0, lens[i-1] - 0.004, 0]; parent.add(j);
+        const n = new Node(seg(w, len, d*(i ? 0.92 : 1), 0.007), skin); n.castShadow = i === 0; j.add(n); chain.push(j); parent = j; });
+      return {knuckle, chain};
+    };
+    const fingers = {index:mk(-side*0.025, 0.022, [0.032, 0.026], 0.024), mitt:mk(side*0.011, 0.05, [0.032, 0.024], 0.026)};
     // thumb
-    const tb = new Node(); tb.pos = [-side*0.028, 0.016, -0.006]; root.add(tb);
+    const tb = new Node(); tb.pos = [-side*0.03, 0.016, -0.006]; root.add(tb);
     { const Y = V.norm([-side*0.62, 0.74, -0.26]); let Z = V.norm([-side*0.62, 0.1, 0.78]); Z = V.norm(V.sub(Z, V.scale(Y, V.dot(Z, Y)))); tb.q = G3.qBasis(V.cross(Y, Z), Y, Z); }
-    // knuckle bumps on the back of the hand
-    const tmeta = new Node(); tb.add(tmeta); tmeta.add(new Node(seg(0.0128, 0.034, 0.0118), skin));
-    const tprox = new Node(); tprox.pos = [0, 0.034, 0]; tmeta.add(tprox); tprox.add(new Node(seg(0.0118, 0.028, 0.0108), skin));
-    const tdist = new Node(); tdist.pos = [0, 0.028, 0]; tprox.add(tdist); tdist.add(new Node(seg(0.0108, 0.024 - 0.0100, 0.0100), skin));
-    const tn = new Node(cg('tnail', () => geo.roundBox(0.0155, 0.014, 0.003, 0.0014, 2)), nailMat); tn.pos = [0, 0.014, 0.0088]; tn.rot = [-0.1, 0, 0]; tn.castShadow = false; tdist.add(tn);
+    const tmeta = new Node(); tb.add(tmeta); tmeta.add(new Node(seg(0.024, 0.034, 0.024, 0.008), skin));
+    const tprox = new Node(); tprox.pos = [0, 0.03, 0]; tmeta.add(tprox); tprox.add(new Node(seg(0.022, 0.026, 0.022, 0.008), skin));
+    const tdist = new Node(); tdist.pos = [0, 0.024, 0]; tprox.add(tdist);
     const hand = {root, side, fingers, thumb:{base:tb, meta:tmeta, prox:tprox, dist:tdist}, pose:clonePose(POSES.relaxed), from:null, to:null, t:1, dur:0.2, skin,
       // a point between thumb tip and index tip where held objects go (in hand space)
       grip:new Node()};
@@ -6014,13 +5970,15 @@ const W3H = (() => {
   };
   function clonePose(p){ const o = {}; for(const k in p) o[k] = p[k].slice(); return o; }
   function applyPose(h, p){
-    const sd = h.side;
-    for(const [name] of FINGERS){ const f = h.fingers[name], v = p[name];
-      f.knuckle.rot = [0, 0, -sd*v[3]];
-      f.chain[0].rot = [-v[0], 0, 0]; f.chain[1].rot = [-v[1], 0, 0]; f.chain[2].rot = [-v[2], 0, 0]; }
+    const sd = h.side, ix = h.fingers.index, mt = h.fingers.mitt, i = p.index;
+    ix.knuckle.rot = [0, 0, -sd*i[3]*0.6];
+    ix.chain[0].rot = [-i[0], 0, 0]; ix.chain[1].rot = [-(i[1] + i[2]*0.6), 0, 0];
+    // the mitten follows the middle / ring / pinky average
+    const a0 = (p.middle[0] + p.ring[0] + p.pinky[0])/3, a1 = (p.middle[1] + p.ring[1] + p.pinky[1] + (p.middle[2] + p.ring[2] + p.pinky[2])*0.6)/3;
+    mt.chain[0].rot = [-a0, 0, 0]; mt.chain[1].rot = [-a1, 0, 0];
     const t = p.thumb;
     h.thumb.meta.rot = [-t[0]*0.75, 0, -sd*t[3]*0.6];
-    h.thumb.prox.rot = [-t[1], 0, 0]; h.thumb.dist.rot = [-t[2], 0, 0];
+    h.thumb.prox.rot = [-(t[1] + t[2]*0.6), 0, 0];
   }
   function setPose(h, name, dur = 0.18){
     const target = typeof name === 'string' ? POSES[name] : name; if(!target) return;
@@ -6035,18 +5993,17 @@ const W3H = (() => {
   }
 
   /* ---------------- arms + IK ---------------- */
-  // An arm hangs from a shoulder node. upperLen/foreLen in meters.
+  // An arm hangs from a shoulder node: a block upper arm, a block forearm and a rounded elbow. Lengths in metres.
   function buildArm(side, skin, sleeve, opts = {}){
-    const L1 = opts.upper || 0.28, L2 = opts.fore || 0.255, r1 = opts.r1 || 0.047, r2 = opts.r2 || 0.039;
+    const L1 = opts.upper || 0.28, L2 = opts.fore || 0.255, W = opts.w || 0.088;
     const shoulder = new Node(); shoulder.name = 'shoulder';
     const upper = new Node(); shoulder.add(upper);
-    upper.add(new Node(limbGeo(L1, r1, [[0, 1.0], [0.18, 1.06], [0.45, 1.0], [0.75, 0.9], [1, 0.84]], 0.94), opts.upperMat || sleeve));
+    upper.add(new Node(cg(`armU${L1}_${W}`, () => geo.transform(geo.roundBox(W, L1 + 0.035, W, 0.022, 3), [0, (L1 - 0.035)/2, 0])), opts.upperMat || sleeve));
     const fore = new Node(); fore.pos = [0, L1, 0]; upper.add(fore);
     const foreMat = opts.foreMat || sleeve;
-    const foreGeo = limbGeo(L2 - 0.012, r2, [[0, 1.1], [0.2, 1.12], [0.45, 1.0], [0.8, 0.8], [1, 0.74]], 0.84);
-    fore.add(new Node(foreGeo, foreMat));
-    if(opts.cuff){ const cuff = new Node(cg('cuff'+r2, () => geo.cylinder(r2*0.86, r2*0.9, 0.035, 18)), opts.cuff); cuff.pos = [0, L2 - 0.045, 0]; fore.add(cuff); }
-    if(opts.watch){ const w = new Node(cg('watch', () => geo.cylinder(r2*0.8, r2*0.8, 0.016, 18)), opts.watch); w.pos = [0, L2 - 0.03, 0]; w.scl = [1, 1, 0.82]; fore.add(w); }
+    fore.add(new Node(cg(`armE${W}`, () => geo.roundBox(W*1.02, W*1.02, W*1.02, W*0.4, 3)), foreMat));   // elbow
+    fore.add(new Node(cg(`armF${L2}_${W}`, () => geo.transform(geo.roundBox(W*0.94, L2 - 0.004, W*0.94, 0.02, 3), [0, (L2 - 0.004)/2, 0])), foreMat));
+    if(opts.cuff){ const cuff = new Node(cg('cuffB' + W, () => geo.roundBox(W*0.98, 0.024, W*0.98, 0.008, 2)), opts.cuff); cuff.pos = [0, L2 - 0.024, 0]; fore.add(cuff); }
     const wristN = new Node(); wristN.pos = [0, L2, 0]; fore.add(wristN);
     const hand = buildHand(skin, side, opts.handScale || 1); wristN.add(hand.root);
     const arm = {side, shoulder, upper, fore, wristN, hand, L1, L2,
@@ -6086,13 +6043,15 @@ const W3H = (() => {
   return {buildHand, buildArm, solveArm, setPose, updateHand, applyPose, handQ, POSES, skinMaterial, clonePose};
 })();
 /* =====================================================================
-   3D PEOPLE: avatars built from a "look" (skin, hair, outfit, extras).
-   Heads are sculpted meshes with glossy 3D eyes, eyelids that blink,
-   lashes, painted makeup and a mouth that opens (morph targets).
+   3D PEOPLE: blocky toy-style avatars built from a "look" (skin, hair,
+   outfit, extras). Rounded-box head, body, arms and legs in smooth
+   plastic colours, with a simple cartoon face: eyes that blink and look
+   around, eyebrows that move with the mood, and a mouth that smiles,
+   frowns, gasps and talks.
    Avatar local space: feet/floor at y=0, facing +Z.
    ===================================================================== */
 const W3P = (() => {
-  const {Node, geo, mat, V, col, canvasTex, qEuler, qAxis, normalTex, fbm, vnoise, hash2, smooth} = G3;
+  const {Node, geo, mat, V, col, canvasTex, qEuler} = G3;
   const OPT = {
     skin:['#f7d7c1','#ecc3a2','#dfab86','#c98f6b','#b07752','#8d5838','#6c4027','#4b2c1b'],
     hair:['short','long','bun','ponytail','curly','buzz','mohawk','bald','swept','bob'],
@@ -6140,793 +6099,320 @@ const W3P = (() => {
   }
   const shade = (hex, f) => { const n = parseInt(hex.slice(1), 16); const c = [n>>16&255, n>>8&255, n&255].map(v => Math.max(0, Math.min(255, Math.round(f > 0 ? v + (255-v)*f : v*(1+f))))); return '#' + c.map(v => v.toString(16).padStart(2,'0')).join(''); };
   const mix = (a, b, t) => { const A = parseInt(a.slice(1), 16), B = parseInt(b.slice(1), 16); const c = [16, 8, 0].map(s => Math.round(((A>>s)&255)*(1-t) + ((B>>s)&255)*t)); return '#' + c.map(v => v.toString(16).padStart(2,'0')).join(''); };
-  const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
   const cache = new Map(); const cg = (k, f) => { if(!cache.has(k)) cache.set(k, f()); return cache.get(k); };
-  const coarse = () => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 
-  /* =================================================================
-     HEAD SHAPE. The head is a stack of horizontal cross-sections
-     (super-ellipses whose half-width / front depth / back depth vary with
-     height y), plus sculpted features. Parameters: longitude lam
-     (0 = front, +x = the avatar's left) and height y (metres, head-local).
-     Face coordinates (fx, fy) = the base cross-section x / y.
-     ================================================================= */
-  const Y_TOP = 0.118, Y_BOT = -0.13;
-  const ML = -0.05;             // mouth line (face y)
-  const EYE_X = 0.0305, EYE_Y = 0.009;
-  const ER = 0.0145;            // eyeball radius
-  const g2 = (dx, dy) => Math.exp(-(dx*dx + dy*dy));
-  // y -> [half width, front depth, back depth] (female / male)
-  const XS = {
-    f:[[-0.13,0.042,0.036,0.043],[-0.118,0.04,0.034,0.045],[-0.108,0.024,0.05,0.046],[-0.1,0.019,0.063,0.047],[-0.085,0.031,0.075,0.05],[-0.065,0.046,0.082,0.058],[-0.045,0.057,0.085,0.072],[-0.02,0.067,0.086,0.088],
-       [0.005,0.071,0.086,0.097],[0.03,0.072,0.085,0.1],[0.055,0.07,0.08,0.098],[0.08,0.063,0.069,0.088],[0.1,0.048,0.052,0.07],[0.112,0.03,0.031,0.045],[0.118,0.0,0.0,0.0]],
-    m:[[-0.13,0.046,0.038,0.046],[-0.118,0.045,0.036,0.048],[-0.108,0.03,0.052,0.049],[-0.1,0.026,0.066,0.05],[-0.085,0.04,0.078,0.053],[-0.065,0.054,0.084,0.06],[-0.045,0.062,0.087,0.073],[-0.02,0.07,0.088,0.088],
-       [0.005,0.074,0.088,0.098],[0.03,0.076,0.087,0.101],[0.055,0.074,0.082,0.099],[0.08,0.066,0.07,0.089],[0.1,0.05,0.053,0.071],[0.112,0.031,0.032,0.046],[0.118,0.0,0.0,0.0]],
-  };
-  function xsec(y, fem){
-    const T = XS[fem ? 'f' : 'm']; if(y <= T[0][0]) return T[0].slice(1);
-    for(let k = 1; k < T.length; k++) if(y <= T[k][0]){ const a = T[k-1], b = T[k], t = (y - a[0])/(b[0] - a[0]), e = t*t*(3 - 2*t), w = 0.55;
-      const f = t*(1 - w) + e*w; return [a[1] + (b[1]-a[1])*f, a[2] + (b[2]-a[2])*f, a[3] + (b[3]-a[3])*f]; }
-    return [0, 0, 0];
-  }
-  const NF = 2.5, NB = 2.15; // super-ellipse exponents: flatter face, rounder skull
-  function basePt(lam, y, fem){
-    const [W, Fz, Bz] = xsec(y, fem), s = Math.sin(lam), c = Math.cos(lam), n = c > 0 ? NF : NB, e = 2/n;
-    return [W*Math.sign(s)*Math.pow(Math.abs(s), e), y, (c > 0 ? Fz : Bz)*Math.sign(c)*Math.pow(Math.abs(c), e)];
-  }
-  // sculpted features on top of the base (returns the final position)
-  function sculpt(lam, y, fem){
-    let [x, , z] = basePt(lam, y, fem);
-    const fx = x, fy = y, front = Math.cos(lam), F = smooth(0.05, 0.6, front), ax = Math.abs(fx), s = fx < 0 ? -1 : 1;
-    // eye sockets, brow ridge, nasion, cheekbones, temples
-    z -= 0.0115*F*g2((ax - EYE_X)/0.0172, (fy - EYE_Y)/0.0122);
-    z += (fem ? 0.0024 : 0.004)*F*g2((ax - 0.028)/0.021, (fy - 0.029)/0.0078);
-    z -= 0.0018*F*g2(fx/0.008, (fy - 0.016)/0.006);
-    z += 0.0038*F*g2((ax - 0.045)/0.017, (fy + 0.008)/0.013);
-    x += s*0.002*F*g2((ax - 0.055)/0.016, (fy + 0.006)/0.016);
-    z -= 0.0025*F*g2((ax - 0.04)/0.012, (fy + 0.036)/0.012);              // under the cheekbone
-    // nose: bridge rising to a rounded tip, then the base
-    const nk = fem ? 0.88 : 1;
-    if(fy < 0.022 && fy > -0.044){
-      const h = (0.0028 + 0.0142*smooth(0.018, -0.022, fy))*smooth(-0.036, -0.026, fy)*nk;
-      const w = 0.0052 + 0.0052*smooth(0.002, -0.028, fy);
-      z += F*h*Math.exp(-Math.pow(fx/w, 2));
-    }
-    z += 0.0046*F*nk*g2(fx/0.0074, (fy + 0.0235)/0.0058);
-    z += 0.0042*F*nk*g2((ax - 0.0108)/0.005, (fy + 0.0285)/0.0052);       // nostril wings
-    z -= 0.0012*F*g2((ax - 0.0155)/0.0035, (fy + 0.029)/0.006);
-    // lips
-    const lk = fem ? 1.22 : 1;
-    z += 0.0048*lk*F*g2(fx/0.0185, (fy - (ML + 0.0055))/0.0052);
-    z += 0.0009*F*g2((ax - 0.0048)/0.0032, (fy - (ML + 0.008))/0.0018);   // cupid's bow
-    z += 0.0056*lk*F*g2(fx/0.0158, (fy - (ML - 0.0062))/0.0055);
-    z -= 0.0016*F*g2(fx/0.023, (fy - ML)/0.0015);
-    z -= 0.001*F*g2(fx/0.003, (fy - (ML + 0.0135))/0.0062);               // philtrum
-    z -= 0.0015*F*g2((ax - 0.021)/0.004, (fy - ML)/0.004);                // mouth corners
-    // chin
-    z += (fem ? 0.0045 : 0.0065)*F*g2(fx/0.017, (fy + 0.087)/0.012);
-    z -= 0.0016*F*g2(fx/0.011, (fy - (ML - 0.0155))/0.004);
-    return [x, y, z];
-  }
-  // texture mapping: front half fills the texture; rows below the mouth line are shifted down by MD
-  const MD = 0.012;
-  const vOfY = y => 0.5 + y/0.3;
-  const uvOf = (lam, y, lower) => [Math.max(0, Math.min(1, 0.5 + lam/Math.PI)), vOfY(y) + (lower ? -MD : MD)];
-  // rows: dense on the face, a doubled row at the mouth line (the mouth "slit")
-  function headRows(){
-    const rows = [];
-    const add = (a, b, n) => { for(let k = 0; k < n; k++) rows.push(a + (b - a)*k/n); };
-    add(Y_BOT, -0.11, 4); add(-0.11, ML, 26); rows.push(ML);           // lower side of the slit
-    const lowerEnd = rows.length - 1;
-    add(ML, 0.07, 46); add(0.07, Y_TOP, 12); rows.push(Y_TOP);
-    return {rows, lowerEnd};
-  }
-  // morph targets: displacement (in face coords) for a vertex, given if it sits below the slit
-  function morphD(name, fx, fy, lower){
-    const ax = Math.abs(fx), s = fx < 0 ? -1 : 1, d = [0, 0, 0];
-    if(name === 'open'){
-      if(lower){
-        const lens = Math.pow(Math.max(0, 1 - Math.pow(fx/0.0228, 2)), 0.75), jaw = smooth(0.068, 0.022, ax)*smooth(-0.128, -0.11, fy);
-        const w = smooth(ML, ML - 0.024, fy), k = lens*(1 - w) + jaw*w;
-        d[1] = -0.011*k; d[2] = -0.0032*k;
-      } else {
-        const k = Math.pow(Math.max(0, 1 - Math.pow(fx/0.0228, 2)), 0.8)*Math.exp(-Math.pow((fy - ML)/0.0068, 2));
-        d[1] = 0.0017*k;
-      }
-    }
-    if(name === 'smile'){
-      const c = g2((ax - 0.0205)/0.0115, (fy - ML)/0.0105);
-      d[0] = s*0.0027*c; d[1] = 0.005*c; d[2] = -0.0026*c;
-      const ch = g2((ax - 0.033)/0.015, (fy + 0.022)/0.012); d[1] += 0.0022*ch; d[2] += 0.0015*ch;
-    }
-    if(name === 'sad'){
-      const c = g2((ax - 0.0205)/0.0105, (fy - ML)/0.0095); d[1] = -0.004*c; d[0] = s*0.001*c;
-      const b = g2((ax - 0.012)/0.01, (fy - 0.028)/0.008); d[1] += 0.003*b;
-    }
-    if(name === 'browUp'){ const b = g2((ax - 0.028)/0.023, (fy - 0.03)/0.012); d[1] = 0.0042*b; d[2] = 0.0006*b; }
-    if(name === 'browDown'){ const b = g2((ax - 0.016)/0.016, (fy - 0.028)/0.01); d[1] = -0.0033*b; d[0] = -s*0.002*b; d[2] = 0.0008*b; }
-    return d;
-  }
-  const MORPHS = ['open', 'smile', 'sad', 'browUp', 'browDown'];
-  function headTemplate(fem){
-    return cg('headT' + (fem ? 'f' : 'm'), () => {
-      const {rows, lowerEnd} = headRows(), NL = 112, g = new G3.Geo();
-      const meta = []; // per vertex: [fx, fy, lower, front]
-      for(let r = 0; r < rows.length; r++){
-        const y = rows[r], lower = r <= lowerEnd;
-        for(let i = 0; i <= NL; i++){
-          const t = i/NL*2 - 1, lam = Math.PI*(0.42*t + 0.58*t*t*t);
-          const p = sculpt(lam, y, fem), [u, v] = uvOf(lam, y, lower);
-          g.v(p[0], p[1], p[2], 0, 1, 0, u, v);
-          const b = basePt(lam, y, fem); meta.push([b[0], y, lower, Math.cos(lam) > 0]);
-        }
-      }
-      for(let r = 0; r < rows.length - 1; r++) for(let i = 0; i < NL; i++){
-        const a = r*(NL+1) + i, b = a + 1, c = a + NL + 2, d = a + NL + 1;
-        g.q(a, b, c, d);
-      }
-      geo.computeNormals(g);
-      const targets = {};
-      for(const name of MORPHS){
-        const dp = new Float32Array(g.p.length);
-        for(let k = 0; k < g.vc; k++){ const [fx, fy, lower, front] = meta[k]; if(!front) continue; const d = morphD(name, fx, fy, lower);
-          if(Math.abs(d[0]) + Math.abs(d[1]) + Math.abs(d[2]) > 1e-7){ dp[k*3] = d[0]; dp[k*3+1] = d[1]; dp[k*3+2] = d[2]; } }
-        const tg = new G3.Geo(); tg.p = g.p.map((v, i) => v + dp[i]); tg.n = g.n.slice(); tg.u = g.u; tg.i = g.i; geo.computeNormals(tg);
-        const dn = new Float32Array(g.n.length); for(let i = 0; i < dn.length; i++) dn[i] = tg.n[i] - g.n[i];
-        targets[name] = {dp, dn};
-      }
-      const idx = []; for(let k = 0; k < g.vc; k++){ for(const name of MORPHS){ const t = targets[name]; if(t.dp[k*3] || t.dp[k*3+1] || t.dp[k*3+2] || Math.abs(t.dn[k*3]) + Math.abs(t.dn[k*3+1]) + Math.abs(t.dn[k*3+2]) > 1e-6){ idx.push(k); break; } } }
-      const eyeZ = sculpt(lamOf(EYE_X, EYE_Y, fem), EYE_Y, fem)[2];
-      return {g, targets, idx, eyeZ};
-    });
-  }
-  function lamOf(fx, fy, fem){ const [W] = xsec(fy, fem); const r = Math.min(1, Math.abs(fx)/Math.max(W, 1e-6)); return Math.sign(fx)*Math.asin(Math.pow(r, NF/2)); }
-  function headGeoFor(fem){
-    const T = headTemplate(fem), g = new G3.Geo();
-    g.p = T.g.p.slice(); g.n = T.g.n.slice(); g.u = T.g.u; g.i = T.g.i; g.dynamic = true; g.own = true;
-    return {g, T};
-  }
-  // face coords -> canvas pixels on the face texture (W x H)
-  let paintFem = false;
-  function facePx(fx, fy, W, H){ const [u, v] = uvOf(lamOf(fx, fy, paintFem), fy, fy < ML); return [u*W, (1 - v)*H]; }
-  // local px-per-metre at a face point (for drawing shapes in metres)
-  function faceScale(fx, fy, W, H){ const a = facePx(fx, fy, W, H), b = facePx(fx + 0.001, fy, W, H), c = facePx(fx, fy + 0.001, W, H); return [(b[0]-a[0])*1000, (a[1]-c[1])*1000]; }
-  // head surface point for shells (hair, hats, beards): param (lam, y)
-  const Yphi = phi => phi >= 0 ? Y_TOP*Math.sin(phi) : -Y_BOT*Math.sin(phi);
+  /* ---------- building blocks ---------- */
+  const RB = (w, h, d, r, s = 3) => cg(`rb${w}_${h}_${d}_${r}_${s}`, () => geo.roundBox(w, h, d, r, s));
+  // a rounded box placed (and optionally turned) inside a merged mesh
+  const part = (w, h, d, r, pos, rot) => geo.transform(geo.roundBox(w, h, d, r, 3), pos, rot ? qEuler(rot[0], rot[1], rot[2]) : [0, 0, 0, 1]);
+  const add = (parent, g, m, pos, rot, scl) => { const n = new Node(g, m); if(pos) n.pos = pos; if(rot) n.rot = rot; if(scl) n.scl = scl; parent.add(n); return n; };
+  // smooth toy plastic
+  const mats = new Map();
+  const plastic = (hex, o = {}) => { const k = hex + JSON.stringify(o); if(!mats.has(k)) mats.set(k, mat({color:hex, rough:0.45, env:0.35, coat:0.2, ...o})); return mats.get(k); };
+  const cloth = (hex, top) => top === 'leather' ? plastic(hex, {rough:0.3, coat:0.45, env:0.6}) : plastic(hex, {rough:0.62, coat:0.08, env:0.22});
 
-  /* ---------- face texture: skin, makeup, brows, lips, mouth interior ---------- */
-  function paintFace(x, W, H, look, fem){
-    paintFem = fem;
-    const skin = look.skin, P = (fx, fy) => facePx(fx, fy, W, H);
-    const at = (fx, fy, f) => { const [px, py] = P(fx, fy), [sx, sy] = faceScale(fx, fy, W, H); x.save(); x.translate(px, py); x.scale(sx, -sy); f(); x.restore(); };
-    const blob = (fx, fy, rx, ry, color, a0, a1 = 0) => at(fx, fy, () => { const g = x.createRadialGradient(0, 0, 0, 0, 0, 1); g.addColorStop(0, rgba(color, a0)); g.addColorStop(1, rgba(color, a1)); x.fillStyle = g; x.save(); x.scale(rx, ry); x.beginPath(); x.arc(0, 0, 1, 0, Math.PI*2); x.fill(); x.restore(); });
-    x.fillStyle = skin; x.fillRect(0, 0, W, H);
-    // mottled skin variation (low-res noise, blended softly)
-    { const n = 160, c = document.createElement('canvas'); c.width = c.height = n; const cx = c.getContext('2d'), im = cx.createImageData(n, n);
-      for(let py = 0; py < n; py++) for(let px = 0; px < n; px++){ const v = fbm(px/n*14, py/n*14, 14, 3, 7)*255, k = (py*n + px)*4; im.data[k] = im.data[k+1] = im.data[k+2] = v; im.data[k+3] = 255; }
-      cx.putImageData(im, 0, 0); x.save(); x.globalAlpha = 0.1; x.globalCompositeOperation = 'soft-light'; x.imageSmoothingEnabled = true; x.drawImage(c, 0, 0, W, H); x.restore(); }
-    const warm = '#c4503c', dark = shade(skin, -0.45);
-    // warmth: cheeks, nose, chin, ears; cooler around the jaw
-    for(const s of [-1, 1]) blob(s*0.04, -0.02, 0.024, 0.019, fem ? '#d0485a' : warm, fem ? 0.26 : 0.14);
-    for(const s of [-1, 1]) blob(s*0.058, -0.045, 0.018, 0.04, shade(skin, -0.35), 0.22);
-    blob(0, -0.112, 0.05, 0.012, shade(skin, -0.4), 0.3);
-    blob(0, -0.022, 0.012, 0.014, warm, 0.14);
-    blob(0, -0.088, 0.016, 0.012, warm, 0.08);
-    // soft shading in the eye sockets and under the brow
-    for(const s of [-1, 1]){ blob(s*EYE_X, EYE_Y + 0.002, 0.021, 0.016, shade(skin, -0.3), 0.32); blob(s*(EYE_X - 0.006), EYE_Y - 0.012, 0.016, 0.006, '#7a4a60', 0.12); }
-    // eyeshadow + liner (makeup)
-    if(fem){
-      for(const s of [-1, 1]){
-        blob(s*(EYE_X + 0.003), EYE_Y + 0.009, 0.022, 0.012, '#5a2a3a', 0.42);
-        blob(s*(EYE_X + 0.012), EYE_Y + 0.006, 0.012, 0.009, '#2a1418', 0.35);
-      }
-    }
-    // brows: many fine strokes along an arch
-    const lightHair = ['#f0f0f0', '#e9e4da', '#e8d6a0', '#c9a15a', '#9a9a9a'].includes(look.hairColor);
-    const browC = look.hair === 'bald' ? shade(skin, -0.5) : lightHair ? (fem ? '#4a3a33' : shade(look.hairColor, -0.45)) : look.hairColor;
-    for(const s of [-1, 1]){
-      const pts = fem ? [[0.011, 0.0265], [0.022, 0.0335], [0.035, 0.0355], [0.048, 0.029]] : [[0.010, 0.0255], [0.022, 0.0315], [0.036, 0.0325], [0.049, 0.028]];
-      const thick = fem ? 0.0042 : 0.0056;
-      let seed = s > 0 ? 3 : 9; const rnd = () => (seed = (seed*16807) % 2147483647)/2147483647;
-      for(let k = 0; k < (fem ? 260 : 300); k++){
-        const t = rnd(), seg = Math.min(2, Math.floor(t*3)), lt = t*3 - seg, a = pts[seg], b = pts[seg+1];
-        const bx = a[0] + (b[0]-a[0])*lt, by = a[1] + (b[1]-a[1])*lt, taper = 1 - Math.pow(Math.abs(t - 0.35)/0.65, 2)*0.75;
-        const off = (rnd() - 0.5)*thick*taper, ang = Math.atan2(b[1]-a[1], b[0]-a[0]) + (t < 0.25 ? 0.9 : 0.25)*(rnd()*0.6 + 0.7);
-        const len = 0.0042 + rnd()*0.003, [p0x, p0y] = P(s*bx, by + off), [p1x, p1y] = P(s*(bx + Math.cos(ang)*len), by + off + Math.sin(ang)*len);
-        x.strokeStyle = rgba(browC, 0.45 + rnd()*0.45); x.lineWidth = 1.2 + rnd()*1.4; x.beginPath(); x.moveTo(p0x, p0y); x.lineTo(p1x, p1y); x.stroke();
-      }
-    }
-    // nostrils
-    for(const s of [-1, 1]) at(s*0.0072, -0.0372, () => { x.fillStyle = rgba('#3a1814', 0.4); x.beginPath(); x.ellipse(0, 0, 0.0024, 0.0011, s*0.35, 0, Math.PI*2); x.fill(); });
-    blob(0, -0.039, 0.009, 0.0025, shade(skin, -0.3), 0.3);
-    for(const s of [-1, 1]) blob(s*0.0125, -0.031, 0.004, 0.006, shade(skin, -0.25), 0.25);
-    // lips
-    const lipC = fem ? '#a8162c' : mix(skin, '#9a4040', 0.45), lipD = shade(lipC, -0.35), lipL = shade(lipC, 0.2);
-    const lk = fem ? 1.22 : 1;
-    const lipPath = (upper) => {
-      const n = 28, o = [];
-      for(let k = 0; k <= n; k++){ const t = k/n*2 - 1, xx = t*0.0228, ax = Math.abs(xx);
-        const bow = g2((ax - 0.0052)/0.0032, 0) - 0.55*g2(xx/0.0022, 0);
-        o.push([xx, upper ? ML + (0.006 + 0.0013*bow)*lk*(1 - Math.pow(Math.abs(t), 2.6)) : ML - 0.0094*lk*Math.pow(Math.cos(t*Math.PI/2), 0.85)]); }
-      return o;
-    };
-    for(const upper of [true, false]){
-      const pts = lipPath(upper); x.beginPath();
-      pts.forEach(([fx, fy], k) => { const [px, py] = P(fx, fy); if(k) x.lineTo(px, py); else x.moveTo(px, py); });
-      for(let k = pts.length - 1; k >= 0; k--){ const [px, py] = P(pts[k][0], upper ? ML : ML - 1e-7); x.lineTo(px, py); }
-      x.closePath(); x.fillStyle = lipC; x.fill();
-      x.save(); x.clip();
-      blob(0, upper ? ML + 0.002 : ML - 0.004, 0.02, 0.004, upper ? lipD : lipL, 0.5);
-      x.restore();
-      x.strokeStyle = rgba(lipC, 0.5); x.lineWidth = 2; x.stroke();
-    }
-    // mouth interior band (only visible when the mouth opens)
-    {
-      const [lx, ty] = P(-0.026, ML + 0.00001), [rx] = P(0.026, ML), [, by] = P(0, ML - 0.00001);
-      const top = ty, bot = by, hh = bot - top;
-      const g = x.createLinearGradient(0, top, 0, bot);
-      g.addColorStop(0, '#5a1a1e'); g.addColorStop(0.04, '#f1ece2'); g.addColorStop(0.3, '#e6dfd2'); g.addColorStop(0.36, '#3a0c10'); g.addColorStop(0.6, '#1a0507'); g.addColorStop(0.75, '#6a1e26'); g.addColorStop(0.88, '#dcd3c4'); g.addColorStop(1, '#5a1a1e');
-      x.fillStyle = g; x.fillRect(lx, top, rx - lx, hh);
-      x.strokeStyle = 'rgba(120,100,90,0.5)'; x.lineWidth = 1;
-      for(let k = -4; k <= 4; k++){ const [tx] = P(k*0.0042, ML); x.beginPath(); x.moveTo(tx, top + hh*0.04); x.lineTo(tx, top + hh*0.3); x.stroke(); x.beginPath(); x.moveTo(tx, top + hh*0.76); x.lineTo(tx, top + hh*0.97); x.stroke(); }
-      // fade the band to dark at the corners
-      const gl = x.createLinearGradient(lx, 0, rx, 0); gl.addColorStop(0, 'rgba(26,5,7,1)'); gl.addColorStop(0.18, 'rgba(26,5,7,0)'); gl.addColorStop(0.82, 'rgba(26,5,7,0)'); gl.addColorStop(1, 'rgba(26,5,7,1)');
-      x.fillStyle = gl; x.fillRect(lx, top, rx - lx, hh);
-    }
-    // facial hair (painted part)
-    if(look.beard === 'stubble' || look.beard === 'beard' || look.beard === 'goatee' || look.beard === 'mustache'){
-      const hc = look.hairColor, dense = look.beard === 'stubble' ? 0.5 : 0.8;
-      let seed = 11; const rnd = () => (seed = (seed*16807) % 2147483647)/2147483647;
-      const inBeard = (fx, fy) => {
-        const ax = Math.abs(fx);
-        if(look.beard === 'mustache') return fy > ML + 0.002 && fy < ML + 0.013 && ax < 0.027;
-        if(look.beard === 'goatee') return (fy < ML - 0.006 && fy > -0.103 && ax < 0.02) || (fy > ML + 0.002 && fy < ML + 0.012 && ax < 0.026);
-        return fy < ML + 0.016 && fy > -0.112 && ax < 0.066 && !(fy > ML - 0.012 && fy < ML + 0.0085 && ax < 0.024) && fy < 0.0 - ax*0.25;
+  // head size (metres)
+  // body and head sizes (metres): a big toy head on a chunky body
+  const HW = 0.27, HH = 0.25, HD = 0.25, FZ = HD/2, F = HW/0.235;
+  const TW = 0.36, TH = 0.4, TD = 0.2, AW = 0.1, LW = 0.15;
+
+  /* ---------- face parts ---------- */
+  // mouths are small transparent decals, shared by everyone
+  const INK = '#2a1210';
+  function mouthTex(kind, lips){
+    return cg('mouth' + kind + (lips ? 'L' : ''), () => canvasTex(128, 72, (x, W, H) => {
+      const cx = W/2, lip = lips ? '#c0283c' : INK;
+      x.lineCap = 'round'; x.lineJoin = 'round';
+      const openShape = (w, top, bot, teeth) => {
+        x.fillStyle = '#3a0d12'; x.beginPath(); x.moveTo(cx - w, top); x.quadraticCurveTo(cx, top - 4, cx + w, top); x.quadraticCurveTo(cx + w*0.9, bot, cx, bot); x.quadraticCurveTo(cx - w*0.9, bot, cx - w, top); x.fill();
+        if(teeth){ x.save(); x.clip(); x.fillStyle = '#fbf6ee'; x.fillRect(cx - w, top - 6, w*2, 12); x.fillStyle = '#e2566a'; x.beginPath(); x.ellipse(cx, bot, w*0.55, (bot - top)*0.42, 0, 0, Math.PI*2); x.fill(); x.restore(); }
+        if(lips){ x.strokeStyle = lip; x.lineWidth = 6; x.beginPath(); x.moveTo(cx - w, top); x.quadraticCurveTo(cx, top - 4, cx + w, top); x.quadraticCurveTo(cx + w*0.9, bot, cx, bot); x.quadraticCurveTo(cx - w*0.9, bot, cx - w, top); x.stroke(); }
       };
-      for(let k = 0; k < 9000; k++){
-        const fx = (rnd() - 0.5)*0.14, fy = -0.115 + rnd()*0.1; if(!inBeard(fx, fy)) continue;
-        const [px, py] = P(fx, fy); x.fillStyle = rgba(hc, (0.25 + rnd()*0.4)*dense); x.fillRect(px, py, 1.4, 1.4 + rnd()*2);
-      }
-    }
+      if(kind === 'smile'){ x.strokeStyle = lip; x.lineWidth = lips ? 9 : 7; x.beginPath(); x.moveTo(cx - 30, 26); x.quadraticCurveTo(cx, 54, cx + 30, 26); x.stroke(); }
+      else if(kind === 'flat'){ x.strokeStyle = lip; x.lineWidth = lips ? 9 : 7; x.beginPath(); x.moveTo(cx - 20, 38); x.lineTo(cx + 20, 38); x.stroke(); }
+      else if(kind === 'frown'){ x.strokeStyle = lip; x.lineWidth = lips ? 9 : 7; x.beginPath(); x.moveTo(cx - 24, 48); x.quadraticCurveTo(cx, 26, cx + 24, 48); x.stroke(); }
+      else if(kind === 'grin') openShape(34, 22, 58, true);
+      else if(kind === 'open') openShape(20, 26, 50, true);
+      else if(kind === 'o'){ x.fillStyle = '#3a0d12'; x.beginPath(); x.ellipse(cx, 38, 13, 18, 0, 0, Math.PI*2); x.fill(); if(lips){ x.strokeStyle = lip; x.lineWidth = 5; x.stroke(); } }
+    }));
   }
-  // normal map for the face: pores, lip lines; roughness in alpha (lips glossy)
-  function faceNormal(look, fem){
-    const S = 512;
-    return cg('faceN' + (fem ? 'f' : 'm') + look.beard, () => {
-      const vm = vOfY(ML);
-      const lipBox = (u, v) => { // u, v in 0..1 GL order
-        const lam = (u - 0.5)*Math.PI; let y;
-        if(v < vm - MD) y = (v + MD - 0.5)*0.3; else if(v > vm + MD) y = (v - MD - 0.5)*0.3; else y = ML;
-        return [basePt(lam, y, fem)[0], y];
-      };
-      return normalTex(S, S, (px, py) => {
-        const u = (px + 0.5)/S, v = (py + 0.5)/S, [fx, fy] = lipBox(u, v);
-        let h = (vnoise(px*0.9, py*0.9, S*0.9, 3) - 0.5)*0.5 + (vnoise(px*0.35, py*0.35, S*0.35, 4) - 0.5)*0.6;
-        const lip = Math.abs(fx) < 0.024 && Math.abs(fy - ML) < 0.012;
-        if(lip) h = Math.sin(fx*2600)*0.25 + h*0.3;
-        return h;
-      }, {strength:0.9, repeat:false, rough:(px, py) => {
-        const u = (px + 0.5)/S, v = (py + 0.5)/S, [fx, fy] = lipBox(u, v), ax = Math.abs(fx);
-        const lip = Math.max(0, 1 - Math.pow(fx/0.024, 2))*Math.exp(-Math.pow((fy - ML)/0.0085, 4));
-        const tz = 0.06*Math.exp(-Math.pow(fx/0.012, 2) - Math.pow((fy + 0.022)/0.012, 2)) + 0.05*Math.exp(-Math.pow(fx/0.03, 2) - Math.pow((fy - 0.05)/0.02, 2));
-        return 0.52 - tz - lip*(fem ? 0.42 : 0.2);
-      }});
-    });
-  }
+  const MOUTH_OF = {smile:'smile', neutral:'flat', happy:'grin', shock:'o', sad:'frown', angry:'flat', grin:'grin', talk:'smile'};
+  const blushTex = () => cg('blush', () => canvasTex(64, 40, (x, W, H) => { const g = x.createRadialGradient(W/2, H/2, 2, W/2, H/2, W/2); g.addColorStop(0, 'rgba(240,110,130,0.55)'); g.addColorStop(1, 'rgba(240,110,130,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); }));
+  const stubbleTex = () => cg('stubble', () => canvasTex(128, 96, (x, W, H) => {
+    for(let k = 0; k < 900; k++){ const px = Math.random()*W, py = H*0.15 + Math.random()*H*0.85, edge = Math.min(px, W - px)/(W*0.5);
+      if(Math.random() > Math.min(1, edge*2.2)) continue; x.fillStyle = `rgba(40,30,25,${0.25 + Math.random()*0.3})`; x.fillRect(px, py, 2, 2); }
+    x.clearRect(W*0.26, H*0.28, W*0.48, H*0.3);  // leave room for the mouth
+  }));
+  // the Buckshot dealer's painted mask: hollow eyes and a stitched grin
+  const dealerFaceTex = () => cg('dealerFace', () => canvasTex(256, 240, (x, W, H) => {
+    x.fillStyle = '#d9d2c6'; x.fillRect(0, 0, W, H);
+    for(let k = 0; k < 1400; k++){ x.fillStyle = `rgba(90,70,60,${Math.random()*0.06})`; x.fillRect(Math.random()*W, Math.random()*H, 3, 3); }
+    x.fillStyle = '#0a0606';
+    for(const s of [-1, 1]){ x.beginPath(); x.ellipse(W/2 + s*52, H*0.38, 26, 34, s*0.15, 0, Math.PI*2); x.fill(); }
+    x.beginPath(); x.moveTo(W/2 - 78, H*0.66); x.quadraticCurveTo(W/2, H*0.9, W/2 + 78, H*0.66); x.quadraticCurveTo(W/2, H*0.76, W/2 - 78, H*0.66); x.fill();
+    x.fillStyle = '#ece4cc'; for(let k = -6; k <= 6; k++){ const tx = W/2 + k*11; x.fillRect(tx - 3.5, H*0.7 + Math.abs(k)*1.6 - (Math.abs(k) > 5 ? 4 : 0), 7, 13 - Math.abs(k)*0.6); }
+    x.strokeStyle = 'rgba(60,20,20,0.6)'; x.lineWidth = 3;
+    for(const s of [-1, 1]){ x.beginPath(); x.moveTo(W/2 + s*86, H*0.62); x.lineTo(W/2 + s*104, H*0.58); x.stroke();
+      for(let k = 0; k < 3; k++){ const t = k/2; x.beginPath(); x.moveTo(W/2 + s*(86 + 18*t) - 4, H*(0.62 - 0.04*t) - 5); x.lineTo(W/2 + s*(86 + 18*t) + 4, H*(0.62 - 0.04*t) + 5); x.stroke(); } }
+  }));
 
-  /* ---------- eyes ---------- */
-  function irisTex(color){
-    return cg('iris' + color, () => canvasTex(256, 128, (x, W, H) => {
-      // lat-long eyeball map: row 0 = front pole
-      x.fillStyle = '#ddd5cc'; x.fillRect(0, 0, W, H);
-      const rowOf = a => a/Math.PI*H;
-      const g = x.createLinearGradient(0, 0, 0, rowOf(1.2)); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(160,90,90,0.18)'); x.fillStyle = g; x.fillRect(0, rowOf(0.5), W, rowOf(0.9));
-      const iris = rowOf(0.58), pupil = rowOf(0.2), lim = rowOf(0.515);
-      const ig = x.createLinearGradient(0, 0, 0, iris); ig.addColorStop(0, shade(color, -0.6)); ig.addColorStop(pupil/iris, shade(color, -0.25)); ig.addColorStop(0.55, shade(color, 0.28)); ig.addColorStop(0.82, color); ig.addColorStop(1, shade(color, -0.55));
-      x.fillStyle = ig; x.fillRect(0, 0, W, iris);
-      // radial fibres
-      for(let k = 0; k < 220; k++){ const u = Math.random()*W, a = 0.3 + Math.random()*0.5; x.strokeStyle = Math.random() < 0.5 ? rgba(shade(color, 0.45), a*0.6) : rgba(shade(color, -0.4), a*0.5); x.lineWidth = 0.6 + Math.random()*1.2; x.beginPath(); x.moveTo(u, pupil + Math.random()*3); x.lineTo(u + (Math.random()-0.5)*4, lim - Math.random()*4); x.stroke(); }
-      const lg = x.createLinearGradient(0, lim - 3, 0, iris + 2); lg.addColorStop(0, 'rgba(10,8,6,0)'); lg.addColorStop(0.6, 'rgba(10,8,6,0.75)'); lg.addColorStop(1, 'rgba(10,8,6,0)'); x.fillStyle = lg; x.fillRect(0, lim - 3, W, iris - lim + 5);
-      x.fillStyle = '#060404'; x.fillRect(0, 0, W, pupil);
-      const pg = x.createLinearGradient(0, pupil - 2, 0, pupil + 3); pg.addColorStop(0, 'rgba(6,4,4,1)'); pg.addColorStop(1, 'rgba(6,4,4,0)'); x.fillStyle = pg; x.fillRect(0, pupil - 2, W, 5);
-    }, {}));
-  }
-  function capGeo(r, thetaMax, psi, down){ // spherical cap around +Y (or -Y), front half; theta from the pole
-    return cg(`cap${r}_${thetaMax}_${psi}_${down ? 1 : 0}`, () => {
-      const g = new G3.Geo(), nt = 14, np = 26;
-      for(let j = 0; j <= nt; j++) for(let i = 0; i <= np; i++){
-        const th = thetaMax*j/nt, ps = -psi + 2*psi*i/np, sy = down ? -1 : 1;
-        const nx = Math.sin(th)*Math.sin(ps), ny = Math.cos(th)*sy, nz = Math.sin(th)*Math.cos(ps);
-        g.v(nx*r, ny*r, nz*r, nx, ny, nz, i/np, j/nt);
-      }
-      for(let j = 0; j < nt; j++) for(let i = 0; i < np; i++){ const a = j*(np+1) + i, b = a + 1, c = a + np + 2, d = a + np + 1; if(down) g.q(a, b, c, d); else g.q(a, d, c, b); }
-      return g;
-    });
-  }
-  function lashTex(fem){
-    return cg('lash' + (fem ? 'f' : 'm'), () => canvasTex(256, 64, (x, W, H) => {
-      x.clearRect(0, 0, W, H); x.lineCap = 'round';
-      for(let k = 0; k < (fem ? 150 : 90); k++){
-        const u = Math.random()*W, len = H*(fem ? 0.55 + Math.random()*0.45 : 0.3 + Math.random()*0.3)*(0.6 + 0.4*(u/W)), bend = (u/W - 0.3)*10 + (Math.random() - 0.5)*6;
-        x.strokeStyle = `rgba(14,9,8,${0.7 + Math.random()*0.3})`; x.lineWidth = fem ? 1.6 : 1.2;
-        x.beginPath(); x.moveTo(u, H); x.quadraticCurveTo(u + bend*0.3, H - len*0.6, u + bend, H - len); x.stroke();
-      }
-      const g = x.createLinearGradient(0, H, 0, H - 6); g.addColorStop(0, 'rgba(14,9,8,0.95)'); g.addColorStop(1, 'rgba(14,9,8,0)'); x.fillStyle = g; x.fillRect(0, H - 6, W, 6);
-    }, {}));
-  }
-  function lashGeo(r, side, fem, lower){
-    return cg(`lashG${side}${fem ? 'f' : 'm'}${lower ? 'l' : 'u'}`, () => {
-      const g = new G3.Geo(), n = 20, psi0 = -1.15, psi1 = 1.2;
-      for(let i = 0; i <= n; i++){
-        const t = i/n, ps = psi0 + (psi1 - psi0)*t, outer = side > 0 ? t : 1 - t; // outer corner gets the longer lashes
-        const out = [Math.sin(ps), 0, Math.cos(ps)], base = [out[0]*r*1.02, 0, out[2]*r*1.02];
-        const L = (lower ? 0.0022 : fem ? 0.0062 : 0.0036)*(0.55 + 0.6*outer), sy = lower ? -1 : 1;
-        const mid = [base[0] + out[0]*L*0.55, sy*L*0.25, base[2] + out[2]*L*0.55], tip = [base[0] + out[0]*L*0.7, sy*L*0.85, base[2] + out[2]*L*0.7];
-        const uu = side > 0 ? t : 1 - t;
-        g.v(...base, 0, 0, 1, uu, 0); g.v(...mid, 0, 0, 1, uu, 0.5); g.v(...tip, 0, 0, 1, uu, 1);
-      }
-      for(let i = 0; i < n; i++){ const a = i*3; g.q(a, a + 3, a + 4, a + 1); g.q(a + 1, a + 4, a + 5, a + 2); }
-      return g;
-    });
-  }
-  function buildEye(side, look, fem, skinM, lidM){
-    const grp = new Node(); grp.name = 'eye';
-    const ball = new Node(cg('eyeball', () => geo.transform(geo.sphere(ER, 28, 20), [0,0,0], qAxis([1,0,0], Math.PI/2))), mat({color:'#ffffff', map:irisTex(look.eyes), rough:0.3, env:0.4, shadow:false}));
-    ball.castShadow = false; grp.add(ball);
-    const cornea = new Node(capGeo(ER*1.045, 0.62, Math.PI, false), mat({color:'#000000', rough:0.03, env:1.6, blend:'add', depthWrite:false, side:'front'}));
-    cornea.q = qAxis([1,0,0], Math.PI/2); cornea.castShadow = false; ball.add(cornea);
-    // eyelids: caps around the eyeball that rotate shut
-    const upper = new Node(); grp.add(upper);
-    const ul = new Node(capGeo(ER*1.075, Math.PI/2 + 0.04, 1.35, false), lidM); ul.castShadow = false; upper.add(ul);
-    const rimU = new Node(cg('lidrim', () => { const pts = []; for(let k = 0; k <= 18; k++){ const ps = -1.3 + 2.6*k/18; pts.push([Math.sin(ps)*ER*1.09, -0.0004, Math.cos(ps)*ER*1.09]); } return geo.tube(pts, 0.00085, 6); }), lidM);
-    rimU.castShadow = false; upper.add(rimU);
-    const lashM = mat({color:'#ffffff', map:lashTex(fem), rough:0.6, env:0.2, blend:'alpha', side:'double', depthWrite:false, shadow:false});
-    const lash = new Node(lashGeo(ER*1.08, side, fem, false), lashM); lash.castShadow = false; lash.pos = [0, -0.0006, 0]; upper.add(lash);
-    const lower = new Node(); grp.add(lower);
-    const ll = new Node(capGeo(ER*1.065, Math.PI/2 + 0.04, 1.3, true), lidM); ll.castShadow = false; lower.add(ll);
-    const rimL = new Node(cg('lidrimL', () => { const pts = []; for(let k = 0; k <= 18; k++){ const ps = -1.25 + 2.5*k/18; pts.push([Math.sin(ps)*ER*1.08, 0.0003, Math.cos(ps)*ER*1.08]); } return geo.tube(pts, 0.0007, 6); }), mat({color:'#c88a84', rough:0.25, env:0.6, shadow:false}));
-    rimL.castShadow = false; lower.add(rimL);
-    if(fem){ const ll2 = new Node(lashGeo(ER*1.07, side, fem, true), lashM); ll2.castShadow = false; lower.add(ll2); }
-    return {grp, ball, upper, lower};
-  }
-
-  /* ---------- hair: shells offset from the scalp, strand normal maps ---------- */
-  const lerpPts = (pts, x) => { if(x <= pts[0][0]) return pts[0][1]; for(let k = 1; k < pts.length; k++) if(x <= pts[k][0]){ const [a, va] = pts[k-1], [b, vb] = pts[k], t = (x - a)/(b - a), e = t*t*(3-2*t); return va + (vb - va)*e; } return pts[pts.length-1][1]; };
-  const HAIRLINE = [[0, 0.064], [0.45, 0.06], [0.8, 0.047], [1.08, 0.014], [1.26, -0.016], [1.4, 0.008], [1.85, 0.006], [2.15, -0.032], [2.6, -0.06], [Math.PI, -0.068]];
-  function hairNormal(curly){
-    return cg('hairN' + (curly ? 'c' : ''), () => normalTex(256, 256, (px, py) => {
-      const u = px/256, v = py/256;
-      if(curly) return (vnoise(px*0.12, py*0.12, 256*0.12, 5) + vnoise(px*0.3, py*0.3, 256*0.3, 6)*0.5);
-      const w = Math.sin(v*Math.PI*2*3 + vnoise(u*8, 0, 8, 2)*6)*0.003;
-      return vnoise((u + w)*90, v*3, 90, 1)*0.9 + vnoise((u + w)*210, v*6, 210, 2)*0.6 + vnoise((u + w)*30, v*2, 30, 3)*0.8;
-    }, {strength:curly ? 2.2 : 1.6, rough:(px, py) => 0.42 + vnoise(px*0.2, py*0.05, 51.2, 9)*0.25}));
-  }
-  function hairMat(look, curly){
-    const c = look.hairColor;
-    const light = ['#f0f0f0', '#e9e4da', '#e8d6a0', '#c9a15a'].includes(c);
-    return mat({color:col(c).map(v => v*0.8), map:curly ? null : hairAlbedo(), kind:'hair', rough:curly ? 0.75 : light ? 0.42 : 0.5, nmap:hairNormal(curly), nuv:curly ? [3, 3, 0, 0] : [6, 1.4, 0, 0], nstr:1, env:0.5, sheen:0});
-  }
-  // generic shell: thickness(lam, y) metres, cover(lam, y) 0..1. Optional frame rotation (pole tilt) for swept styles.
-  function shellGeo(key, fem, thick, cover, opts = {}){
-    return cg('shell_' + key + (fem ? 'f' : 'm'), () => {
-      const g = new G3.Geo(), NL = opts.nl || 64, NP = opts.np || 44, q = opts.frame || null;
-      const meta = [];
-      for(let j = 0; j <= NP; j++){
-        const phi1 = -Math.PI/2 + Math.PI*j/NP;
-        for(let i = 0; i <= NL; i++){
-          const lam1 = -Math.PI + 2*Math.PI*i/NL;
-          let lam = lam1, phi = phi1;
-          if(q){ const d = G3.qRot(q, [Math.cos(phi1)*Math.sin(lam1), Math.sin(phi1), Math.cos(phi1)*Math.cos(lam1)]); lam = Math.atan2(d[0], d[2]); phi = Math.asin(Math.max(-1, Math.min(1, d[1]))); }
-          const y = Yphi(phi), p = sculpt(lam, y, fem);
-          const n = V.norm([p[0], (p[1] - 0.01)*0.85, p[2] + 0.004]);
-          const c = cover(lam, y), t = thick(lam, y);
-          const lock = opts.locks ? opts.locks*lockRidge(lam1, phi1)*smooth(0.0, 0.5, c) : 0;
-          const off = c > 0 ? t*c + lock - 0.0025*(1 - c) : -0.004;
-          const extra = opts.push ? opts.push(lam, y, c) : [0, 0, 0];
-          g.v(p[0] + n[0]*off + extra[0], p[1] + n[1]*off + extra[1], p[2] + n[2]*off + extra[2], n[0], n[1], n[2], i/NL, j/NP);
-          meta.push(c);
-        }
-      }
-      for(let j = 0; j < NP; j++) for(let i = 0; i < NL; i++){
-        const a = j*(NL+1) + i, b = a + 1, c = a + NL + 2, d = a + NL + 1;
-        if(meta[a] + meta[b] + meta[c] + meta[d] <= 0) continue; // fully hidden: skip
-        g.q(a, b, c, d);
-      }
-      // strand direction: along the meridians of the hair frame
-      g.t = new Array(g.p.length).fill(0);
-      for(let j = 0; j <= NP; j++) for(let i = 0; i <= NL; i++){
-        const k = j*(NL+1) + i, a = Math.max(0, j-1)*(NL+1) + i, b = Math.min(NP, j+1)*(NL+1) + i;
-        const d = V.norm([g.p[b*3] - g.p[a*3], g.p[b*3+1] - g.p[a*3+1], g.p[b*3+2] - g.p[a*3+2]]);
-        g.t[k*3] = d[0]; g.t[k*3+1] = d[1]; g.t[k*3+2] = d[2];
-      }
-      return geo.computeNormals(g);
-    });
-  }
-  const hairlineAt = (lam) => lerpPts(HAIRLINE, Math.abs(lam));
-  const LOCKS = 22;
-  const lockRidge = (lam1, phi1) => Math.cos(lam1*LOCKS + 0.9*Math.sin(phi1*3.5 + lam1*2.2));
-  function hairAlbedo(){
-    return cg('hairAlb', () => canvasTex(512, 256, (x, W, H) => {
-      const im = x.createImageData(W, H);
-      for(let py = 0; py < H; py++) for(let px = 0; px < W; px++){
-        const lam1 = px/W*Math.PI*2 - Math.PI, phi1 = (1 - py/H)*Math.PI - Math.PI/2, r = lockRidge(lam1, phi1);
-        const fine = vnoise(px*0.9, py*0.06, W*0.9, 4)*0.18 + vnoise(px*0.25, py*0.03, W*0.25, 5)*0.12;
-        const v = Math.max(0, Math.min(255, (0.74 + 0.16*r + fine)*255)), k = (py*W + px)*4;
-        im.data[k] = im.data[k+1] = im.data[k+2] = v; im.data[k+3] = 255;
-      }
-      x.putImageData(im, 0, 0);
-    }, {srgb:false}));
-  }
-  function fromTo(a, b){ a = V.norm(a); b = V.norm(b); const ax = V.cross(a, b), l = V.len(ax); if(l < 1e-6) return [0, 0, 0, 1]; return qAxis(V.scale(ax, 1/l), Math.acos(Math.max(-1, Math.min(1, V.dot(a, b))))); }
-  function addHair(head, look, fem, special){
-    const st = special === 'myla' ? 'swept' : look.hair;
-    if(special === 'dealer' || st === 'bald') return;
-    const m = hairMat(look, st === 'curly');
-    const add = (g, pos, q, scl, mm) => { const n = new Node(g, mm || m); if(pos) n.pos = pos; if(q) n.q = q; if(scl) n.scl = scl; head.add(n); return n; };
-    const coverStd = (shift = 0) => (lam, y) => smooth(hairlineAt(lam) + shift - 0.003, hairlineAt(lam) + shift + 0.009, y);
-    if(st === 'buzz'){ add(shellGeo('buzz', fem, () => 0.0026, coverStd(0.001)), null, null, null, mat({color:look.hairColor, kind:'hair', rough:0.85, nmap:hairNormal(true), nuv:[8, 8, 0, 0], env:0.2})); return; }
-    if(st === 'curly'){
-      add(shellGeo('curly', fem, (lam, y) => 0.022 + 0.012*smooth(0.01, 0.11, y) + 0.006*(vnoise(lam*5 + 9, y*45 + 9, 1000, 3) - 0.5), coverStd(-0.003), {nl:72, np:52,
-        push:(lam, y, c) => { const k = c*0.004*(vnoise(lam*14 + 3, y*120 + 3, 1000, 1) - 0.5); return [k, k, k]; }}));
-      return; }
-    if(st === 'mohawk'){
-      add(shellGeo('mohawkbase', fem, () => 0.0018, coverStd(0.003)), null, null, null, mat({color:look.hairColor, kind:'hair', rough:0.85, nmap:hairNormal(true), nuv:[8, 8, 0, 0], env:0.2}));
-      add(shellGeo('mohawk', fem, (lam, y) => 0.045*smooth(0.26, 0.08, Math.abs(Math.sin(lam)))*smooth(-0.04, 0.06, y), (lam, y) => smooth(0.24, 0.14, Math.abs(Math.sin(lam)))*coverStd(0)(lam, y), {nl:96, np:52}));
-      return; }
-    if(st === 'swept'){
-      // volume swept from a side part across the forehead (Myla)
-      const part = -0.4; // the part sits on the avatar's right
-      const th = (lam, y) => {
-        const top = smooth(0.0, 0.1, y), side = lam - part;
-        let t = 0.008 + 0.014*top*smooth(-1.2, 0.2, side)*smooth(2.4, 0.8, side);
-        t += 0.012*g2((lam - 0.3)/0.55, (y - 0.06)/0.035);                       // swoop volume over the forehead
-        t -= 0.005*g2((lam - part)/0.08, (y - 0.09)/0.05);                       // part groove
-        if(lam > 0.9 && lam < 2.0) t += 0.006*smooth(0.04, -0.02, y);             // fuller where it covers the ear
-        return Math.max(0.004, t);
-      };
-      const cv = (lam, y) => {
-        let hl = hairlineAt(lam);
-        if(lam > -0.2 && lam < 1.1) hl -= 0.014*smooth(-0.2, 0.25, lam)*smooth(1.1, 0.6, lam); // the swoop dips over one brow
-        if(lam > 1.0 && lam < 2.1) hl = Math.min(hl, -0.05 + 0.03*smooth(1.0, 1.3, lam)*0);  // covers the ear on the swoop side
-        return smooth(hl - 0.004, hl + 0.008, y);
-      };
-      add(shellGeo('swept', fem, th, cv, {nl:110, np:64, locks:0.0024, frame:fromTo([0, 1, 0], [-0.3, 0.92, 0.22]),
-        push:(lam, y, c) => { const f = c*g2((lam - 0.35)/0.6, (y - 0.05)/0.04); return [0.003*f, 0.0, 0.004*f]; }}));
-      return; }
-    // short, long, bun, ponytail, bob share a base cap
-    add(shellGeo('base' + (st === 'bob' ? 'b' : ''), fem, (lam, y) => 0.01 + 0.007*smooth(0.02, 0.1, y) + (st === 'bob' ? 0.006*smooth(1.0, 1.6, Math.abs(lam)) : 0), coverStd(st === 'short' ? 0.002 : -0.001), {nl:96, np:52, locks:st === 'short' ? 0.0012 : 0.0018}));
-    if(st === 'long' || st === 'bob'){
-      const len = st === 'long' ? 0.27 : 0.12;
-      const g = cg('curtain' + st + (fem ? 'f' : 'm'), () => {
-        // a sheet hanging from the back and sides of the head
-        const gg = new G3.Geo(), nu = 34, nv = 16, a0 = 1.05, a1 = Math.PI*2 - 1.05;
-        for(let j = 0; j <= nv; j++) for(let i = 0; i <= nu; i++){
-          const a = a0 + (a1 - a0)*i/nu, v = j/nv, y = 0.03 - v*(len + 0.05);
-          const rr = (0.083 + 0.02*Math.sin(Math.min(1, v*1.6)*Math.PI/2) - (st === 'bob' ? 0.012*v*v : 0.008*v))*(1 + 0.03*Math.sin(a*7 + v*4));
-          gg.v(Math.sin(a)*rr*0.98, y, Math.cos(a)*rr*0.98 - 0.006, Math.sin(a), 0, Math.cos(a), i/nu, 1 - v);
-        }
-        for(let j = 0; j < nv; j++) for(let i = 0; i < nu; i++){ const a = j*(nu+1) + i, b = a + 1, c = a + nu + 2, d = a + nu + 1; gg.q(a, d, c, b); }
-        gg.t = []; for(let k = 0; k < gg.vc; k++) gg.t.push(0, -1, 0);
-        return geo.computeNormals(gg);
-      });
-      add(g, [0, 0, -0.004], null, null, mat({...m, side:'double', color:look.hairColor}));
-    }
-    if(st === 'bun') add(cg('bun', () => geo.sphere(0.042, 18, 14)), [0, 0.105, -0.07]);
-    if(st === 'ponytail'){ add(cg('pony', () => geo.capsule(0.026, 0.17, 14, 5, 0.014)), [0, 0.05, -0.105], qEuler(Math.PI - 0.32, 0, 0)); add(cg('ptie', () => geo.sphere(0.024, 12, 10)), [0, 0.055, -0.1], null, null, mat({color:'#1a1a1a', rough:0.5})); }
-  }
-  function addBeard(head, look, fem){
-    if(look.beard !== 'beard' && look.beard !== 'goatee' && look.beard !== 'mustache') return;
-    const m = hairMat(look, true);
-    const cv = look.beard === 'beard' ? (lam, fy) => { const [fx] = basePt(lam, fy, fem); const ax = Math.abs(fx);
-        const mouth = g2(fx/0.025, (fy - ML)/0.0105); return Math.max(0, smooth(-0.018, -0.03, fy + 0.012 - ax*0.35)*smooth(0.08, 0.06, ax)*(1 - smooth(0.35, 0.65, mouth))*(Math.cos(lam) > 0.1 ? 1 : 0)); }
-      : look.beard === 'goatee' ? (lam, fy) => { const [fx] = basePt(lam, fy, fem); return (Math.cos(lam) > 0.3 ? 1 : 0)*smooth(0.024, 0.018, Math.abs(fx))*(smooth(ML - 0.008, ML - 0.012, fy)*smooth(-0.112, -0.1, fy) + smooth(ML + 0.003, ML + 0.005, fy)*smooth(ML + 0.013, ML + 0.011, fy)); }
-      : (lam, fy) => { const [fx] = basePt(lam, fy, fem); return (Math.cos(lam) > 0.3 ? 1 : 0)*smooth(0.028, 0.022, Math.abs(fx))*smooth(ML + 0.003, ML + 0.006, fy)*smooth(ML + 0.014, ML + 0.011, fy); };
-    head.add(new Node(shellGeo('beard_' + look.beard, fem, () => look.beard === 'beard' ? 0.0055 : 0.0035, cv, {nl:110, np:72, locks:0.0008}), m));
-  }
-  function addHat(head, look, fem){
-    const h = look.hat; if(h === 'none') return;
-    const add = (g, m, pos, q, scl) => { const n = new Node(g, m); if(pos) n.pos = pos; if(q) n.q = q; if(scl) n.scl = scl; head.add(n); return n; };
-    const big = ['long','curly','bun','swept','bob'].includes(look.hair) ? 0.008 : 0;
-    if(h === 'cap'){ const m = mat({color:look.topColor, rough:0.8, sheen:0.35});
-      add(shellGeo('cap' + big, fem, () => 0.017 + big, (lam, y) => smooth(0.04, 0.05, y)), m);
-      add(cg('brim', () => geo.cylinder(0.075, 0.075, 0.006, 24)), m, [0, 0.05 + big, 0.098], qEuler(-0.18, 0, 0), [0.85, 1, 0.75]); }
-    if(h === 'beanie'){ const m = mat({color:look.topColor, rough:0.95, sheen:0.5});
-      add(shellGeo('beanie' + big, fem, (lam, y) => 0.02 + big + 0.012*smooth(0.07, 0.115, y), (lam, y) => smooth(0.024, 0.034, y)), m);
-      add(cg('beanieroll', () => geo.torus(0.1, 0.014, 32, 8)), m, [0, 0.03, -0.004], null, [0.84, 1, 1.02]); }
-    if(h === 'cowboy'){ const m = mat({color:'#7a5230', rough:0.85, sheen:0.3});
-      add(cg('cbcrown', () => geo.cylinder(0.075, 0.09, 0.09, 20)), m, [0, 0.118, -0.005], null, [0.95, 1, 1.1]);
-      add(cg('cbbrim', () => geo.cylinder(0.19, 0.19, 0.008, 28)), m, [0, 0.074, -0.005], qEuler(0.05, 0, 0), [1, 1, 1.05]);
-      add(cg('cbband', () => geo.cylinder(0.091, 0.091, 0.018, 20, false)), mat({color:'#2a1a10', rough:0.6}), [0, 0.085, -0.005], null, [0.95, 1, 1.1]); }
-    if(h === 'crown'){ const m = mat({color:'#e8b84a', rough:0.18, metal:1});
-      add(cg('crownband', () => geo.cylinder(0.078, 0.076, 0.04, 28, false)), m, [0, 0.11 + big, -0.006], null, [0.95, 1, 1.05]);
-      for(let k = 0; k < 6; k++){ const a = k/6*Math.PI*2; add(cg('crownspike', () => geo.cylinder(0.002, 0.012, 0.035, 6)), m, [Math.sin(a)*0.074, 0.146 + big, Math.cos(a)*0.078 - 0.006]); }
-      add(cg('gem', () => geo.sphere(0.009, 12, 10)), mat({color:'#c41230', rough:0.05, env:1.6, coat:1}), [0, 0.11 + big, 0.077]); }
-    if(h === 'headphones'){ const m = mat({color:'#1a1a1a', rough:0.35, coat:0.5}), acc = mat({color:look.topColor, rough:0.35, coat:0.6});
-      add(cg('hpband', () => geo.torus(0.1, 0.008, 28, 6, Math.PI)), m, [0, 0.012, 0], qEuler(0, Math.PI/2, Math.PI/2), [1, 1.12, 1.05]);
-      for(const s of [-1, 1]) add(cg('hpcup', () => geo.cylinder(0.035, 0.035, 0.03, 20)), acc, [s*0.084, -0.004, -0.004], qEuler(0, 0, Math.PI/2)); }
-  }
-  function addGlasses(head, look, eyeZ){
-    const g = look.glasses; if(g === 'none') return;
-    const frame = mat({color:g === 'shades' ? '#111' : '#2a2a2a', rough:0.25, metal:g === 'shades' ? 0 : 0.6, coat:0.6});
-    const z = eyeZ + ER + 0.009;
-    for(const s of [-1, 1]){
-      const ring = new Node(cg('lensring', () => geo.torus(0.019, 0.0018, 28, 6)), frame); ring.pos = [s*EYE_X, EYE_Y, z]; ring.q = qEuler(Math.PI/2, 0, 0); ring.scl = [1.08, 1, 0.82]; head.add(ring);
-      const lens = new Node(cg('lens', () => geo.cylinder(0.019, 0.019, 0.0015, 24)), g === 'shades' ? mat({color:'#050505', rough:0.04, env:1.6, coat:1, alpha:0.9, blend:'alpha'}) : mat({color:'#000000', rough:0.03, env:1.4, blend:'add', depthWrite:false}));
-      lens.pos = [s*EYE_X, EYE_Y, z]; lens.q = qEuler(Math.PI/2, 0, 0); lens.scl = [1.08, 1, 0.82]; head.add(lens);
-      const arm = new Node(cg('glarm', () => geo.box(0.0025, 0.0035, 0.085)), frame); arm.pos = [s*0.07, EYE_Y + 0.004, z - 0.043]; head.add(arm);
-    }
-    const bridge = new Node(cg('bridge', () => geo.box(0.016, 0.0025, 0.0025)), frame); bridge.pos = [0, EYE_Y + 0.004, z + 0.001]; head.add(bridge);
-  }
-
-  /* ---------- The Dealer (Buckshot): a painted mask on a plain skull ---------- */
-  function drawDealerFace(x, W, H){
-    x.fillStyle = '#d9cfc2'; x.fillRect(0, 0, W, H);
-    const cx = W/2, ey = H*0.455;
-    for(const s of [-1, 1]){ const ex = cx + s*W*0.052; x.fillStyle = '#0a0606'; x.beginPath(); x.ellipse(ex, ey, W*0.024, H*0.05, 0, 0, Math.PI*2); x.fill(); }
-    x.fillStyle = '#1a0606'; x.beginPath(); x.moveTo(cx - W*0.075, H*0.62); x.quadraticCurveTo(cx, H*0.72, cx + W*0.075, H*0.62); x.quadraticCurveTo(cx, H*0.66, cx - W*0.075, H*0.62); x.fill();
-    x.fillStyle = '#e8e0c8'; for(let k = -6; k <= 6; k++){ const tx = cx + k*W*0.0105; x.fillRect(tx - 2.5, H*0.632 + Math.abs(k)*0.9 - (Math.abs(k) > 5 ? 3 : 0), 5, 9 - Math.abs(k)*0.4); }
-    x.strokeStyle = 'rgba(60,30,30,0.5)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(cx - W*0.03, H*0.39); x.lineTo(cx - W*0.012, H*0.415); x.moveTo(cx + W*0.03, H*0.39); x.lineTo(cx + W*0.012, H*0.415); x.stroke();
-  }
-
-  /* ---------- torso (outfit) texture ---------- */
-  function drawTorso(x, W, H, look, kind){
-    const c = look.topColor, top = kind || look.top;
-    const C = W/2;
-    if(top === 'robe'){ x.fillStyle = '#0d0b0b'; x.fillRect(0, 0, W, H); x.fillStyle = 'rgba(255,255,255,0.03)'; for(let k = 0; k < 30; k++) x.fillRect(k*W/30, 0, 2, H); return; }
+  /* ---------- outfit: the design printed on the front of the body ---------- */
+  function drawShirt(x, W, H, look, top, special){
+    const c = top === 'robe' ? '#151012' : look.topColor, C = W/2, dk = shade(c, -0.32), lt = shade(c, 0.3), skin = look.skin;
     x.fillStyle = c; x.fillRect(0, 0, W, H);
-    // fabric weave
-    for(let k = 0; k < 2600; k++){ x.fillStyle = Math.random() < 0.5 ? 'rgba(255,255,255,0.025)' : 'rgba(0,0,0,0.035)'; x.fillRect(Math.random()*W, Math.random()*H, 2, 1); }
-    const g = x.createLinearGradient(0, 0, W, 0); g.addColorStop(0, 'rgba(0,0,0,0.25)'); g.addColorStop(0.25, 'rgba(0,0,0,0.05)'); g.addColorStop(0.5, 'rgba(255,255,255,0.04)'); g.addColorStop(0.75, 'rgba(0,0,0,0.05)'); g.addColorStop(1, 'rgba(0,0,0,0.25)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
-    const dk = shade(c, -0.35), lt = shade(c, 0.25);
+    if(top === 'robe'){ x.strokeStyle = 'rgba(255,255,255,0.05)'; x.lineWidth = 3; for(let k = 1; k < 8; k++){ x.beginPath(); x.moveTo(k*W/8, H*0.25); x.lineTo(k*W/8 + (k - 4)*3, H); x.stroke(); } return; }
     if(top === 'tee' || top === 'jersey'){
-      x.fillStyle = shade(look.skin, 0); x.beginPath(); x.ellipse(C, 0, top === 'jersey' ? 46 : 34, top === 'jersey' ? 46 : 26, 0, 0, Math.PI); x.fill();
-      x.strokeStyle = dk; x.lineWidth = 5; x.beginPath(); x.ellipse(C, 0, top === 'jersey' ? 46 : 34, top === 'jersey' ? 46 : 26, 0, 0, Math.PI); x.stroke();
-      if(top === 'jersey'){ x.fillStyle = lt; x.font = 'bold 64px Arial'; x.textAlign = 'center'; x.fillText('33', C, H*0.72); x.fillText('33', 40, H*0.72); x.fillText('33', W - 40, H*0.72);
-        x.strokeStyle = lt; x.lineWidth = 5; x.beginPath(); x.moveTo(C - 70, 0); x.lineTo(C - 46, 46); x.moveTo(C + 70, 0); x.lineTo(C + 46, 46); x.stroke(); }
-      else { x.fillStyle = lt; x.font = 'bold 30px Georgia'; x.textAlign = 'center'; x.fillText('W', C, H*0.55); }
+      x.fillStyle = skin; x.beginPath(); x.ellipse(C, 0, top === 'jersey' ? 46 : 40, top === 'jersey' ? 52 : 30, 0, 0, Math.PI); x.fill();
+      x.strokeStyle = dk; x.lineWidth = 7; x.beginPath(); x.ellipse(C, 0, top === 'jersey' ? 46 : 40, top === 'jersey' ? 52 : 30, 0, 0, Math.PI); x.stroke();
+      if(top === 'jersey'){ x.fillStyle = lt; x.font = 'bold 92px Arial'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('33', C, H*0.6);
+        x.fillStyle = dk; x.fillRect(0, 0, 18, H); x.fillRect(W - 18, 0, 18, H); }
+      else { x.fillStyle = lt; x.beginPath(); for(let k = 0; k < 10; k++){ const a = -Math.PI/2 + k*Math.PI/5, r = k % 2 ? 11 : 26; x.lineTo(C + Math.cos(a)*r, H*0.52 + Math.sin(a)*r); } x.closePath(); x.fill(); }
     } else if(top === 'hoodie'){
-      x.fillStyle = dk; x.beginPath(); x.ellipse(C, 0, 40, 30, 0, 0, Math.PI); x.fill();
-      x.strokeStyle = '#eee'; x.lineWidth = 3; x.beginPath(); x.moveTo(C - 12, 20); x.lineTo(C - 14, 80); x.moveTo(C + 12, 20); x.lineTo(C + 14, 80); x.stroke();
-      x.fillStyle = dk; x.fillRect(C - 70, H*0.68, 140, H*0.3); x.fillStyle = c; x.fillRect(C - 66, H*0.7, 132, H*0.28);
-      x.strokeStyle = dk; x.lineWidth = 3; x.strokeRect(C - 66, H*0.7, 132, H*0.4);
-    } else if(top === 'suit' || top === 'leather' || top === 'blazer'){
-      const shirt = top === 'blazer' ? '#f1ede6' : top === 'suit' ? '#f4f2ee' : '#262626';
-      x.fillStyle = shirt; x.beginPath(); x.moveTo(C - 44, 0); x.lineTo(C + 44, 0); x.lineTo(C, H*(top === 'blazer' ? 0.62 : 0.75)); x.closePath(); x.fill();
-      if(top === 'blazer'){ x.fillStyle = shade(look.skin, 0); x.beginPath(); x.moveTo(C - 26, 0); x.lineTo(C + 26, 0); x.lineTo(C, H*0.36); x.closePath(); x.fill(); }
-      if(top === 'suit'){ x.fillStyle = '#a3182c'; x.beginPath(); x.moveTo(C - 8, 8); x.lineTo(C + 8, 8); x.lineTo(C + 11, H*0.6); x.lineTo(C, H*0.68); x.lineTo(C - 11, H*0.6); x.closePath(); x.fill(); }
-      x.strokeStyle = dk; x.lineWidth = 6; x.beginPath(); x.moveTo(C - 46, 0); x.lineTo(C - 4, H*0.78); x.moveTo(C + 46, 0); x.lineTo(C + 4, H*0.78); x.stroke();
-      if(top === 'leather'){ x.strokeStyle = '#c0c0c0'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(C + 18, H*0.2); x.lineTo(C + 24, H); x.stroke(); }
-      else { x.fillStyle = top === 'blazer' ? '#c9a24a' : '#222'; for(const yy of top === 'blazer' ? [0.82, 0.93] : [0.84]){ x.beginPath(); x.arc(C, H*yy, 4, 0, Math.PI*2); x.fill(); } }
-    } else if(top === 'shirt'){
-      x.fillStyle = lt; x.beginPath(); x.moveTo(C - 34, 0); x.lineTo(C, 34); x.lineTo(C + 34, 0); x.closePath(); x.fill();
-      x.strokeStyle = dk; x.lineWidth = 2; x.beginPath(); x.moveTo(C, 30); x.lineTo(C, H); x.stroke();
-      x.fillStyle = '#f4f2ee'; for(let k = 0; k < 5; k++){ x.beginPath(); x.arc(C + 5, 50 + k*40, 3.5, 0, Math.PI*2); x.fill(); }
-      x.fillStyle = dk; x.fillRect(C + 30, H*0.32, 40, 34);
-    }
-  }
-  function fabricNormal(kind){
-    return cg('fabN' + kind, () => normalTex(128, 128, (px, py) => {
-      if(kind === 'knit') return Math.abs(Math.sin(px*Math.PI/4))*0.6 + Math.abs(Math.sin((py + (Math.floor(px/8)%2)*4)*Math.PI/8))*0.4 + vnoise(px*0.5, py*0.5, 64, 1)*0.3;
-      if(kind === 'leather') return fbm(px/16, py/16, 8, 3, 4)*1.5;
-      return Math.sin((px + py)*Math.PI/3)*0.35 + vnoise(px*0.25, py*0.25, 32, 3)*0.5; // twill
-    }, {strength:kind === 'leather' ? 2 : 0.8}));
-  }
-
-  /* ---------- geometry helpers ---------- */
-  function limb(a, b, r1, r2, m){
-    const d = V.sub(b, a), len = V.len(d), y = V.norm(d);
-    const n = new Node(cg(`limb${r1}_${r2}_${len.toFixed(3)}`, () => geo.capsule(r1, len, 16, 5, r2)), m);
-    const ax = V.cross([0, 1, 0], y), s = V.len(ax);
-    n.pos = a.slice(); n.q = s < 1e-6 ? (y[1] > 0 ? [0, 0, 0, 1] : [1, 0, 0, 0]) : G3.qAxis(ax, Math.atan2(s, y[1]));
-    return n;
-  }
-  function skinMat(hex){ return W3H.skinMaterial(hex); }
-
-  // torso: lofted super-ellipse cross sections (waist -> shoulders -> neck), uv like a lathe (front centre at u 0.5)
-  const XT = {
-    m:[[-0.02,0.142,0.088,0.084],[0.05,0.136,0.09,0.086],[0.12,0.146,0.1,0.09],[0.19,0.158,0.108,0.096],[0.245,0.168,0.11,0.1],[0.285,0.176,0.1,0.098],[0.318,0.168,0.085,0.088],[0.345,0.13,0.07,0.075],[0.368,0.085,0.056,0.058],[0.39,0.052,0.046,0.048]],
-    f:[[-0.02,0.138,0.086,0.084],[0.05,0.118,0.08,0.078],[0.12,0.124,0.086,0.08],[0.19,0.138,0.098,0.086],[0.245,0.148,0.104,0.09],[0.285,0.158,0.092,0.09],[0.318,0.152,0.078,0.082],[0.345,0.116,0.064,0.068],[0.368,0.075,0.05,0.052],[0.39,0.046,0.041,0.043]],
-  };
-  function torsoGeo(fem){
-    return cg('torsoL' + (fem ? 'f' : 'm'), () => {
-      const T = XT[fem ? 'f' : 'm'], g = new G3.Geo(), NU = 44, NV = 30, y0 = T[0][0], y1 = T[T.length-1][0];
-      const at = (y) => { for(let k = 1; k < T.length; k++) if(y <= T[k][0] + 1e-9){ const a = T[k-1], b = T[k], t = (y - a[0])/(b[0] - a[0]), e = t*t*(3 - 2*t); return [a[1] + (b[1]-a[1])*e, a[2] + (b[2]-a[2])*e, a[3] + (b[3]-a[3])*e]; } return T[T.length-1].slice(1); };
-      for(let j = 0; j <= NV; j++){
-        const y = y0 + (y1 - y0)*j/NV, [W, Fz, Bz] = at(y);
-        for(let i = 0; i <= NU; i++){
-          const ph = Math.PI + 2*Math.PI*i/NU, sn = Math.sin(ph), cs = Math.cos(ph), e = 2/2.35;
-          let x = W*Math.sign(sn)*Math.pow(Math.abs(sn), e), z = (cs > 0 ? Fz : Bz)*Math.sign(cs)*Math.pow(Math.abs(cs), e);
-          if(fem && z > 0) z += 0.024*Math.exp(-Math.pow((y - 0.222)/0.045, 2))*Math.exp(-Math.pow((Math.abs(x) - 0.056)/0.042, 2));
-          if(!fem && z > 0) z += 0.006*Math.exp(-Math.pow((y - 0.235)/0.04, 2))*Math.exp(-Math.pow((Math.abs(x) - 0.06)/0.05, 2));
-          if(z < 0) z -= 0.008*Math.exp(-Math.pow((y - 0.27)/0.05, 2))*Math.exp(-Math.pow((Math.abs(x) - 0.07)/0.04, 2)); // shoulder blades
-          g.v(x, y, z, 0, 1, 0, i/NU, (y - y0)/(y1 - y0));
-        }
+      x.fillStyle = dk; x.beginPath(); x.ellipse(C, 0, 58, 40, 0, 0, Math.PI); x.fill();
+      x.fillStyle = shade(c, -0.15); x.beginPath(); x.ellipse(C, 0, 40, 24, 0, 0, Math.PI); x.fill();
+      x.strokeStyle = '#f2f2f2'; x.lineWidth = 6; x.beginPath(); x.moveTo(C - 16, 30); x.lineTo(C - 18, 96); x.moveTo(C + 16, 30); x.lineTo(C + 18, 96); x.stroke();
+      x.fillStyle = dk; x.beginPath(); x.moveTo(C - 70, H*0.66); x.lineTo(C + 70, H*0.66); x.lineTo(C + 86, H); x.lineTo(C - 86, H); x.closePath(); x.fill();
+      x.fillStyle = c; x.beginPath(); x.moveTo(C - 64, H*0.68); x.lineTo(C + 64, H*0.68); x.lineTo(C + 80, H); x.lineTo(C - 80, H); x.closePath(); x.fill();
+    } else if(top === 'suit' || top === 'blazer' || top === 'leather'){
+      const shirt = top === 'leather' ? '#2a2a2a' : '#f4f1ea';
+      x.fillStyle = shirt; x.beginPath(); x.moveTo(C - 52, 0); x.lineTo(C + 52, 0); x.lineTo(C, H*(top === 'blazer' ? 0.55 : 0.66)); x.closePath(); x.fill();
+      if(top === 'blazer'){ x.fillStyle = skin; x.beginPath(); x.moveTo(C - 30, 0); x.lineTo(C + 30, 0); x.lineTo(C, H*0.3); x.closePath(); x.fill(); }
+      if(top === 'suit'){ x.fillStyle = '#b3182c'; x.beginPath(); x.moveTo(C - 11, 6); x.lineTo(C + 11, 6); x.lineTo(C + 15, H*0.52); x.lineTo(C, H*0.6); x.lineTo(C - 15, H*0.52); x.closePath(); x.fill(); }
+      x.strokeStyle = dk; x.lineWidth = 9; x.beginPath(); x.moveTo(C - 56, 0); x.lineTo(C - 4, H*0.72); x.moveTo(C + 56, 0); x.lineTo(C + 4, H*0.72); x.stroke();
+      if(top === 'leather'){ x.strokeStyle = '#cfcfcf'; x.lineWidth = 4; x.beginPath(); x.moveTo(C + 22, H*0.15); x.lineTo(C + 30, H); x.stroke(); }
+      else { x.fillStyle = top === 'blazer' ? '#e2b956' : '#1c1c1c'; for(const yy of top === 'blazer' ? [0.78, 0.9] : [0.8]){ x.beginPath(); x.arc(C, H*yy, 7, 0, Math.PI*2); x.fill(); } }
+      if(special === 'myla'){ // gold brooch + necklace with a red pendant
+        x.strokeStyle = '#e2b956'; x.lineWidth = 3; x.beginPath(); x.moveTo(C - 30, 0); x.quadraticCurveTo(C, H*0.36, C + 30, 0); x.stroke();
+        x.fillStyle = '#b3122d'; x.beginPath(); x.ellipse(C, H*0.2, 6, 8, 0, 0, Math.PI*2); x.fill();
+        x.fillStyle = '#e2b956'; x.beginPath(); x.arc(C - 78, H*0.4, 12, 0, Math.PI*2); x.fill(); x.fillStyle = '#f5f5ff'; x.beginPath(); x.arc(C - 78, H*0.4, 6, 0, Math.PI*2); x.fill();
       }
-      for(let j = 0; j < NV; j++) for(let i = 0; i < NU; i++){ const a = j*(NU+1) + i, b = a + 1, c = a + NU + 2, d = a + NU + 1; g.q(a, d, c, b); }
-      return geo.computeNormals(g);
+    } else if(top === 'shirt'){
+      x.fillStyle = lt; x.beginPath(); x.moveTo(C - 44, 0); x.lineTo(C, 40); x.lineTo(C + 44, 0); x.closePath(); x.fill();
+      x.fillStyle = skin; x.beginPath(); x.moveTo(C - 16, 0); x.lineTo(C, 20); x.lineTo(C + 16, 0); x.closePath(); x.fill();
+      x.strokeStyle = dk; x.lineWidth = 3; x.beginPath(); x.moveTo(C, 38); x.lineTo(C, H); x.stroke();
+      x.fillStyle = '#f4f1ea'; for(let k = 0; k < 4; k++){ x.beginPath(); x.arc(C + 8, 62 + k*52, 5, 0, Math.PI*2); x.fill(); }
+      x.fillStyle = dk; x.fillRect(C + 36, H*0.3, 46, 40);
+    }
+    if(look.chain !== 'none' && !special){ x.strokeStyle = look.chain === 'gold' ? '#e8b84a' : '#d8d8de'; x.lineWidth = 6; x.setLineDash([7, 4]); x.beginPath(); x.moveTo(C - 44, 0); x.quadraticCurveTo(C, H*0.45, C + 44, 0); x.stroke(); x.setLineDash([]);
+      x.fillStyle = x.strokeStyle; x.beginPath(); x.arc(C, H*0.24, 9, 0, Math.PI*2); x.fill(); }
+  }
+
+  /* ---------- hair: chunky plastic hair pieces, merged into one mesh per style ---------- */
+  function hairGeo(style){
+    return cg('hair_' + style, () => {
+      const P = [];
+      const cap = (h = 0.062) => P.push(part(HW + 0.018, h, HD + 0.018, 0.045, [0, HH/2 + 0.012 - h/2 + 0.02, -0.003]));
+      const back = (to) => { const top = HH/2 + 0.01, h = top - to; P.push(part(HW + 0.018, h, 0.045, 0.02, [0, top - h/2, -FZ + 0.012])); };
+      const sides = (to, depth = 0.13, z = -0.03) => { const top = HH/2 - 0.005, h = top - to; for(const s of [-1, 1]) P.push(part(0.026, h, depth, 0.011, [s*(HW/2 + 0.01), top - h/2, z])); };
+      const fringe = () => P.push(part(0.17, 0.034, 0.03, 0.012, [0.022, HH/2 - 0.012, FZ + 0.004], [0, 0, -0.12]));
+      if(style === 'short'){ cap(); back(-0.02); sides(0.03, 0.11, -0.04); fringe(); }
+      else if(style === 'buzz'){ P.push(part(HW + 0.008, 0.07, HD + 0.008, 0.05, [0, HH/2 - 0.027, -0.002])); P.push(part(HW + 0.008, 0.11, 0.03, 0.014, [0, 0.0, -FZ + 0.01])); }
+      else if(style === 'long'){ cap(); back(-0.27); sides(-0.2, 0.15, -0.025); fringe(); }
+      else if(style === 'bob'){ cap(); back(-0.1); sides(-0.085, 0.19, -0.012); P.push(part(HW + 0.006, 0.036, 0.026, 0.012, [0, HH/2 - 0.016, FZ + 0.004])); }
+      else if(style === 'bun'){ cap(); back(-0.03); sides(0.03, 0.11, -0.04); P.push(part(0.11, 0.1, 0.1, 0.045, [0, HH/2 + 0.07, -0.05])); }
+      else if(style === 'ponytail'){ cap(); back(-0.02); sides(0.03, 0.11, -0.04); fringe();
+        P.push(part(0.075, 0.24, 0.06, 0.026, [0, -0.06, -FZ - 0.04], [0.22, 0, 0])); }
+      else if(style === 'curly'){
+        const b = (x, y, z, s = 0.082) => P.push(part(s, s, s, s*0.42, [x, y, z]));
+        for(const xx of [-0.085, 0, 0.085]) for(const zz of [-0.07, 0.0, 0.07]) b(xx, HH/2 + 0.02, zz);
+        for(const xx of [-0.085, 0, 0.085]) for(const yy of [0.05, -0.025]) b(xx, yy, -FZ - 0.005);
+        for(const s of [-1, 1]) for(const zz of [-0.05, 0.03]) b(s*(HW/2 + 0.01), 0.055, zz, 0.07);
+        for(const xx of [-0.06, 0.04]) b(xx, HH/2 + 0.004, FZ - 0.01, 0.07);
+      }
+      else if(style === 'mohawk'){ P.push(part(0.046, 0.085, HD + 0.03, 0.018, [0, HH/2 + 0.035, -0.008])); P.push(part(0.046, 0.12, 0.04, 0.016, [0, 0.03, -FZ - 0.008])); }
+      else if(style === 'swept'){ cap(0.07); back(-0.06); sides(-0.03, 0.15, -0.025);
+        P.push(part(0.2, 0.055, 0.05, 0.022, [0.03, HH/2 - 0.005, FZ + 0.006], [0.15, 0, -0.32]));   // the big sweep over the forehead
+        P.push(part(0.032, 0.17, 0.12, 0.014, [-(HW/2 + 0.018), -0.005, 0.035], [0, 0, 0.06])); }
+      if(!P.length) return null;
+      return geo.merge(...P);
     });
+  }
+  function addHat(head, look){
+    const h = look.hat; if(h === 'none') return;
+    const big = ['long','curly','bun','swept','bob'].includes(look.hair) ? 0.01 : 0, top = HH/2 + big;
+    if(h === 'cap'){ const m = cloth(look.topColor);
+      add(head, RB(HW + 0.034, 0.075, HD + 0.03, 0.04), m, [0, top + 0.02, -0.004]);
+      add(head, RB(0.19, 0.016, 0.11, 0.008), m, [0, top - 0.008, FZ + 0.06], [-0.12, 0, 0]); }
+    if(h === 'beanie'){ const m = cloth(look.topColor);
+      add(head, RB(HW + 0.03, 0.1, HD + 0.03, 0.05), m, [0, top + 0.02, -0.004]);
+      add(head, RB(HW + 0.04, 0.034, HD + 0.04, 0.015), cloth(shade(look.topColor, -0.2)), [0, top - 0.03, -0.004]);
+      add(head, RB(0.055, 0.055, 0.055, 0.025), cloth(shade(look.topColor, 0.3)), [0, top + 0.085, -0.004]); }
+    if(h === 'cowboy'){ const m = plastic('#7a5230', {rough:0.6});
+      add(head, RB(0.42, 0.016, 0.38, 0.06), m, [0, top + 0.004, -0.004]);
+      add(head, RB(0.2, 0.1, 0.19, 0.04), m, [0, top + 0.06, -0.004]);
+      add(head, RB(0.206, 0.022, 0.196, 0.01), plastic('#2a1a10'), [0, top + 0.024, -0.004]); }
+    if(h === 'crown'){ const m = plastic('#e8b84a', {rough:0.22, metal:1});
+      add(head, RB(0.19, 0.04, 0.18, 0.008), m, [0, top + 0.025, -0.004]);
+      for(const [x, z] of [[-0.08, 0.075], [0, 0.075], [0.08, 0.075], [-0.08, -0.08], [0.08, -0.08]]) add(head, RB(0.028, 0.04, 0.028, 0.008), m, [x, top + 0.06, z - 0.004]);
+      add(head, RB(0.026, 0.026, 0.01, 0.006), plastic('#c41230', {rough:0.1, coat:1, env:1.2}), [0, top + 0.025, 0.088]); }
+    if(h === 'headphones'){ const m = plastic('#1a1a1a', {rough:0.35, coat:0.5}), acc = plastic(look.topColor, {rough:0.35, coat:0.5});
+      add(head, RB(HW + 0.07, 0.022, 0.04, 0.01), m, [0, top + 0.03, 0]);
+      for(const s of [-1, 1]){ add(head, RB(0.022, 0.1, 0.04, 0.008), m, [s*(HW/2 + 0.03), top - 0.035, 0]); add(head, RB(0.04, 0.085, 0.08, 0.016), acc, [s*(HW/2 + 0.022), -0.005, 0]); } }
+  }
+  function addGlasses(head, look){
+    const g = look.glasses; if(g === 'none') return;
+    const frame = plastic(g === 'shades' ? '#111111' : '#2a2a2a', {rough:0.3, coat:0.6});
+    const lens = g === 'shades' ? plastic('#060606', {rough:0.05, coat:1, env:1.4}) : mat({color:'#bfe0ff', rough:0.05, env:1.2, alpha:0.35, blend:'alpha', depthWrite:false});
+    const z = FZ + 0.012;
+    for(const s of [-1, 1]){
+      add(head, RB(0.064, 0.048, 0.008, 0.012), frame, [s*0.047, 0.012, z - 0.002]);
+      add(head, RB(0.052, 0.036, 0.004, 0.009), lens, [s*0.047, 0.012, z + 0.003]).castShadow = false;
+      add(head, RB(0.008, 0.008, 0.12, 0.003), frame, [s*(HW/2 + 0.002), 0.02, z - 0.06]);
+    }
+    add(head, RB(0.03, 0.008, 0.008, 0.003), frame, [0, 0.02, z]);
+  }
+  function addBeard(head, look){
+    const b = look.beard; if(b === 'none') return;
+    if(b === 'stubble'){ const n = add(head, cg('stubbleQ', () => geo.quad(0.17, 0.11)), mat({color:'#ffffff', map:stubbleTex(), rough:0.6, blend:'alpha', depthWrite:false}), [0, -0.052, FZ + 0.0006]); n.castShadow = false; return; }
+    const m = plastic(look.hairColor, {rough:0.5, coat:0.25});
+    const P = [part(0.09, 0.016, 0.02, 0.007, [0, -0.02, FZ + 0.004])];   // mustache
+    if(b === 'goatee') P.push(part(0.06, 0.042, 0.024, 0.01, [0, -0.09, FZ - 0.002]));
+    if(b === 'beard'){ P.push(part(HW - 0.012, 0.05, 0.03, 0.014, [0, -0.09, FZ - 0.004]));
+      for(const s of [-1, 1]) P.push(part(0.03, 0.1, 0.13, 0.012, [s*(HW/2 - 0.002), -0.05, 0.03])); }
+    add(head, cg('beard_' + b, () => geo.merge(...P)), m);
   }
 
   /* ---------- avatar ---------- */
   function build(lookIn, opts = {}){
     const look = cleanLook(opts.special === 'myla' && !(lookIn && lookIn.skin) ? MYLA_LOOK : lookIn), standing = !!opts.standing, special = opts.special || null;
-    const fem = look.face === 'lashes';
+    const dealer = special === 'dealer', fem = look.face === 'lashes' && !dealer;
     const root = new Node(); root.name = 'avatar';
     const body = new Node(); root.add(body);
-    const baseY = standing ? 0.98 : 0.66;
+    const baseY = standing ? 0.8 : 0.66;
     body.pos = [0, baseY, 0];
-    const skin = skinMat(look.skin);
-    // torso
-    const torsoTex = canvasTex(512, 256, (x, W, H) => drawTorso(x, W, H, look, special === 'dealer' ? 'robe' : null));
-    torsoTex.own = true;
-    const topKind = look.top === 'leather' ? 'leather' : look.top === 'hoodie' || look.top === 'tee' || look.top === 'jersey' ? 'knit' : 'twill';
-    const topRough = look.top === 'leather' ? 0.38 : 0.82;
-    const torsoMat = mat({color:'#ffffff', map:torsoTex, rough:special === 'dealer' ? 0.95 : topRough, sheen:0.4, env:look.top === 'leather' ? 0.9 : 0.3, nmap:fabricNormal(topKind), nuv:[10, 6, 0, 0], nstr:0.8});
-    const torsoG = torsoGeo(fem);
-    const torso = new Node(torsoG, torsoMat); body.add(torso);
-    const topColorMat = mat({color:special === 'dealer' ? '#0d0b0b' : look.topColor, rough:topRough, sheen:0.4, env:look.top === 'leather' ? 0.9 : 0.3, nmap:fabricNormal(topKind), nuv:[6, 6, 0, 0], nstr:0.8});
-    // blazer lapels + brooch
-    if(look.top === 'blazer' && special !== 'dealer'){
-      const lapM = mat({color:shade(look.topColor, -0.12), rough:0.55, sheen:0.5, env:0.35, coat:0.15});
-      for(const s of [-1, 1]){
-        const lap = new Node(cg('lapel', () => { const pts = [[0, 0], [0.034, 0.0], [0.05, -0.05], [0.012, -0.16], [0.0, -0.17]]; const g = geo.shape(pts, 0, 0.004); return g; }), lapM);
-        lap.pos = [s*0.032, 0.372, 0.095]; lap.q = qEuler(-Math.PI/2 + 0.32, s*0.28, 0); lap.scl = [s, 1, 1]; if(s < 0) lap.mat = mat({...lapM, side:'double'}); body.add(lap);
-      }
-      if(special === 'myla'){ // gold name brooch + necklace
-        const gold = mat({color:'#e2b956', rough:0.18, metal:1, coat:0.4});
-        const br = new Node(cg('brooch', () => geo.cylinder(0.011, 0.011, 0.004, 24)), gold); br.pos = [-0.072, 0.29, 0.104]; br.q = qEuler(Math.PI/2 - 0.3, 0, 0); body.add(br);
-        const gem = new Node(cg('broochgem', () => geo.sphere(0.0065, 14, 10)), mat({color:'#f5f5ff', rough:0.03, env:2, coat:1})); gem.pos = [-0.072, 0.291, 0.108]; gem.scl = [1, 1, 0.6]; body.add(gem);
-        const neck = new Node(cg('necklace', () => { const pts = []; for(let k = 0; k <= 30; k++){ const a = -1.25 + 2.5*k/30; pts.push([Math.sin(a)*0.05, 0.398 - 0.06*Math.pow(Math.cos(a*0.8), 3), Math.cos(a)*0.042 + 0.006]); } return geo.tube(pts, 0.0012, 5); }), gold);
-        body.add(neck);
-        const pend = new Node(cg('pendant', () => geo.sphere(0.0055, 12, 10)), mat({color:'#a8102a', rough:0.05, env:1.8, coat:1})); pend.pos = [0, 0.335, 0.052]; pend.scl = [1, 1.3, 0.7]; body.add(pend);
-      }
-    }
+    const skinHex = dealer ? '#d9d2c6' : look.skin, skin = W3H.skinMaterial(skinHex);
+    const topHex = dealer ? '#151012' : look.topColor, topM = cloth(topHex, look.top);
+    // body + the printed front of the outfit
+    add(body, RB(TW, TH, TD, 0.045), topM, [0, TH/2 - 0.01, 0]);
+    const shirtTex = canvasTex(240, 274, (x, W, H) => drawShirt(x, W, H, look, dealer ? 'robe' : look.top, special)); shirtTex.own = true;
+    const front = add(body, cg('shirtQ', () => geo.quad(TW - 0.08, TH - 0.09)), mat({color:'#ffffff', map:shirtTex, rough:look.top === 'leather' ? 0.3 : 0.62, coat:look.top === 'leather' ? 0.45 : 0.08, env:look.top === 'leather' ? 0.6 : 0.22}), [0, TH/2 - 0.01, TD/2 + 0.0003]);
+    front.castShadow = false;
+    if(look.top === 'hoodie' && !special) add(body, RB(0.27, 0.1, 0.07, 0.028), cloth(shade(topHex, -0.18)), [0, TH - 0.04, -TD/2 - 0.012]);
+    if(!dealer){ add(body, RB(TW + 0.004, 0.032, TD + 0.004, 0.012), plastic('#1a1210', {rough:0.4, coat:0.4}), [0, 0.0, 0]);
+      add(body, RB(0.04, 0.026, 0.01, 0.005), plastic('#c9b07a', {rough:0.25, metal:1}), [0, 0.0, TD/2 + 0.004]); }
     // neck + head
-    const neckG = cg('neck', () => geo.lathe([[0.05, -0.02], [0.046, 0.03], [0.043, 0.08], [0.045, 0.12]], 22));
-    const neck = new Node(neckG, skin); neck.pos = [0, 0.37, -0.004]; if(fem) neck.scl = [0.88, 1, 0.9]; body.add(neck);
-    const headPivot = new Node(); headPivot.pos = [0, 0.445, 0.005]; body.add(headPivot);
-    const head = new Node(); head.pos = [0, 0.09, 0]; head.scl = fem ? [1.1, 1.1, 1.1] : [1.08, 1.08, 1.08]; headPivot.add(head);
-    let eyes = null, face = null;
-    if(special === 'dealer'){
-      const faceTex = canvasTex(512, 256, (x, W, H) => drawDealerFace(x, W, H)); faceTex.own = true;
-      const skull = new Node(cg('dskull', () => { const g = geo.sphere(0.1, 32, 24); for(let k = 0; k < g.vc; k++){ const y = g.p[k*3+1]/0.1; if(y < 0.05){ const t = Math.min(1, (0.05 - y)/1.05); g.p[k*3] *= 1 - 0.3*Math.pow(t, 1.4); g.p[k*3+2] *= 1 - 0.12*t; } } return geo.computeNormals(g); }),
-        mat({color:'#ffffff', map:faceTex, rough:0.6, wrap:0.4, env:0.4, shadow:false}));
-      skull.q = qEuler(0, Math.PI, 0); skull.scl = [0.88, 1.12, 0.98]; head.add(skull);
-      const hood = new Node(shellGeo('hood', false, (lam, y) => 0.03 + 0.01*smooth(0, 0.1, y), (lam, y) => Math.cos(lam) < 0.45 || y > 0.06 ? 1 : 0, {nl:56, np:40}), mat({color:'#0b0909', rough:0.95, side:'double'}));
-      hood.scl = [1.08, 1.0, 1.04]; head.add(hood);
-      const eyeGlow = mat({color:'#ff2a1a', unlit:true, emissive:'#ff2a1a', emisMult:6});
-      for(const s of [-1, 1]){ const e = new Node(cg('eyeglow', () => geo.sphere(0.006, 8, 6)), eyeGlow); e.pos = [s*0.03, 0.012, 0.094]; head.add(e); }
+    add(body, RB(0.12, 0.05, 0.11, 0.02), skin, [0, TH - 0.01, 0]);
+    const headPivot = new Node(); headPivot.pos = [0, TH + 0.005, 0]; body.add(headPivot);
+    const head = new Node(); head.pos = [0, HH/2 + 0.012, 0]; headPivot.add(head);
+    add(head, RB(HW, HH, HD, 0.06, 4), dealer ? plastic(skinHex, {rough:0.7, coat:0}) : skin);
+    let eyes = null, brows = null, mouth = null;
+    if(dealer){
+      const mask = add(head, cg('dealerQ', () => geo.quad(0.17, 0.16)), mat({color:'#ffffff', map:dealerFaceTex(), rough:0.7}), [0, -0.005, FZ + 0.0006]); mask.castShadow = false;
+      const glow = mat({color:'#ff2a1a', unlit:true, emissive:'#ff2a1a', emisMult:6});
+      for(const s of [-1, 1]) add(head, cg('dEye', () => geo.sphere(0.0075, 10, 8)), glow, [s*0.035, 0.014, FZ + 0.002]).castShadow = false;
+      // a hood around the head, open at the front, with a peak that shades the face
+      const hood = plastic('#0b0909', {rough:0.9, coat:0, env:0.1});
+      add(head, cg('hood', () => geo.merge(part(HW + 0.06, 0.035, HD + 0.04, 0.016, [0, HH/2 + 0.02, -0.012]),
+        part(0.028, HH + 0.07, HD + 0.04, 0.01, [-(HW/2 + 0.018), -0.01, -0.012]), part(0.028, HH + 0.07, HD + 0.04, 0.01, [HW/2 + 0.018, -0.01, -0.012]),
+        part(HW + 0.06, HH + 0.07, 0.028, 0.01, [0, -0.01, -(FZ + 0.03)]), part(HW + 0.06, 0.032, 0.05, 0.012, [0, HH/2 + 0.004, FZ + 0.008], [0.25, 0, 0]))), hood);
     } else {
-      // sculpted head with a face texture painted once; expressions are morph targets
-      const {g, T} = headGeoFor(fem);
-      const res = coarse() ? 768 : 1024;
-      const faceTex = canvasTex(res, res, (x, W, H) => paintFace(x, W, H, look, fem)); faceTex.own = true;
-      const faceM = mat({color:[0.74, 0.74, 0.74], map:faceTex, kind:'skin', rough:0.52, env:0.45, sss:sssFor(look.skin), nmap:faceNormal(look, fem), nstr:0.3});
-      const skull = new Node(g, faceM); head.add(skull);
-      face = {g, T, w:{}, cur:{}};
-      for(const k of MORPHS){ face.w[k] = 0; face.cur[k] = 0; }
-      // ears
-      for(const s of [-1, 1]){
-        const ear = new Node(cg('ear' + s, () => { const gg = geo.sphere(0.024, 18, 14); for(let k = 0; k < gg.vc; k++){ const y = gg.p[k*3+1], z = gg.p[k*3+2]; gg.p[k*3] *= 0.32; gg.p[k*3+1] = y*(1 + 0.25*Math.max(0, y/0.024)); gg.p[k*3+2] *= 0.8; if(gg.p[k*3]*s > 0) gg.p[k*3] -= s*0.004*Math.exp(-(y*y + z*z)/0.00012); } return geo.computeNormals(gg); }), skin);
-        ear.pos = [s*0.071, -0.006, -0.012]; ear.q = qEuler(0, s*0.25, 0); head.add(ear);
-      }
-      // eyes in their sockets
-      const lidM = mat({color:col(fem ? mix(look.skin, '#6a3a4a', 0.28) : shade(look.skin, -0.04)).map(v => v*0.74), kind:'skin', rough:0.45, env:0.4, sss:sssFor(look.skin), shadow:false});
+      // eyes: glossy dark ovals with a white glint, in groups that blink and glance around
+      const eyeM = plastic(shade(look.eyes, -0.5), {rough:0.2, coat:0.5, env:0.45}), glint = mat({color:'#ffffff', unlit:true});
       eyes = [];
       for(const s of [-1, 1]){
-        const e = buildEye(s, look, fem, skin, lidM);
-        e.grp.pos = [s*EYE_X, EYE_Y, T.eyeZ - ER*0.42];
-        e.grp.q = qEuler(0, s*0.16, -s*0.07);
-        head.add(e.grp); eyes.push(e);
+        const grp = new Node(); grp.pos = [s*0.05, 0.014, FZ]; head.add(grp);
+        add(grp, cg('eyeball', () => geo.sphere(1, 16, 12)), eyeM, null, null, [0.017, 0.026, 0.007]);
+        add(grp, cg('glint', () => geo.sphere(0.0048, 8, 6)), glint, [-0.0052, 0.0095, 0.0052]).castShadow = false;
+        if(fem) add(grp, RB(0.016, 0.005, 0.004, 0.002), plastic('#111111'), [-s*0.016, 0.021, 0.002], [0, 0, -s*0.6]);
+        eyes.push({grp, s, base:grp.pos.slice()});
       }
-      addBeard(head, look, fem);
+      // eyebrows in the hair colour (a darker brown when bald / very light)
+      const browHex = look.hair === 'bald' || ['#f0f0f0', '#e9e4da', '#e8d6a0'].includes(look.hairColor) ? shade(look.hairColor === '#e9e4da' ? '#9a8f80' : '#5a3a22', -0.1) : shade(look.hairColor, -0.15);
+      brows = [];
+      for(const s of [-1, 1]){ const b = add(head, RB(0.042, 0.011, 0.007, 0.004), plastic(browHex, {rough:0.5}), [s*0.05, 0.054, FZ + 0.001]); b.castShadow = false; brows.push({n:b, s}); }
+      // mouth decal (swapped for each expression, opens and closes while talking)
+      const mouthM = mat({color:'#ffffff', map:mouthTex('smile', fem), rough:0.5, blend:'alpha', depthWrite:false});
+      const mq = add(head, cg('mouthQ', () => geo.quad(0.092, 0.052)), mouthM, [0, -0.054, FZ + 0.0012]); mq.castShadow = false;
+      mouth = {mat:mouthM, kind:'smile', lips:fem};
+      if(fem){ const bm = mat({color:'#ffffff', map:blushTex(), rough:0.6, blend:'alpha', depthWrite:false});
+        for(const s of [-1, 1]) add(head, cg('blushQ', () => geo.quad(0.046, 0.03)), bm, [s*0.082, -0.026, FZ + 0.0008]).castShadow = false; }
+      addBeard(head, look);
     }
-    addHair(head, look, fem, special);
-    addHat(head, look, fem);
-    if(special !== 'dealer') addGlasses(head, look, face ? face.T.eyeZ : 0.07);
-    if(look.chain !== 'none' && !special){ const ch = new Node(cg('chain', () => geo.torus(0.06, 0.004, 40, 8)), mat({color:look.chain === 'gold' ? '#e0b44a' : '#d8d8de', rough:0.18, metal:1})); ch.pos = [0, 0.355, 0.035]; ch.q = qEuler(1.25, 0, 0); ch.scl = [1.15, 1, 1]; body.add(ch); }
-    if(look.top === 'hoodie' && !special){ const hood = new Node(cg('hoodring', () => geo.torus(0.085, 0.032, 28, 12)), topColorMat); hood.pos = [0, 0.37, -0.035]; hood.q = qEuler(1.2, 0, 0); hood.scl = [1.1, 1, 0.8]; body.add(hood); }
-    // shoulders
-    for(const s of [-1, 1]){ const sh = new Node(cg('shoulder', () => geo.sphere(0.046, 20, 14)), topColorMat); sh.pos = [s*(fem ? 0.156 : 0.166), 0.292, -0.008]; sh.scl = [1.0, 0.72, 0.92]; body.add(sh); }
+    // hair
+    if(!dealer){ const hg = hairGeo(look.hair); if(hg){ const c = col(look.hairColor), light = (c[0] + c[1] + c[2])/3 > 0.45;   // very light hair is toned down so it doesn't glow
+      add(head, hg, plastic(light ? shade(look.hairColor, -0.16) : look.hairColor, {rough:light ? 0.55 : 0.4, coat:light ? 0.12 : 0.28, env:light ? 0.25 : 0.4})); } }
+    if(!dealer){ addHat(head, look); addGlasses(head, look); }
     // hips + legs (seated players sit on the stool with their feet on the foot ring)
-    const pantsMat = mat({color:special === 'dealer' ? '#0b0909' : look.pants, rough:0.85, sheen:0.35, env:0.2, nmap:fabricNormal('twill'), nuv:[8, 8, 0, 0], nstr:0.7});
-    const shoeMat = mat({color:special === 'dealer' ? '#0b0909' : look.shoes, rough:look.shoes === '#111111' ? 0.25 : 0.55, env:0.6, coat:look.shoes === '#111111' ? 0.6 : 0.1});
-    const pelvis = new Node(cg('pelvis3', () => { const g = geo.lathe([[0.0, -0.085], [0.05, -0.082], [0.095, -0.065], [0.125, -0.03], [0.136, 0.01], [0.136, 0.045], [0.13, 0.07]], 32); return geo.computeNormals(g); }), pantsMat);
-    pelvis.pos = [0, baseY - 0.005, -0.005]; pelvis.scl = [fem ? 1.22 : 1.18, 1, 0.8]; root.add(pelvis);
-    if(special !== 'dealer'){ const belt = new Node(cg('belt', () => geo.cylinder(0.14, 0.14, 0.032, 32, false)), mat({color:'#1a1210', rough:0.45, env:0.5, coat:0.4, side:'double'})); belt.pos = [0, baseY + 0.05, -0.005]; belt.scl = [fem ? 1.18 : 1.16, 1, 0.8]; root.add(belt);
-      const buckle = new Node(cg('buckle', () => geo.roundBox(0.04, 0.026, 0.008, 0.004, 2)), mat({color:'#c9b07a', rough:0.2, metal:1})); buckle.pos = [0, baseY + 0.05, 0.108]; root.add(buckle); }
-    for(const s of [-1, 1]){
-      const hip = standing ? [s*0.09, baseY - 0.02, 0] : [s*0.095, 0.6, 0.02];
-      const knee = standing ? [s*0.095, 0.5, 0.02] : [s*0.11, 0.565, 0.34];
-      const ankle = standing ? [s*0.1, 0.085, 0] : [s*0.12, 0.27, 0.29];
-      root.add(limb(hip, knee, fem ? 0.084 : 0.088, 0.06, pantsMat), limb(knee, ankle, 0.058, 0.044, pantsMat));
-      const shoe = new Node(cg('shoe', () => { const g = geo.roundBox(0.095, 0.075, 0.25, 0.035, 3); for(let k = 0; k < g.vc; k++){ const z = g.p[k*3+2], y = g.p[k*3+1]; if(z > 0.03 && y > 0) g.p[k*3+1] -= (z - 0.03)*0.18; } return geo.computeNormals(g); }), shoeMat); shoe.pos = V.add(ankle, [0, -0.045, 0.055]); root.add(shoe);
-      if(special === 'dealer'){ shoe.visible = false; }
-    }
-    if(special === 'dealer'){ // a long robe instead of trousers
-      const robe = new Node(cg('robe', () => geo.lathe([[0.2, 0], [0.19, 0.3], [0.17, 0.62], [0.15, 0.7]], 28)), pantsMat); robe.pos = [0, 0, 0]; robe.scl = [1.1, standing ? 1.4 : 0.95, 0.85]; root.add(robe);
+    const pantsM = cloth(dealer ? '#0b0909' : look.pants), shoeM = plastic(dealer ? '#0b0909' : look.shoes, {rough:0.4, coat:0.35});
+    if(dealer){ // a long robe instead of trousers
+      add(root, RB(TW + 0.04, baseY + 0.02, TD + 0.05, 0.05), pantsM, [0, (baseY + 0.02)/2, 0]);
+    } else {
+      add(root, RB(TW - 0.02, 0.12, TD - 0.01, 0.03), pantsM, [0, baseY - 0.04, 0]);
+      for(const s of [-1, 1]){
+        if(standing){
+          add(root, RB(LW, baseY - 0.05, LW, 0.035), pantsM, [s*0.085, (baseY - 0.05)/2 + 0.05, 0]);
+          add(root, RB(LW + 0.008, 0.08, 0.23, 0.032), shoeM, [s*0.085, 0.04, 0.035]);
+        } else {
+          add(root, RB(LW, 0.15, 0.43, 0.035), pantsM, [s*0.085, 0.585, 0.15]);
+          add(root, RB(LW - 0.01, 0.34, LW - 0.01, 0.033), pantsM, [s*0.085, 0.42, 0.31]);
+          add(root, RB(LW, 0.085, 0.22, 0.032), shoeM, [s*0.085, 0.23, 0.36]);
+        }
+      }
     }
     // arms
-    const longSleeve = ['hoodie','suit','shirt','leather','blazer'].includes(look.top) || special === 'myla' || special === 'dealer';
+    const longSleeve = ['hoodie','suit','shirt','leather','blazer'].includes(look.top) || special === 'myla' || dealer;
     const bareUpper = look.top === 'jersey' && !special;
-    const sleeveMat = topColorMat;
-    const armOpts = () => ({upperMat:bareUpper ? skin : sleeveMat, foreMat:longSleeve ? sleeveMat : skin,
-      cuff:look.top === 'suit' || look.top === 'blazer' ? mat({color:'#f4f2ee', rough:0.7, sheen:0.3}) : null,
-      upper:standing ? 0.29 : 0.28, fore:standing ? 0.27 : 0.255, r1:fem ? 0.043 : 0.047, r2:fem ? 0.035 : 0.039, handScale:fem ? 0.93 : 1});
+    const armOpts = () => ({upperMat:bareUpper ? skin : topM, foreMat:longSleeve ? topM : skin,
+      cuff:(look.top === 'suit' || look.top === 'blazer') && !dealer ? plastic('#f4f1ea', {rough:0.6}) : null,
+      upper:standing ? 0.29 : 0.28, fore:standing ? 0.27 : 0.255, w:fem ? AW*0.94 : AW, handScale:fem ? 1.08 : 1.15});
     const arms = {};
     for(const [k, side] of [['R', 1], ['L', -1]]){
-      const a = W3H.buildArm(side, skin, sleeveMat, armOpts());
+      const a = W3H.buildArm(side, skin, topM, armOpts());
       // avatar faces +Z, so its right side is -X
-      a.shoulder.pos = [-side*(fem ? 0.17 : 0.182), 0.3, -0.01]; body.add(a.shoulder);
+      a.shoulder.pos = [-side*(TW/2 + AW/2 + 0.003), TH - 0.06, 0]; body.add(a.shoulder);
       arms[k] = a;
     }
-    const av = {root, body, head, headPivot, look, arms, standing, special, fem, eyes, face, expr:'smile', exprUntil:0, blinkAt:0.5 + Math.random()*3, blink:0, talkUntil:0,
-      lookTarget:null, headYaw:0, headPitch:0, breathe:Math.random()*6, lean:0, gaze:[0, 0], saccade:0, lidW:0, lidS:0,
+    const av = {root, body, head, headPivot, look, arms, standing, special, fem, eyes, brows, mouth, expr:'smile', exprUntil:0, blinkAt:0.5 + Math.random()*3, blink:0, talkUntil:0,
+      lookTarget:null, headYaw:0, headPitch:0, breathe:Math.random()*6, lean:0, gaze:[0, 0], saccade:0, browT:[0, 0], browK:[0, 0],
       rest:{R:null, L:null}};
     return av;
   }
-  function sssFor(hex){ const c = col(hex); const l = (c[0] + c[1] + c[2])/3; return [0.95, 0.3 + l*0.1, 0.2]; }
 
   /* ---------- per-frame life: expressions, blinking, talking, eyes, head turn, breathing ---------- */
-  const EXPR = {
-    smile:{smile:0.45}, neutral:{}, happy:{smile:1, open:0.38, browUp:0.25}, shock:{open:0.95, browUp:1}, sad:{sad:1}, angry:{browDown:1},
-    grin:{smile:1.25, open:0.16}, talk:{smile:0.25},
-  };
+  // brow pose per mood: [lift, tilt] (tilt > 0 = angry, inner ends down)
+  const BROW = {smile:[0, 0], neutral:[0, 0], happy:[0.005, 0], shock:[0.012, -0.05], sad:[0.004, -0.38], angry:[-0.004, 0.45], grin:[0.004, 0.08], talk:[0.002, 0]};
   function setExpression(av, e, secs = 0){ av.baseExpr = av.baseExpr || 'smile'; if(secs > 0){ av.tempExpr = e; av.exprUntil = performance.now()/1000 + secs; } else av.baseExpr = e; }
   function talk(av, secs = 1.6){ av.talkUntil = performance.now()/1000 + secs; }
-  function applyMorph(av){
-    const f = av.face, T = f.T, g = f.g, bp = T.g.p, bn = T.g.n;
-    for(const k of T.idx){
-      let px = bp[k*3], py = bp[k*3+1], pz = bp[k*3+2], nx = bn[k*3], ny = bn[k*3+1], nz = bn[k*3+2];
-      for(const name of MORPHS){ const w = f.cur[name]; if(!w) continue; const t = T.targets[name];
-        px += t.dp[k*3]*w; py += t.dp[k*3+1]*w; pz += t.dp[k*3+2]*w; nx += t.dn[k*3]*w; ny += t.dn[k*3+1]*w; nz += t.dn[k*3+2]*w; }
-      const l = Math.hypot(nx, ny, nz) || 1;
-      g.p[k*3] = px; g.p[k*3+1] = py; g.p[k*3+2] = pz; g.n[k*3] = nx/l; g.n[k*3+1] = ny/l; g.n[k*3+2] = nz/l;
-    }
-    g.dirtyPos = true;
-  }
   function update(av, dt){
     const now = performance.now()/1000;
-    let e = av.tempExpr && now < av.exprUntil ? av.tempExpr : (av.baseExpr || 'smile');
+    const e = av.tempExpr && now < av.exprUntil ? av.tempExpr : (av.baseExpr || 'smile');
     const talking = now < av.talkUntil && av.special !== 'dealer';
     av.expr = e;
     // blinking
     av.blinkAt -= dt; if(av.blinkAt < 0){ av.blink = Math.min(1, av.blink + dt/0.06); if(av.blinkAt < -0.14){ av.blinkAt = 2 + Math.random()*4; } } else av.blink = Math.max(0, av.blink - dt/0.09);
-    if(av.face){
-      const f = av.face, tgt = EXPR[e] || EXPR.smile;
-      for(const k of MORPHS) f.w[k] = tgt[k] || 0;
-      if(talking){ const ph = now*11 + av.breathe; f.w.open = Math.max(f.w.open, 0.18 + 0.32*Math.abs(Math.sin(ph)*Math.sin(ph*0.47 + 1.3))); f.w.smile = Math.max(f.w.smile, 0.25); }
-      let changed = false; const kk = 1 - Math.exp(-dt*(talking ? 22 : 9));
-      for(const k of MORPHS){ const d = f.w[k] - f.cur[k]; if(Math.abs(d) > 0.002){ f.cur[k] += d*kk; changed = true; } else if(f.cur[k] !== f.w[k]){ f.cur[k] = f.w[k]; changed = true; } }
-      if(changed) applyMorph(av);
+    // mouth
+    if(av.mouth){
+      let kind = MOUTH_OF[e] || 'smile';
+      if(talking){ const ph = now*9 + av.breathe; kind = Math.sin(ph)*Math.sin(ph*0.47 + 1.3) > -0.1 ? 'open' : 'smile'; }
+      if(kind !== av.mouth.kind){ av.mouth.kind = kind; av.mouth.mat.map = mouthTex(kind, av.mouth.lips); }
+    }
+    // brows ease toward the mood
+    if(av.brows){
+      const b = BROW[e] || BROW.smile, k = 1 - Math.exp(-dt*10);
+      av.browK[0] += (b[0] - av.browK[0])*k; av.browK[1] += (b[1] - av.browK[1])*k;
+      for(const B of av.brows){ B.n.pos = [B.s*0.05, 0.054 + av.browK[0]*F, FZ + 0.001]; B.n.rot = [0, 0, B.s*av.browK[1]]; }
     }
     // breathing + lean
     av.breathe += dt; av.body.scl = [1, 1 + Math.sin(av.breathe*1.6)*0.006, 1];
     av.body.rot = [av.lean, 0, 0];
     // head turn toward a world point
     let yaw = Math.sin(av.breathe*0.31)*0.12, pitch = 0.06 + Math.sin(av.breathe*0.23)*0.03;
-    let ld = null;
     if(av.lookTarget){
       const hp = av.headPivot.worldPos(), d = V.sub(av.lookTarget, hp);
-      const inv = G3.qInv(av.root.worldQuat()); ld = G3.qRot(inv, d);
+      const inv = G3.qInv(av.root.worldQuat()), ld = G3.qRot(inv, d);
       yaw = Math.max(-1.0, Math.min(1.0, Math.atan2(ld[0], ld[2]))); pitch = Math.max(-0.5, Math.min(0.6, -Math.atan2(ld[1], Math.hypot(ld[0], ld[2]))));
     }
     const k = 1 - Math.exp(-dt*5);
     av.headYaw += (yaw - av.headYaw)*k; av.headPitch += (pitch - av.headPitch)*k;
     av.headPivot.rot = [av.headPitch, av.headYaw, 0];
-    // eyes: lead the head toward the target, small saccades
+    // eyes: glance ahead of the head toward the target, small saccades; blinks squash them flat
     if(av.eyes){
       av.saccade -= dt; if(av.saccade < 0){ av.saccade = 0.6 + Math.random()*2.2; av.sacc = [(Math.random() - 0.5)*0.12, (Math.random() - 0.5)*0.06]; }
       const gy = Math.max(-0.38, Math.min(0.38, (yaw - av.headYaw)*1.4 + (av.sacc ? av.sacc[0] : 0))), gp = Math.max(-0.25, Math.min(0.25, (pitch - av.headPitch)*1.2 + (av.sacc ? av.sacc[1] : 0)));
       const ke = 1 - Math.exp(-dt*25); av.gaze[0] += (gy - av.gaze[0])*ke; av.gaze[1] += (gp - av.gaze[1])*ke;
-      const wide = e === 'shock' ? 1 : 0, sq = e === 'happy' || e === 'grin' ? 1 : e === 'smile' ? 0.35 : 0, sad = e === 'sad' ? 1 : 0;
-      const kl = 1 - Math.exp(-dt*12); av.lidW += (wide - av.lidW)*kl; av.lidS += (sq - av.lidS)*kl;
-      for(const E of av.eyes){
-        E.ball.q = qEuler(av.gaze[1], av.gaze[0], 0);
-        const open = -0.24 - av.lidW*0.36 + sad*0.12 + av.gaze[1]*0.3;
-        E.upper.rot = [open + (0.47 - open)*av.blink, 0, 0];
-        E.lower.rot = [0.42 - av.lidS*0.2 + av.lidW*0.08 + Math.max(0, av.gaze[1])*0.3 - av.blink*0.08, 0, 0];
-      }
+      const wide = e === 'shock' ? 1.18 : e === 'happy' || e === 'grin' ? 0.8 : 1;
+      const sy = Math.max(0.08, wide*(1 - av.blink));
+      for(const E of av.eyes){ E.grp.pos = [E.base[0] + av.gaze[0]*0.018, E.base[1] - av.gaze[1]*0.018, E.base[2]]; E.grp.scl = [1, sy, 1]; }
     }
     W3H.updateHand(av.arms.R.hand, dt); W3H.updateHand(av.arms.L.hand, dt);
   }
@@ -7887,7 +7373,7 @@ W3.games.blackjack = (() => {
       const A = X.actors.get(p.id); if(!A) return;
       const s = T.seats[i], mine = p.id === MY_ID;
       const turn = S.phase === 'playing' && S.turn === p.id;
-      if(!mine) L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.27, 0]),
+      if(!mine) L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.34, 0]),
         html:`<b>${esc(p.name)}</b><span>${short(p.chips)}</span>`, cls:'w3name' + (turn ? ' turn' : '') + (!p.connected ? ' away' : '')});
       const mineCards = all.filter(r => r.pid === p.id);
       if(mineCards.length){
@@ -7899,7 +7385,7 @@ W3.games.blackjack = (() => {
         if(html) L.push({key:'t' + p.id, at:V.add(s.cards(0, 1), [0, 0.035, 0]), html, cls});
       } else if(S.phase === 'betting' && !mine && p.ready) L.push({key:'t' + p.id, at:V.add(spotPos(s, 'main'), [0, 0.05, 0]), html:'&#10003;', cls:'w3tot ok'});
     });
-    L.push(...W3.sayLabel('MYLA', () => V.add(D.av.headPivot.worldPos(), [0, 0.3, 0])));
+    L.push(...W3.sayLabel('MYLA', () => V.add(D.av.headPivot.worldPos(), [0, 0.38, 0])));
     X.labels(L);
   }
 
@@ -8264,14 +7750,14 @@ W3.games.roulette = (() => {
       let em = '';
       if(S.phase === 'betting') em = p.ready ? (p.bet ? `BET ${short(p.bet)}` : 'SITTING OUT') : 'BETTING...';
       else if(S.phase === 'results' && p.inRound) em = p.delta > 0 ? `+${short(p.delta)}` : p.delta < 0 ? `-${short(-p.delta)}` : 'PUSH';
-      L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.27, 0]), html:`<b>${esc(p.name)}</b><span>${short(p.chips)}</span>${em ? `<em>${em}</em>` : ''}`,
+      L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.34, 0]), html:`<b>${esc(p.name)}</b><span>${short(p.chips)}</span>${em ? `<em>${em}</em>` : ''}`,
         cls:'w3name' + (S.phase === 'shooter' && S.turn === p.id ? ' turn' : '') + (!p.connected ? ' away' : '')});
     });
     const rl = S.rl || {history:[]};
     const showRes = S.phase === 'results' && rl.result != null && spin && spin.t >= spin.T;
     if(showRes) L.push({key:'res', at:V.add(WC, [0, 0.42, 0]), html:`${rl.result}`, cls:'w3tot big ' + (rl.result === 0 ? 'green' : rlColor(rl.result))});
     if(rl.history && rl.history.length) L.push({key:'hist', at:V.add(WC, [0, 0.62, -0.1]), html:rl.history.slice(0, 8).map(n => `<i class="${rlColor(n)}">${n}</i>`).join(''), cls:'w3hist'});
-    L.push(...W3.sayLabel('MYLA', () => V.add(D.av.headPivot.worldPos(), [0, 0.3, 0])));
+    L.push(...W3.sayLabel('MYLA', () => V.add(D.av.headPivot.worldPos(), [0, 0.38, 0])));
     X.labels(L);
   }
 
@@ -8668,7 +8154,7 @@ W3.games.baccarat = (() => {
       if(S.phase === 'betting') em = p.ready ? (p.bet ? `BET ${short(p.bet)}` : 'SITTING OUT') : 'BETTING...';
       else if(S.phase === 'results' && p.inRound) em = p.delta > 0 ? `+${short(p.delta)}` : p.delta < 0 ? `-${short(-p.delta)}` : 'PUSH';
       if(b.by === p.id && (S.phase === 'dealing' || S.phase === 'shooter')) em = 'HAS THE SHOE';
-      L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.27, 0]), html:`<b>${esc(p.name)}</b><span>${short(p.chips)}</span>${em ? `<em>${em}</em>` : ''}`,
+      L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.34, 0]), html:`<b>${esc(p.name)}</b><span>${short(p.chips)}</span>${em ? `<em>${em}</em>` : ''}`,
         cls:'w3name' + (S.phase === 'shooter' && S.turn === p.id ? ' turn' : '') + (!p.connected ? ' away' : '')});
     });
     for(const side of ['P', 'B']){
@@ -8678,7 +8164,7 @@ W3.games.baccarat = (() => {
       L.push({key:'tot' + side, at:V.add([HAND[side][0], TOP, HAND[side][1]], [0, 0.04, 0.1]), html:`${side === 'P' ? 'PLAYER' : 'BANKER'} ${v}`, cls:'w3tot' + (win ? ' win' : '') + (S.phase === 'results' && b.winner === 'T' ? ' push' : '')});
     }
     if(b.history && b.history.length) L.push({key:'road', at:V.add(T.shoe, [0.05, 0.3, -0.05]), html:b.history.slice(-10).map(x => `<i class="${x === 'P' ? 'black' : x === 'B' ? 'red' : 'green'}">${x}</i>`).join(''), cls:'w3hist road'});
-    L.push(...W3.sayLabel('MYLA', () => V.add(D.av.headPivot.worldPos(), [0, 0.3, 0])));
+    L.push(...W3.sayLabel('MYLA', () => V.add(D.av.headPivot.worldPos(), [0, 0.38, 0])));
     X.labels(L);
   }
 
@@ -8837,7 +8323,7 @@ W3.games.buckshot = (() => {
     if(now){ gun.root.pos = pos; gun.root.q = q; return wait(0); }
     return Promise.all([tween(gun.root, 'pos', pos, 0.35), tween(gun.root, 'q', q, 0.35)]);
   }
-  const headOf = (A) => V.add(A.av.headPivot.worldPos(), [0, 0.08, 0]);
+  const headOf = (A) => V.add(A.av.headPivot.worldPos(), [0, 0.14, 0]);
   function holdPose(A){
     const f = A === D ? [0, 0, 1] : SEATS[A.seat].fwd;
     const base = A === D ? [0.04, 1.0, -0.5] : V.add(A.av.root.pos, V.add(V.scale(f, 0.4), [0, 1.0, 0]));
@@ -8975,12 +8461,12 @@ W3.games.buckshot = (() => {
       if(b && b.cuffed && b.cuffed[p.id]) em = 'CUFFED';
       if(b && b.order.includes(p.id) && !(b.lives[p.id] > 0)) em = 'DOWN';
       if(p.id === MY_ID){ if(lives) L.push({key:'me', at:V.add(SEATS[n].items(5), [0, 0.03, 0]), html:lives, cls:'w3name bs'}); return; }
-      L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.27, 0]), html:`<b>${esc(p.name)}</b>${lives}${em ? `<em>${em}</em>` : ''}`, cls:'w3name bs' + (turn ? ' turn' : '')});
+      L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.34, 0]), html:`<b>${esc(p.name)}</b>${lives}${em ? `<em>${em}</em>` : ''}`, cls:'w3name bs' + (turn ? ' turn' : '')});
     });
-    if(b) L.push({key:'dealer', at:() => V.add(D.av.headPivot.worldPos(), [0, 0.3, 0]), html:`<b>THE DEALER</b>${livesHTML(b.lives.dealer || 0, b.max.dealer || 0)}${b.cuffed && b.cuffed.dealer ? '<em>CUFFED</em>' : ''}`, cls:'w3name bs dealer' + (b.turn === 'dealer' && b.stage === 'turn' ? ' turn' : '')});
+    if(b) L.push({key:'dealer', at:() => V.add(D.av.headPivot.worldPos(), [0, 0.38, 0]), html:`<b>THE DEALER</b>${livesHTML(b.lives.dealer || 0, b.max.dealer || 0)}${b.cuffed && b.cuffed.dealer ? '<em>CUFFED</em>' : ''}`, cls:'w3name bs dealer' + (b.turn === 'dealer' && b.stage === 'turn' ? ' turn' : '')});
     if(b && b.load && b.stage === 'load') L.push({key:'load', at:[0, TOP + 0.12, -0.15], html:`<b class="r">${b.load.live} LIVE</b> &middot; ${b.load.blank} BLANK`, cls:'w3tot shells'});
     else if(b && b.left != null && b.stage !== 'over') L.push({key:'left', at:() => V.add(gun.root.pos, [0, 0.12, 0]), html:`${b.left} shell${b.left === 1 ? '' : 's'} left${b.saw ? ' &middot; <b class="r">SAWED</b>' : ''}`, cls:'w3tot shells'});
-    L.push(...W3.sayLabel('THE DEALER', () => V.add(D.av.headPivot.worldPos(), [0, 0.6, 0])));
+    L.push(...W3.sayLabel('THE DEALER', () => V.add(D.av.headPivot.worldPos(), [0, 0.66, 0])));
     X.labels(L);
   }
 
@@ -9153,7 +8639,7 @@ W3.games.imposter = (() => {
   }
   function think(A){
     return X.gesture(A, async () => {
-      const c = A.arms.R, chin = V.add(A.av.headPivot.worldPos(), X.ldir(A, [-0.02, -0.03, 0.1]));
+      const c = A.arms.R, chin = V.add(A.av.headPivot.worldPos(), X.ldir(A, [-0.02, 0.0, 0.17]));
       await X.arm(c, chin, {dur:0.4, pose:'fist', q:X.hq(A, [0, 1, 0.3], [0, 0, 1])});
       await wait(1.2);
       await restOf(A);
@@ -9186,14 +8672,14 @@ W3.games.imposter = (() => {
       else if(S.phase === 'betting') tags.push(p.ready ? (p.inRound ? 'IN' : 'SITTING OUT') : 'deciding...');
       const clues = m && m.clues[p.id] || [];
       const last = clues.length ? clues[clues.length - 1] : null;
-      const at = () => V.add(A.av.headPivot.worldPos(), [0, 0.27, 0]);
+      const at = () => V.add(A.av.headPivot.worldPos(), [0, 0.34, 0]);
       if(p.id !== MY_ID || last){
         L.push({key:'n' + p.id, at, html:`${p.id !== MY_ID ? `<b>${esc(p.name)}</b>` : ''}${tags.length && p.id !== MY_ID ? `<em>${tags.map(esc).join(' &middot; ')}</em>` : ''}`,
           cls:'w3name imp' + (m && m.cur === p.id ? ' turn' : '') + (m && m.imposter === p.id ? ' isImp' : '') + (m && m.myVote === p.id ? ' myVote' : '')});
         if(last) L.push({key:'c' + p.id, at, dy:p.id !== MY_ID ? -44 : 0, html:clues.map(c => `<span${c === '...' ? ' class="none"' : ''}>${esc(c)}</span>`).join(''), cls:'w3clue'});
       }
     });
-    L.push(...W3.sayLabel('MYLA', () => V.add(D.av.headPivot.worldPos(), [0, 0.3, 0])));
+    L.push(...W3.sayLabel('MYLA', () => V.add(D.av.headPivot.worldPos(), [0, 0.38, 0])));
     X.labels(L);
   }
 
