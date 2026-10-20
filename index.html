@@ -982,6 +982,10 @@ body.w3creator #w3c{display:block;z-index:30}
 .crHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
 .crHead b{font-family:var(--serif);color:var(--gold);font-size:21px}
 .crRand{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:#f0e6cf;border-radius:999px;padding:6px 12px;font:600 13px var(--ui);cursor:pointer}
+.crStyle{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:4px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.1);border-radius:12px}
+.crStyle span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#b9ad95;font-weight:700;padding:0 4px 0 6px}
+.crStyle button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:transparent;border:1px solid transparent;color:#d9cfb9;border-radius:9px;padding:7px 6px;font:700 13px var(--ui);cursor:pointer}
+.crStyle button.on{background:linear-gradient(#ffe39a,#d9a83c);color:#1a0d02;border-color:#ffe7a6}
 .crTabs{display:flex;gap:6px;margin-bottom:8px}
 .crTab{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#d9cfb9;border-radius:10px;padding:8px 4px;font:700 13px var(--ui);cursor:pointer}
 .crTab.on{background:linear-gradient(#ffe39a,#d9a83c);color:#1a0d02;border-color:#ffe7a6}
@@ -2675,6 +2679,8 @@ const ICON_LOOK = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="
 const ICON_ZOOM = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 const ICON_ZOOMOUT = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21M7.5 10.5h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
 const ICON_GEAR = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 000-2l2-1.6-2-3.4-2.4 1a7.6 7.6 0 00-1.7-1L15 3.5h-4l-.4 2.5a7.6 7.6 0 00-1.7 1l-2.4-1-2 3.4L6.6 11a7.5 7.5 0 000 2l-2 1.6 2 3.4 2.4-1a7.6 7.6 0 001.7 1l.4 2.5h4l.4-2.5a7.6 7.6 0 001.7-1l2.4 1 2-3.4zM13 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" transform="translate(-1 0)"/></svg>';
+const ICON_MODEL = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="7.6" r="4.3" fill="currentColor"/><path d="M3.8 21.5c0-4.9 3.7-8.4 8.2-8.4s8.2 3.5 8.2 8.4z" fill="currentColor"/></svg>';
+const ICON_BLOCK = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="7" y="2.5" width="10" height="9.5" rx="1.6" fill="currentColor"/><rect x="4.5" y="13.4" width="15" height="8.1" rx="1.6" fill="currentColor"/></svg>';
 const ICON_EXIT = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M14 4h4a2 2 0 012 2v12a2 2 0 01-2 2h-4M10 16l-4-4 4-4M6 12h10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180 12 12)"/></svg>';
 
 /* ---------- Myla, standing behind the table (original illustration, painted with soft gradients) ---------- */
@@ -3284,6 +3290,7 @@ function headerHTML(){
     <div class="topright">
       ${isHost ? `<button class="iconbtn" data-act="settings" aria-label="Table settings">${ICON_GEAR}</button>` : `<button class="iconbtn" data-act="rules" aria-label="How to play" style="font-weight:800">?</button>`}
       <button class="iconbtn t3d${W3.enabled() ? ' on' : ''}${W3.supported() ? '' : ' na'}" data-act="toggle3d" aria-label="${W3.supported() ? 'Switch between the 3D and the classic table' : 'Why the 3D table is off'}" title="${!W3.supported() ? "3D is off in this browser. Tap to see why" : W3.enabled() ? 'Switch to the classic 2D table' : 'Switch to the 3D table'}">3D</button>
+      ${W3.enabled() ? `<button class="iconbtn chst" data-act="charstyle" aria-label="${W3S.style() === 'blocky' ? 'Characters: blocky. Switch to the 3D models' : 'Characters: 3D models. Switch to blocky'}" title="${W3S.style() === 'blocky' ? 'Blocky characters (tap for the 3D models)' : '3D model characters (tap for blocky)'}">${W3S.style() === 'blocky' ? ICON_BLOCK : ICON_MODEL}</button>` : ''}
       <button class="iconbtn" data-act="sound" aria-label="${SFX.on ? 'Mute' : 'Unmute'}">${SFX.on ? ICON_ON : ICON_OFF}</button>
       <button class="iconbtn" data-act="leave" aria-label="Leave the table">${ICON_EXIT}</button>
     </div>`;
@@ -4226,6 +4233,7 @@ function act(a, b){
     case 'start': send({t:'start'}); break;
     case 'invite': invite(); break;
     case 'toggle3d': W3.toggle(); break;
+    case 'charstyle': W3.setStyle(W3S.style() === 'blocky' ? 'model' : 'blocky'); break;
     case 'retry3d': W3.retry(); break;
     case 'creator': closeModal(); Creator.show(); break;
     case 'settings': openSettings(); break;
@@ -6335,7 +6343,7 @@ const W3P = (() => {
   function build(lookIn, opts = {}){
     const look = cleanLook(opts.special === 'myla' && !(lookIn && lookIn.skin) ? MYLA_LOOK : lookIn), standing = !!opts.standing, special = opts.special || null;
     // the imported cartoon models, once they are unpacked (the Buckshot dealer keeps his hooded look)
-    if(typeof W3S !== 'undefined' && W3S.ready()){ try{ return W3S.build(look, opts); }catch(e){ console.warn('model avatar failed', e); } }
+    if(typeof W3S !== 'undefined' && W3S.use()){ try{ return W3S.build(look, opts); }catch(e){ console.warn('model avatar failed', e); } }
     const dealer = special === 'dealer', fem = look.face === 'lashes' && !dealer;
     const root = new Node(); root.name = 'avatar';
     const body = new Node(); root.add(body);
@@ -6584,6 +6592,10 @@ const W3S = (() => {
       .catch(e => { failed = true; console.warn('3D models unavailable, using blocky people', e); }), 0);
   }
   const ready = () => !!LIB;
+  // which characters this screen shows: the 3D models (default) or the blocky people. Only this device; friends pick their own.
+  const style = () => store.get('charStyle', 'model') === 'blocky' ? 'blocky' : 'model';
+  const use = () => !!LIB && style() === 'model';
+  const setStyle = (v) => store.set('charStyle', v === 'blocky' ? 'blocky' : 'model');
   const onReady = (f) => { if(LIB) f(); else listeners.push(f); };
 
   /* ---------------- skeleton ---------------- */
@@ -6819,7 +6831,7 @@ const W3S = (() => {
     }
     return root;
   }
-  return {start, ready, onReady, build, update, table, failed:() => failed, BONES, K};
+  return {start, ready, use, style, setStyle, onReady, build, update, table, failed:() => failed, BONES, K};
 })();
 /* =====================================================================
    3D ROOMS: the casino floor, Buckshot's basement, the Imposter lounge.
@@ -7104,6 +7116,16 @@ const W3 = (() => {
     toast(want ? (coarse() ? '3D table ON.' : '3D table ON. W A S D to look around, R to look ahead, Z to zoom.') : '3D table OFF. Classic view.');
     skelKey = ''; render();
   }
+  /* blocky people or the 3D models, on this screen only */
+  function setStyle(v){
+    v = v === 'blocky' ? 'blocky' : 'model';
+    if(v === W3S.style()) return;
+    W3S.setStyle(v);
+    if(v === 'model' && !W3S.ready()) toast(W3S.failed() ? "The 3D models couldn't load on this device, so you'll see blocky characters." : 'Loading the 3D models...');
+    else toast(v === 'blocky' ? 'Blocky characters ON.' : '3D model characters ON.');
+    if(active){ kind = null; sync(); }
+    if(typeof S !== 'undefined' && S){ skelKey = ''; render(); }
+  }
   /* why 3D is off, and how to get it back */
   function explain(force){
     if(explained && !force) return; explained = true;
@@ -7190,7 +7212,7 @@ const W3 = (() => {
   }
 
   /* ---------------- actors ---------------- */
-  function lookKey(look, opts){ return JSON.stringify(look || {}) + '|' + (opts.special || '') + (opts.standing ? 's' : '') + (W3S.ready() ? 'M' : ''); }
+  function lookKey(look, opts){ return JSON.stringify(look || {}) + '|' + (opts.special || '') + (opts.standing ? 's' : '') + (W3S.use() ? 'M' : ''); }
   function actor(id, look, opts = {}){
     const key = lookKey(look, opts);
     let A = actors.get(id);
@@ -7487,7 +7509,7 @@ const W3 = (() => {
   // unpack the character models in the background; when they're ready, rebuild the table with them
   W3S.start(); W3S.onReady(() => { if(active){ kind = null; sync(); } });
 
-  return {games, supported, enabled, toggle, sync, stop, setCreator, explain, retry, setZoom, cycleZoom, closeUp, frameUp, fitDist, get zoom(){ return zoom; }, get zoomStops(){ return zoomStops(); }, get failWhy(){ return failWhy; }, get active(){ return active; }, seatOf, lookOf, sayLabel, step,
+  return {games, supported, enabled, toggle, setStyle, sync, stop, setCreator, explain, retry, setZoom, cycleZoom, closeUp, frameUp, fitDist, get zoom(){ return zoom; }, get zoomStops(){ return zoomStops(); }, get failWhy(){ return failWhy; }, get active(){ return active; }, seatOf, lookOf, sayLabel, step,
     get ctx(){ return ctx; }, get cam(){ return cam; }, get R(){ return R; }};
 })();
 /* =====================================================================
@@ -8258,7 +8280,7 @@ const Creator = (() => {
     outfit:[['topColor', 'Shirt', 'sw'], ['pants', 'Pants', 'sw'], ['shoes', 'Shoes', 'sw']],
   };
   const MLABEL = {natural:'Man', lashes:'Woman'};
-  const models = () => typeof W3S !== 'undefined' && W3S.ready();
+  const models = () => typeof W3S !== 'undefined' && W3S.use();
   const tabs = () => models() ? MTABS : TABS, sections = () => models() ? MSECTIONS : SECTIONS;
   function sectionHTML([k, label, kind]){
     const opts = W3P.OPT[k];
@@ -8269,6 +8291,7 @@ const Creator = (() => {
   }
   function panelHTML(){
     return `<div class="crHead"><b>Your character</b><button class="crRand" data-cr="random">${DICE}<span>Surprise me</span></button></div>
+      ${W3.supported() && typeof W3S !== 'undefined' ? `<div class="crStyle" role="group" aria-label="Character style on your screen"><span>Style</span>${[['model', '3D Models', ICON_MODEL], ['blocky', 'Blocky', ICON_BLOCK]].map(([v, l, ic]) => `<button data-style="${v}" class="${W3S.style() === v ? 'on' : ''}" aria-pressed="${W3S.style() === v}">${ic}${l}</button>`).join('')}</div>` : ''}
       <div class="crTabs" role="tablist">${tabs().map(([k, l]) => `<button role="tab" class="crTab${tab === k ? ' on' : ''}" aria-selected="${tab === k}" data-tab="${k}">${l}</button>`).join('')}</div>
       <div class="crBody">${(sections()[tab] || sections()[tabs()[0][0]]).map(sectionHTML).join('')}</div>
       <div class="crFoot"><button class="btn ghost" data-cr="cancel">Cancel</button><button class="btn" data-cr="save">Looks good!</button></div>`;
@@ -8280,6 +8303,7 @@ const Creator = (() => {
     el = document.createElement('div'); el.id = 'creator'; el.className = 'creator' + (W3.supported() ? '' : ' no3d');
     el.innerHTML = `<div class="crHint">${W3.supported() ? 'Drag to spin around' : "3D preview isn't available on this device, but your friends will still see your look."}</div><div class="crPanel" role="dialog" aria-label="Customize your character"></div>`;
     document.body.appendChild(el); paint();
+    if(typeof W3S !== 'undefined' && !W3S.ready()) W3S.onReady(() => { if(open && el){ tab = tabs()[0][0]; paint(); } });
     el.addEventListener('click', onClick);
     document.addEventListener('keydown', onKey);
     W3.setCreator(true);
@@ -8301,6 +8325,7 @@ const Creator = (() => {
     const b = e.target.closest('button'); if(!b) return;
     if(SFX.on) actx();
     if(b.dataset.tab){ tab = b.dataset.tab; paint(); return; }
+    if(b.dataset.style){ if(b.dataset.style !== W3S.style()){ W3.setStyle(b.dataset.style); tab = tabs()[0][0]; sfx('chip'); paint(); W3.sync(); } return; }
     if(b.dataset.cr === 'save') return close(true);
     if(b.dataset.cr === 'cancel') return close(false);
     if(b.dataset.cr === 'random'){ look = W3P.randomLook(Math.random()); sfx('chip'); paint(); W3.sync(); return; }
