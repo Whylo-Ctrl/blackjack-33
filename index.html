@@ -1073,6 +1073,13 @@ const PEEK_TIME = 1700;     // dealer checking for blackjack
 const SPIN_TIME = 8000;     // roulette spin
 const BAC_STEP = 950;       // baccarat: time between cards
 const SHOOT_TIME = 12000;   // roulette/baccarat: time the player whose turn it is gets to spin / deal
+// Table pace (host setting). FAST is GTA Online style: short timers, Myla spins and deals herself,
+// quick results, straight into the next round. RELAXED keeps the original longer timers.
+const PACE = {
+  fast:   {bet:15000, turn:15000, result:4000, peek:1000, spin:6500, bac:700, shoot:0, dStart:600, dStep:600, dEnd:450},
+  relaxed:{bet:BET_TIME, turn:TURN_TIME, result:RESULT_TIME, peek:PEEK_TIME, spin:SPIN_TIME, bac:BAC_STEP, shoot:SHOOT_TIME, dStart:900, dStep:850, dEnd:650},
+};
+const TM = k => PACE[G && G.settings && G.settings.pace === 'relaxed' ? 'relaxed' : 'fast'][k];
 const PREFIX = 'blackjack33-v1-';
 
 const SUITS = ['♠','♥','♦','♣'];
@@ -1231,7 +1238,7 @@ const conns = new Map();   // player id -> PeerJS connection
 let hostTimer = null, lastBroadcast = 0;
 
 function newGame(code){
-  return {code, round:0, phase:'lobby', settings:{game:'blackjack', target:33, doom:true, impHint:true}, bs:null, imp:null,
+  return {code, round:0, phase:'lobby', settings:{game:'blackjack', target:33, doom:true, impHint:true, pace:'fast'}, bs:null, imp:null,
     players:[], dealer:{hand:[],hidden:true}, dealerBJ:false,
     say:"Welcome to Whylo's. I'm Myla, your dealer tonight. Take a seat.", sayId:1,
     turn:null, turnOrder:[], turnEnds:0, turnTotal:TURN_TIME, phaseEnds:0, phaseTotal:1,
@@ -1252,7 +1259,7 @@ function activeCurse(p){ return p.curse && p.curse.round <= G.round ? p.curse.id
 function limitOf(p){ return activeCurse(p) === 'shrink' ? TGT() - 3 : TGT(); }
 function pv(p){ return handValue(p.hand, limitOf(p), activeCurse(p) === 'aces').total; }
 function pNatural(p){ return isNatural(p.hand, activeCurse(p) === 'aces'); }
-function turnTime(p){ return activeCurse(p) === 'speed' ? SPEED_TIME : TURN_TIME; }
+function turnTime(p){ return activeCurse(p) === 'speed' ? Math.min(SPEED_TIME, TM('turn')) : TM('turn'); }
 function cleanName(n){ n = String(n || '').replace(/\s+/g,' ').trim().slice(0,14); return n || 'Player'; }
 const LOCKED = ['playing','peek','dealer','spinning','dealing','shotgun','imp','shooter'];
 
@@ -1328,6 +1335,7 @@ function changeSettings(p, s){
   if(s.target === 21 || s.target === 33) st.target = s.target;
   if(typeof s.doom === 'boolean'){ st.doom = s.doom; if(!st.doom) G.players.forEach(x => { x.curse = null; }); }
   if(typeof s.impHint === 'boolean') st.impHint = s.impHint;
+  if(s.pace === 'fast' || s.pace === 'relaxed') st.pace = s.pace;
   if(JSON.stringify(st) === before) return false;
   note(`Host switched the table to ${tableLabel(st)}.`);
   if(G.phase === 'betting'){
@@ -1353,7 +1361,7 @@ function startRound(){
   const g = GAME();
   if((g === 'blackjack' || g === 'baccarat') && G.shoe.length < DECKS*52*0.3){ G.shoe = newShoe(); note('Fresh shoe! Myla shuffles six decks.'); }
   if(g === 'baccarat') Object.assign(G.bac, {seq:[], shown:0, winner:null, pt:0, bt:0});
-  G.phaseTotal = BET_TIME; G.phaseEnds = Date.now() + BET_TIME;
+  G.phaseTotal = TM('bet'); G.phaseEnds = Date.now() + G.phaseTotal;
   say(pick(LINES[{roulette:'rlBet', baccarat:'bacBet', buckshot:'bsBet', imposter:'impBet'}[g] || 'bjBet']));
 }
 function eligibleBettors(){ return G.players.filter(p => p.connected && !p.left && (p.ready || p.bet > 0 || p.chips >= MIN_BET || FREE_GAMES.includes(GAME()))); }
@@ -1374,11 +1382,11 @@ function closeBetting(){
   }
   if(g0 === 'imposter' && G.players.filter(p => p.inRound).length < IMP_MIN){
     G.players.forEach(p => { p.ready = false; p.inRound = false; });
-    G.phaseTotal = BET_TIME; G.phaseEnds = Date.now() + BET_TIME;
+    G.phaseTotal = TM('bet'); G.phaseEnds = Date.now() + G.phaseTotal;
     say(`Imposter needs at least ${IMP_MIN} players. Invite some friends!`); return;
   }
   for(const p of G.players.filter(p => p.inRound)){ if(p.bet) p.lastBets = {...p.bets}; p.lastGame = g0; }
-  if(!G.players.some(p => p.inRound)){ G.phaseTotal = BET_TIME; G.phaseEnds = Date.now() + BET_TIME; say(pick(LINES.idle)); return; }
+  if(!G.players.some(p => p.inRound)){ G.phaseTotal = TM('bet'); G.phaseEnds = Date.now() + G.phaseTotal; say(pick(LINES.idle)); return; }
   const g = GAME();
   if(g === 'blackjack') deal();
   else if(g === 'roulette') awaitShooter('spin');
@@ -1399,9 +1407,9 @@ function nextShooter(){
 }
 function awaitShooter(kind){
   const s = nextShooter();
-  if(!s){ if(kind === 'spin') rlSpin(); else { bacDeal(); G.bac.by = null; } return; }
+  if(!s || !TM('shoot')){ if(kind === 'spin') rlSpin(); else { bacDeal(); G.bac.by = null; } return; }   // fast pace: Myla does it herself
   G.phase = 'shooter'; G.shoot = kind; G.lastShooter = s.id;
-  G.turn = s.id; G.turnTotal = SHOOT_TIME; G.turnEnds = Date.now() + SHOOT_TIME;
+  G.turn = s.id; G.turnTotal = TM('shoot'); G.turnEnds = Date.now() + G.turnTotal;
   say(kind === 'spin' ? `No more bets! ${s.name}, you spin the wheel.` : `No more bets! ${s.name}, you deal the cards.`);
 }
 function shooterGo(auto){
@@ -1497,7 +1505,7 @@ function deal(){
   G.turnOrder = ps.map(p => p.id); G.turn = null;
   const up = G.dealer.hand[0].r;
   if(up === 'A' || isTen(up)){
-    G.phase = 'peek'; G.phaseTotal = DEAL_ANIM + PEEK_TIME; G.phaseEnds = Date.now() + G.phaseTotal;
+    G.phase = 'peek'; G.phaseTotal = DEAL_ANIM + TM('peek'); G.phaseEnds = Date.now() + G.phaseTotal;
     say(up === 'A' ? 'Ace showing. Let me check for blackjack...' : 'Ten showing. Let me check for blackjack...');
   } else { say(pick(LINES.bjDeal)); nextTurn(DEAL_ANIM); }
 }
@@ -1553,10 +1561,10 @@ function dealerPlay(){
   const step = () => {
     if(G !== g || G.phase !== 'dealer') return;
     const v = handValue(G.dealer.hand, TGT()).total;
-    if(live && v < DSTAND()){ G.dealer.hand.push(draw()); broadcast(); setTimeout(step, 850); }
-    else setTimeout(() => { if(G === g && G.phase === 'dealer'){ finishBlackjack(); broadcast(); } }, 650);
+    if(live && v < DSTAND()){ G.dealer.hand.push(draw()); broadcast(); setTimeout(step, TM('dStep')); }
+    else setTimeout(() => { if(G === g && G.phase === 'dealer'){ finishBlackjack(); broadcast(); } }, TM('dEnd'));
   };
-  setTimeout(step, 900);
+  setTimeout(step, TM('dStart'));
 }
 function finishBlackjack(){
   const T = TGT(), d = handValue(G.dealer.hand, T).total, dBust = d > T, dBJ = isNatural(G.dealer.hand);
@@ -1589,7 +1597,7 @@ function finishBlackjack(){
 function rlSpin(){
   G.phase = 'spinning';
   G.rl.result = rnd(37); G.rl.spinId++;
-  G.phaseTotal = SPIN_TIME; G.phaseEnds = Date.now() + SPIN_TIME;
+  G.phaseTotal = TM('spin'); G.phaseEnds = Date.now() + G.phaseTotal;
   say('No more bets!');
   G.rl.by = G.shotBy || null; G.shotBy = null;
 }
@@ -1628,7 +1636,7 @@ function bacStep(now){
   const b = G.bac;
   if(b.shown < b.seq.length){
     b.shown++;
-    b.nextAt = now + (b.shown >= 4 ? BAC_STEP + 500 : BAC_STEP);
+    b.nextAt = now + (b.shown >= 4 ? TM('bac') + Math.round(TM('bac')*0.5) : TM('bac'));
     if(b.shown === 4){
       const pt = bacTotal(b.seq.slice(0,4).filter(x => x[0] === 'P').map(x => x[1])), bt = bacTotal(b.seq.slice(0,4).filter(x => x[0] === 'B').map(x => x[1]));
       if(pt >= 8 || bt >= 8) say(`Natural ${Math.max(pt, bt)}!`);
@@ -1675,7 +1683,7 @@ function settle(extra = 0){
   }
   if(G.settings.doom) for(const p of losers) applyCurse(p);
   G.phase = 'results';
-  G.phaseTotal = RESULT_TIME + extra + (G.settings.doom && losers.length ? CURSE_TIME : 0);
+  G.phaseTotal = TM('result') + extra + (G.settings.doom && losers.length ? CURSE_TIME : 0);
   G.phaseEnds = Date.now() + G.phaseTotal;
 }
 function weightedPick(ids){
@@ -1781,7 +1789,7 @@ function viewFor(rid){
   const now = Date.now(), g = GAME();
   const v = {
     code:G.code, round:G.round, phase:G.phase, hostId:G.hostId, say:G.say, sayId:G.sayId, settings:{...G.settings},
-    turn:G.turn, turnLeft:G.turn ? Math.max(0, G.turnEnds - now) : 0, turnTotal:G.turnTotal, shoot:G.phase === 'shooter' ? G.shoot : null, nextShooter:G.phase === 'betting' && (g === 'roulette' || g === 'baccarat') ? ((nextShooter() || {}).id || null) : null,
+    turn:G.turn, turnLeft:G.turn ? Math.max(0, G.turnEnds - now) : 0, turnTotal:G.turnTotal, shoot:G.phase === 'shooter' ? G.shoot : null, nextShooter:G.phase === 'betting' && (g === 'roulette' || g === 'baccarat') && TM('shoot') ? ((nextShooter() || {}).id || null) : null,
     phaseLeft:Math.max(0, G.phaseEnds - now), phaseTotal:G.phaseTotal,
     dealer:{hidden:G.dealer.hidden, bj:G.dealerBJ, hand:G.dealer.hand.map((c,i) => (G.dealer.hidden && i === 1) ? {back:true, id:c.id} : c)},
     players:G.players.map(p => {
@@ -1905,7 +1913,7 @@ function bsBeginTurn(id){
   b.turn = id; b.stage = 'turn'; b.saw = false;
   if(id !== 'dealer') b.lastP = id;
   if(id === 'dealer'){ G.turn = null; b.until = now + BS_DEALER_THINK; }
-  else { G.turn = id; G.turnTotal = TURN_TIME; G.turnEnds = now + TURN_TIME; b.until = 0; }
+  else { G.turn = id; G.turnTotal = TM('turn'); G.turnEnds = now + G.turnTotal; b.until = 0; }
 }
 function bsPause(after, ms = BS_SHOT_PAUSE){ const b = G.bs; b.stage = 'pause'; b.after = after; b.until = Date.now() + ms; G.turn = null; }
 
@@ -3221,7 +3229,7 @@ function syncWheel(){
   }
 }
 function startSpin(rl, wr, br, ball){
-  const dur = SPIN_TIME - 900;
+  const dur = (S.phaseTotal > 1 ? S.phaseTotal : SPIN_TIME) - 900;
   if(!spinP || spinP.id !== rl.spinId){
     const pa = RL_ORDER.indexOf(rl.result)*360/37;
     const sw = wAngle, ew = sw + 1120 + rnd(280);
@@ -3535,7 +3543,7 @@ function bettingHTML(me){
   const hint = g === 'blackjack'
     ? (has ? (canGo ? 'Add more or a side bet, then press DEAL.' : `Main bet needs at least ${MIN_BET}.`) : 'Pick a chip, then press BET.')
     : g === 'buckshot' ? (has ? 'Add more, or press PLAY. You can lose it all.' : 'Pick a chip, then press STAKE.')
-    : (has ? `Add more, or press READY. Then it's ${shooterNext()} turn to ${g === 'roulette' ? 'spin' : 'deal'}.` : `Pick a chip, then press a bet${g === 'roulette' ? ' (NUMBERS for single numbers)' : ''}.`);
+    : (has ? (S.nextShooter ? `Add more, or press READY. Then it's ${shooterNext()} turn to ${g === 'roulette' ? 'spin' : 'deal'}.` : `Add more, or press READY. Then Myla ${g === 'roulette' ? 'spins' : 'deals'}.`) : `Pick a chip, then press a bet${g === 'roulette' ? ' (NUMBERS for single numbers)' : ''}.`);
   const goBtn = g === 'blackjack'
     ? rbtn('done', 'go', IC.ok, okLabel, !canGo)
     : rbtn('done', 'go', has ? IC.ok : IC.clear, has ? okLabel : 'SIT OUT', false);
@@ -3627,6 +3635,7 @@ function settingsHTML(editable){
     <div class="srow gamerow"><label>Game</label>${seg('setgame', [['blackjack','Blackjack'],['roulette','Roulette'],['baccarat','Baccarat'],['buckshot','&#9760; Buckshot'],['imposter','Imposter']], st.game)}</div>
     ${st.game === 'blackjack' ? `<div class="srow"><label>Play to</label>${seg('settarget', [[21,'21 (classic)'],[33,'33']], st.target)}</div>` : ''}
     ${st.game === 'imposter' ? `<div class="srow"><label>Imposter hint</label>${seg('sethint', [['on','Category'],['off','Nothing']], st.impHint ? 'on' : 'off')}</div>` : ''}
+    <div class="srow"><label>Pace</label>${seg('setpace', [['fast','Fast (GTA style)'],['relaxed','Relaxed']], st.pace === 'relaxed' ? 'relaxed' : 'fast')}</div>
     <div class="srow"><label>Wheel of Doom</label>${seg('setdoom', [['on','On'],['off','Off (normal)']], st.doom ? 'on' : 'off')}</div>
   </div>`;
 }
@@ -4242,6 +4251,7 @@ function act(a, b){
     case 'setgame': send({t:'settings', game:v}); break;
     case 'settarget': send({t:'settings', target:Number(v)}); break;
     case 'setdoom': send({t:'settings', doom:v === 'on'}); break;
+    case 'setpace': send({t:'settings', pace:v}); break;
     case 'sound': SFX.on = !SFX.on; store.set('sound', SFX.on); if(!SFX.on && 'speechSynthesis' in window) speechSynthesis.cancel(); render(); break;
     case 'leave':
       dialog({title:'Leave the table?', danger:true, ok:'Leave', cancel:'Stay',
@@ -4661,8 +4671,8 @@ window.addEventListener('beforeunload', () => {
    ===================================================================== */
 const LINEUP = [
   {k:'blackjack', name:'Blackjack', line:"Beat Myla to 21, or play the house special: 33.", who:'1-6 players', turns:'Take turns hitting and standing'},
-  {k:'roulette', name:'Roulette', line:'Bet on numbers and colors, then watch the ball drop.', who:'1-6 players', turns:'Take turns spinning the wheel'},
-  {k:'baccarat', name:'Baccarat', line:'Player or Banker? Closest to 9 wins.', who:'1-6 players', turns:'Take turns flipping the cards'},
+  {k:'roulette', name:'Roulette', line:'Bet on numbers and colors, then watch the ball drop.', who:'1-6 players', turns:'Myla spins, or take turns on Relaxed pace'},
+  {k:'baccarat', name:'Baccarat', line:'Player or Banker? Closest to 9 wins.', who:'1-6 players', turns:'Myla deals, or take turns on Relaxed pace'},
   {k:'buckshot', name:'Buckshot', line:'A shotgun, live shells and The Dealer. Survive.', who:'1-6 players', turns:'Take turns pulling the trigger'},
   {k:'imposter', name:'Imposter', line:"One friend doesn't know the secret word. Find them.", who:'3-6 players', turns:'Take turns giving clues'},
 ];
