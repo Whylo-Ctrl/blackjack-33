@@ -1031,26 +1031,20 @@ body.w3creator #w3c{display:block;z-index:30}
 /* ---------- SLOTS ---------- */
 .giSlots{display:flex;gap:3px;padding:8px 10px;border-radius:12px;background:linear-gradient(#fffaf0,#d8ccb4);box-shadow:inset 0 0 0 3px #b8902f,0 4px 10px rgba(0,0,0,.4)}
 .giSlots img{width:30px;height:30px}
-.slotsRoom{width:100%;max-width:820px;margin:0 auto;padding:6px 10px 4px;display:flex;flex-direction:column;align-items:center;gap:12px}
-.smach{position:relative;border-radius:22px 22px 14px 14px;padding:10px 12px 10px;background:linear-gradient(180deg,#7a0f22,#3a0610 70%,#22040a);box-shadow:inset 0 0 0 3px #d8b04a,inset 0 0 0 6px #4a0a14,0 10px 26px rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;gap:8px}
-.smach.big{width:min(100%,460px)}
-.smach.mini{width:150px;padding:6px 7px 7px;border-radius:14px 14px 10px 10px;gap:5px}
-.smTop{display:flex;align-items:baseline;gap:8px;font-family:var(--serif);color:#ffe9a8;text-shadow:0 0 10px rgba(255,200,80,.8)}
-.smTop b{font-size:20px;letter-spacing:.1em}
-.smTop span{font-family:var(--display);font-size:30px;color:#ffd23d}
-.smach.mini .smTop b{font-size:10px}.smach.mini .smTop span{font-size:14px}
-.smWin{position:relative;width:100%;border-radius:10px;overflow:hidden;background:#111;box-shadow:inset 0 0 0 3px #1a0a06,0 0 0 2px #d8b04a,inset 0 8px 18px rgba(0,0,0,.7)}
-.smWin canvas{display:block;width:100%;height:auto}
-.smWin:after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,0) 40%);pointer-events:none}
-.smFoot{width:100%;display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:800;letter-spacing:.06em;color:#f6e7c0}
-.smach.mini .smFoot{font-size:10px;flex-direction:column;align-items:center;gap:1px}
-.smach.big .sname{display:none}.smach.big .smFoot{justify-content:center;font-size:14px}
-.swon{color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
-.smach.won{box-shadow:inset 0 0 0 3px #ffe58a,inset 0 0 0 6px #4a0a14,0 0 26px rgba(255,210,70,.75),0 10px 26px rgba(0,0,0,.6);animation:slotGlow .5s ease-in-out infinite alternate}
-.smach.jack{animation:slotGlow .25s ease-in-out infinite alternate}
-.smach.doom{box-shadow:inset 0 0 0 3px #c04dff,inset 0 0 0 6px #2a0a3a,0 0 26px rgba(190,70,255,.8),0 10px 26px rgba(0,0,0,.6)}
-@keyframes slotGlow{to{filter:brightness(1.25)}}
+.slotsRoom{width:100%;max-width:980px;margin:0 auto;padding:6px 10px 4px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.smach{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:8px 9px 10px;border-radius:18px 18px 12px 12px;background:linear-gradient(180deg,#22222a,#0d0d11 55%,#050507);box-shadow:inset 0 0 0 2px #3a3a44,0 0 0 2px #ff9d2e,0 0 16px rgba(255,157,46,.4),0 10px 26px rgba(0,0,0,.6)}
+.smach canvas{display:block;width:100%;height:auto;border-radius:8px}
+.smach .smFace{border-radius:10px;box-shadow:0 0 0 2px #000,0 0 14px rgba(0,0,0,.6)}
+.smach.big{width:min(100%,460px,max(290px,calc((100vh - 340px)/1.5)))}
+.smach.mini{width:150px;padding:5px 5px 6px;gap:3px;border-radius:12px 12px 8px 8px}
+.smTitle{text-align:center;font-family:var(--serif);color:#ffe9a8;line-height:1;text-shadow:0 0 10px rgba(255,170,60,.8);white-space:nowrap}
+.smTitle i{font-size:18px}.smTitle b{font-family:var(--display);font-size:26px;color:#ffd23d;margin:0 4px}.smTitle span{font-family:var(--ui);font-size:11px;font-weight:800;letter-spacing:.2em;color:#ffb35c;vertical-align:middle}
+.smFoot{text-align:center;font-size:11px;font-weight:800;letter-spacing:.06em;color:#f6e7c0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.smach.won{box-shadow:inset 0 0 0 2px #3a3a44,0 0 0 2px #ffe58a,0 0 28px rgba(255,210,70,.8),0 10px 26px rgba(0,0,0,.6);animation:slotGlow .5s ease-in-out infinite alternate}
+.smach.fg{box-shadow:inset 0 0 0 2px #3a3a44,0 0 0 2px #7dff9a,0 0 26px rgba(90,255,140,.6),0 10px 26px rgba(0,0,0,.6)}
+@keyframes slotGlow{to{filter:brightness(1.18)}}
 .sfriends{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+@media (min-width:900px){.slotsRoom{flex-direction:row;align-items:flex-start;justify-content:center;gap:18px}.sfriends{display:grid;grid-template-columns:repeat(2,150px);align-content:start}.sfriends:empty{display:none}}
 .slotbtns{display:flex;align-items:center;gap:14px}
 .spinBtn{position:relative;width:118px;height:62px;border-radius:16px;border:2px solid #ffd2d8;background:radial-gradient(circle at 50% 28%,#ff6b7a,#d0102c 58%,#7a0616);color:#fff;font:800 22px/1 var(--ui);letter-spacing:.14em;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 0 18px rgba(255,60,80,.5),0 6px 0 #4a0410,0 10px 16px rgba(0,0,0,.5)}
 .spinBtn small{font-size:11px;letter-spacing:.08em;opacity:.85}
@@ -1058,11 +1052,20 @@ body.w3creator #w3c{display:block;z-index:30}
 .spinBtn:disabled{opacity:.5;cursor:default;filter:saturate(.6)}
 .spinBtn.busy span{animation:spinPulse .5s ease-in-out infinite alternate}
 @keyframes spinPulse{to{opacity:.45}}
-.slotpays .prow{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.08)}
-.slotpays .psyms{display:flex;gap:2px;min-width:102px}
-.slotpays .psyms img{width:32px;height:32px}
+.slotpays h4{margin:14px 0 6px;color:var(--gold);font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.slotpays .prow{display:flex;align-items:center;gap:10px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.slotpays .psyms{min-width:34px;display:flex}
+.slotpays .psyms img{width:30px;height:30px}
 .slotpays .ptxt{flex:1;font-size:13px;color:var(--muted)}
-.slotpays b{color:var(--gold);font-size:16px;font-variant-numeric:tabular-nums}
+.slotpays .prow b{width:62px;text-align:right;color:var(--gold);font-size:14px;font-variant-numeric:tabular-nums}
+.slotpays .phead b{color:var(--muted);font-size:12px}
+.slotpays .potrow{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted);margin:6px 0}
+.slotpays .potrow img{width:72px;height:auto;flex:none}
+.slotpays .potrow b{color:#fff}
+.slotpays .jprow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.jpv{display:flex;flex-direction:column;align-items:center;padding:6px 4px;border-radius:10px;font-weight:800;font-size:13px;color:#fff;border:2px solid #ffe58a;font-variant-numeric:tabular-nums}
+.jpv small{font-size:10px;letter-spacing:.1em;color:#ffe58a}
+.jp-grand{background:linear-gradient(#ff3b3b,#7a0710)}.jp-major{background:linear-gradient(#3fd46a,#0b5a26)}.jp-minor{background:linear-gradient(#b45cff,#4a1280)}.jp-mini{background:linear-gradient(#ff9d2e,#8a4206)}
 .toast.gold{border-color:var(--gold);box-shadow:0 0 18px rgba(232,192,96,.6)}
 </style>
 </head>
@@ -1843,12 +1846,13 @@ function viewFor(rid){
         pendingCurse:p.curse && !ac ? p.curse.id : null,
         connected:p.connected, begs:p.begs, hits:p.hits, main:p.main, side:p.side, mainDelta:p.mainDelta,
         canRebet:!!p.lastBets && p.lastGame === g,
-        slot:p.slot ? {id:p.slot.id, stops:p.slot.stops, bet:p.slot.bet, win:p.slot.win, mult:p.slot.mult, kind:p.slot.kind, label:p.slot.label, spins:p.slot.spins} : null};
+        slot:slotView(p)};
     }),
     events:G.events.filter(e => !e.to || e.to === rid).slice(-15),
   };
   if(g === 'buckshot') v.bs = bsView(rid);
   if(g === 'imposter') v.imp = impView(rid);
+  if(g === 'slots') v.sl = {jp:slotJP()};
   if(g === 'roulette') v.rl = {spinId:G.rl.spinId, result:(G.phase === 'spinning' || G.phase === 'results') ? G.rl.result : null, history:G.rl.history, by:G.rl.by || null};
   if(g === 'baccarat'){
     const shown = G.bac.seq.slice(0, G.bac.shown);
@@ -2230,72 +2234,211 @@ function impView(rid){
     stageLeft:Math.max(0, (m.stage === 'clues' || m.stage === 'guess' ? G.turnEnds : m.until) - Date.now())};
 }
 /* =====================================================================
-   SLOTS: everyone has their own machine and spins whenever they like
-   (GTA Online style). 3 reels, one payline, Whylo's Casino symbols.
-   Three skulls spin the Wheel of Doom (when it's on).
+   SLOTS: "Whylo's 33 Golden Nights", a 5-reel x 4-row video slot with
+   40 lines, played the way modern casino floor games work:
+   - stacked WILDS (any wild can turn into a 2x or 3x wild)
+   - three POTS above the reels: Nudging Wilds (blue), Jackpot Wilds (red)
+     and Expanded Reels (green). Coins of a pot's colour fill it up and it
+     can pop at any time; one pot = 5 free games, two = 8, all three = 12.
+     A losing spin can also pop a random pot.
+     * Nudging Wilds: any part of a wild stack nudges to fill its reel,
+       with a chance of a 2x or 3x multiplier
+     * Jackpot Wilds: wilds can show a jackpot; collect 3 of one to win it
+     * Expanded Reels: the reels grow to 5x6 and 20 more lines play (60)
+   - four jackpots: MINI 15x and MINOR 50x your bet, MAJOR and GRAND grow
+     with every spin at the table (shared, in multiples of your bet).
+   - Whylo twist: skulls on reels 1, 3 and 5 spin the Wheel of Doom.
+   Everyone has their own machine and spins whenever they like.
    The host rolls every spin; clients only animate the result.
    ===================================================================== */
-const SLOT_SYMS = ['33', 'W', 'bow', 'ace', 'dice', 'chip', 'skull'];
-const SLOT_NAMES = {'33':'Golden 33', W:'Whylo Coin', bow:"Myla's Bow", ace:'Ace', dice:'Dice', chip:'Chip', skull:'Skull'};
-// 24 stops per reel: 1x 33, 2x W, 3x bow, 4x ace, 4x dice, 5x chip, 5x skull (each reel in its own order)
-const SLOT_STRIPS = [
-  ['chip','ace','skull','dice','bow','chip','W','skull','ace','dice','chip','33','skull','ace','bow','chip','dice','skull','W','ace','chip','bow','dice','skull'],
-  ['dice','chip','bow','skull','ace','chip','dice','W','skull','chip','ace','bow','dice','skull','33','chip','ace','skull','dice','W','chip','bow','ace','skull'],
-  ['ace','skull','chip','dice','W','bow','skull','chip','ace','dice','skull','bow','chip','33','ace','dice','skull','chip','W','ace','bow','dice','chip','skull'],
-];
-const SLOT_PAYS = {'33':333, W:100, bow:40, ace:20, dice:15, chip:10};
-const SLOT_MIX = 2, SLOT_TWO33 = 8, SLOT_ONE33 = 2;   // any mix of ace/dice/chip, two 33s, one 33
-const SLOT_SPIN_MS = 1950;     // reels stop at 1.0 / 1.45 / 1.9 s
-const SLOT_MIN_GAP = 1500;     // fastest a player can spin again (ms)
+const SL_REELS = 5, SL_ROWS = 4, SL_ROWS_X = 6, SL_LINEBET = 40;
+const SL_STOPS = [0.62, 0.86, 1.10, 1.34, 1.58];   // when each reel lands (seconds)
+const SLOT_SPIN_MS = 1950;     // all reels down (+ a nudge)
+const SLOT_MIN_GAP = 1400;     // fastest a player can spin again (ms)
 const SLOT_CURSE_SPINS = 8;    // 'next round' curses last this many spins at the slots
+const SL_FEATS = ['n', 'j', 'e'];
+const SL_FEAT_NAMES = {n:'NUDGING WILDS', j:'JACKPOT WILDS', e:'EXPANDED REELS'};
+const SL_COIN = {Bn:'n', Bj:'j', Be:'e'};
+const SL_FG_GAMES = [0, 5, 8, 12];
+const SL_NAMES = {W:'Wild', '33':'Golden 33', bow:"Myla's Bow", dice:'Dice', chip:'Chip', A:'Ace', K:'King', Q:'Queen', J:'Jack', T:'Ten', N:'Nine',
+  Bn:'Blue pot coin', Bj:'Red pot coin', Be:'Green pot coin', skull:'Skull'};
+// line pays for 3 / 4 / 5 in a row, in line bets (your bet is 40 line bets)
+const SL_PAY = {W:[0,0,0,40,200,800], '33':[0,0,0,25,100,400], bow:[0,0,0,15,60,250], dice:[0,0,0,12,40,150], chip:[0,0,0,10,30,120],
+  A:[0,0,0,6,15,50], K:[0,0,0,6,15,50], Q:[0,0,0,5,12,40], J:[0,0,0,5,12,40], T:[0,0,0,4,10,30], N:[0,0,0,4,10,30]};
+const SL_JP_KINDS = ['grand', 'major', 'minor', 'mini'];
+const SL_JP_FIXED = {mini:15, minor:50};
+const SL_JP_SEED = {major:250, grand:1500};
+const SL_JP_GROW = {major:0.02, grand:0.05};     // x-bet added per 100-chip spin anywhere at the table
+const SL_BADGE_P = 0.5;                           // chance a wild reel shows a jackpot during Jackpot Wilds
+const SL_BADGE_W = {mini:60, minor:27, major:9, grand:4};
+const SL_POT_MAX = 10;
+const SL_POP = [0, 0.0013, 0.002, 0.003, 0.004, 0.0053, 0.0066, 0.0084, 0.01, 0.0126, 0.0165];  // chance a pot pops when a coin lands, by how full it is
+const SL_RANDOM_TRIG = 1/1000;                    // a losing spin can pop a random pot
+const SL_FG_POP = 0.15;                           // in free games a coin of a new colour can add its feature (+5 games)
+const SL_JOIN = 0.18;                             // when a pot pops, a fuller pot can pop with it
 
-// what a line pays (multiplier of the bet) and what kind of result it is
-function slotEval(line){
-  const [a, b, c] = line;
-  if(a === b && b === c){
-    if(a === 'skull') return {mult:0, kind:'doom', label:'SKULLS'};
-    return {mult:SLOT_PAYS[a], kind:a === '33' ? 'jackpot' : SLOT_PAYS[a] >= 25 ? 'big' : 'win', label:{'33':'JACKPOT', W:'THREE COINS', bow:'THREE BOWS', ace:'THREE ACES', dice:'THREE DICE', chip:'THREE CHIPS'}[a]};
-  }
-  const n33 = line.filter(x => x === '33').length;
-  if(n33 === 2) return {mult:SLOT_TWO33, kind:'win', label:'TWO 33s'};
-  if(n33 === 1) return {mult:SLOT_ONE33, kind:'win', label:'ANY 33'};
-  if(line.every(x => x === 'ace' || x === 'dice' || x === 'chip')) return {mult:SLOT_MIX, kind:'win', label:'TABLE MIX'};
-  return {mult:0, kind:'lose', label:''};
+// --- the 40 lines on 5x4 and the 60 lines on 5x6 (rows top to bottom) ---
+function slMakeLines(rows, n){
+  const all = [];
+  const rec = (path) => { if(path.length === 5){ all.push(path.slice()); return; }
+    const l = path[path.length - 1]; for(const d of [0, -1, 1]){ const r = l + d; if(r >= 0 && r < rows){ path.push(r); rec(path); path.pop(); } } };
+  for(let r = 0; r < rows; r++) rec([r]);
+  const key = (p) => { let c = 0, t = 0; for(let i = 1; i < 5; i++){ c += Math.abs(p[i] - p[i - 1]); if(i > 1 && p[i] - p[i - 1] && p[i - 1] - p[i - 2] && Math.sign(p[i] - p[i - 1]) !== Math.sign(p[i - 1] - p[i - 2])) t++; }
+    const sym = p[0] === p[4] && p[1] === p[3]; return c*10 + t*3 - (sym ? 14 : 0); };
+  return all.map((p, i) => [p, key(p), i]).sort((a, b) => a[1] - b[1] || a[2] - b[2]).slice(0, n).map(x => x[0]);
 }
-const slotLine = (stops) => stops.map((s, r) => SLOT_STRIPS[r][((s % 24) + 24) % 24]);
+const SL_L4 = slMakeLines(4, 40), SL_L6 = slMakeLines(6, 60);
 
+// --- reel strips: fixed, built from a seeded shuffle so every copy is identical ---
+function slPrng(seed){ return () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0)/4294967296; }; }
+function slStrip(spec, seed){
+  const R = slPrng(seed), blocks = [];
+  for(const [s, n, st] of spec) for(let i = 0; i < n; i++) blocks.push(Array(st || 1).fill(s));
+  for(let i = blocks.length - 1; i > 0; i--){ const j = Math.floor(R()*(i + 1)); [blocks[i], blocks[j]] = [blocks[j], blocks[i]]; }
+  return blocks.flat();
+}
+const slBaseSpec = (r) => [['W', r === 0 ? 1 : 2, 4], ['33', 2, 1], ['33', 1, 2], ['bow', 3, 1], ['bow', 1, 2], ['dice', 4, 1], ['dice', 1, 3], ['chip', 5, 1], ['chip', 1, 3],
+  ['A', 7, 1], ['K', 7, 1], ['Q', 8, 1], ['J', 8, 1], ['T', 9, 1], ['N', 9, 1],
+  ...(r >= 1 && r <= 3 ? [['Bn', 1, 1], ['Bj', 1, 1], ['Be', 1, 1]] : []), ...(r % 2 === 0 ? [['skull', 4, 1]] : [])];
+const slFgSpec = (r) => [['W', r === 0 ? 1 : 3, 4], ['33', 2, 1], ['33', 1, 2], ['bow', 3, 1], ['bow', 1, 2], ['dice', 4, 1], ['dice', 1, 3], ['chip', 5, 1], ['chip', 1, 3],
+  ['A', 6, 1], ['K', 6, 1], ['Q', 7, 1], ['J', 7, 1], ['T', 8, 1], ['N', 8, 1], ...(r >= 1 && r <= 3 ? [[['Bn', 'Bj', 'Be'][r - 1], 1, 1]] : [])];
+const SL_STRIPS = [0, 1, 2, 3, 4].map(r => slStrip(slBaseSpec(r), 3301 + r*77));
+const SL_FG_STRIPS = [0, 1, 2, 3, 4].map(r => slStrip(slFgSpec(r), 9133 + r*91));
+
+// what the lines pay: [lineIndex, count, symbol, pay (line bets, after multipliers), multiplier]
+function slEval(grid, lines, mults){
+  let pay = 0; const wins = [];
+  lines.forEach((ln, li) => {
+    const sy = ln.map((row, r) => grid[r][row]);
+    let wn = 0; while(wn < 5 && sy[wn] === 'W') wn++;
+    const base = sy.find(x => x !== 'W');
+    let n = 0; if(base && SL_PAY[base]) while(n < 5 && (sy[n] === base || sy[n] === 'W')) n++;
+    const pw = SL_PAY.W[wn] || 0, ps = base && SL_PAY[base] ? SL_PAY[base][n] || 0 : 0;
+    if(!pw && !ps) return;
+    const useW = pw >= ps, cnt = useW ? wn : n;
+    let m = 0; for(let r = 0; r < cnt; r++) if(sy[r] === 'W' && mults[r] > 1) m += mults[r];
+    m = Math.max(1, m);
+    const lp = (useW ? pw : ps)*m; pay += lp; wins.push([li, cnt, useW ? 'W' : base, lp, m]);
+  });
+  return {pay, wins};
+}
+function slPickJP(x){ const tot = SL_BADGE_W.mini + SL_BADGE_W.minor + SL_BADGE_W.major + SL_BADGE_W.grand; let a = x*tot;
+  for(const k of ['mini', 'minor', 'major', 'grand']){ if((a -= SL_BADGE_W[k]) < 0) return k; } return 'mini'; }
+const slJPx = (k, jp) => SL_JP_FIXED[k] || (jp && jp[k]) || SL_JP_SEED[k];
+
+// one spin for a player's machine. st = {pots:[n,j,e], fg:null|{...}} (changed in place)
+// R = {int(n), f()} random source; jp = {major, grand} current progressive multipliers
+function slPlay(st, bet, R, jp){
+  const fg = st.fg, free = !!fg, feats = free ? fg.feats : {};
+  const rows = free && feats.e ? SL_ROWS_X : SL_ROWS, lines = rows === SL_ROWS_X ? SL_L6 : SL_L4;
+  const strips = free ? SL_FG_STRIPS : SL_STRIPS;
+  const grid = strips.map(sp => { const s = R.int(sp.length), col = []; for(let k = 0; k < rows; k++) col.push(sp[(s + k) % sp.length]); return col; });
+  const mults = [1, 1, 1, 1, 1], nudged = [], pre = [];
+  if(free && feats.n) for(let r = 0; r < 5; r++) if(grid[r].includes('W') && !grid[r].every(x => x === 'W')){ nudged.push(r); pre.push([r, grid[r].slice()]); grid[r] = grid[r].map(() => 'W'); }
+  for(let r = 0; r < 5; r++) if(grid[r].includes('W')){
+    const nud = free && feats.n && grid[r].every(x => x === 'W'), x = R.f();
+    const p3 = nud ? 0.03 : free ? 0.04 : 0.03, p2 = nud ? 0.08 : free ? 0.08 : 0.07;
+    mults[r] = x < p3 ? 3 : x < p3 + p2 ? 2 : 1;
+  }
+  const coins = [];
+  grid.forEach((col, r) => col.forEach((s, k) => { if(SL_COIN[s]) coins.push([r, k, SL_COIN[s]]); }));
+  const pots = st.pots, popped = [], grew = [];
+  if(!free){
+    for(const c of coins){ const i = SL_FEATS.indexOf(c[2]); pots[i] = Math.min(SL_POT_MAX, pots[i] + 1); if(!grew.includes(c[2])) grew.push(c[2]); }
+    for(const f of grew){ if(R.f() < SL_POP[pots[SL_FEATS.indexOf(f)]]) popped.push(f); }
+    if(popped.length) SL_FEATS.forEach((f, i) => { if(!popped.includes(f) && R.f() < SL_JOIN*pots[i]/SL_POT_MAX) popped.push(f); });
+  }
+  const ev = slEval(grid, lines, mults);
+  const win = Math.round(bet*ev.pay/SL_LINEBET);
+  const doom = !free && [0, 2, 4].every(r => grid[r].includes('skull'));
+  let rt = null;
+  if(!free && !popped.length && !win && R.f() < SL_RANDOM_TRIG){ rt = SL_FEATS[R.int(3)]; popped.push(rt); }
+  // jackpot wilds
+  const badges = [], jpWins = [];
+  if(free && feats.j) for(let r = 0; r < 5; r++){
+    const ks = []; grid[r].forEach((s, k) => { if(s === 'W') ks.push(k); });
+    if(!ks.length || R.f() >= SL_BADGE_P) continue;
+    const kind = slPickJP(R.f()), row = ks[R.int(ks.length)]; badges.push([r, row, kind]);
+    if(!fg.jpWon[kind] && ++fg.jp[kind] >= 3){ fg.jpWon[kind] = true; jpWins.push(kind); }
+  }
+  const jpAmts = jpWins.map(k => Math.round(bet*slJPx(k, jp)));
+  const jpAmt = jpAmts.reduce((a, b) => a + b, 0);
+  // free games bookkeeping
+  let add = 0; const added = [];
+  if(free){
+    for(const c of coins){ if(fg.feats[c[2]]) continue; if(!added.includes(c[2]) && R.f() < SL_FG_POP){ added.push(c[2]); add += 5; } }
+    for(const f of added) fg.feats[f] = true;
+    fg.left += add - 1; fg.total += add; fg.played++; fg.won += win + jpAmt;
+  }
+  let trig = null;
+  if(popped.length){
+    const fs = {}; popped.forEach(f => { fs[f] = true; pots[SL_FEATS.indexOf(f)] = 0; });
+    const games = SL_FG_GAMES[popped.length];
+    st.fg = {left:games, total:games, played:0, feats:fs, bet, won:0, jp:{mini:0, minor:0, major:0, grand:0}, jpWon:{}};
+    trig = {feats:SL_FEATS.filter(f => fs[f]), games, random:!!rt};
+  }
+  const fgSnap = st.fg ? JSON.parse(JSON.stringify(st.fg)) : null;
+  const fgEnd = free && st.fg.left <= 0;
+  if(fgEnd) st.fg = null;
+  return {grid, rows, mults, nudged, pre, coins, popped, grew, badges, jpWins, jpAmts, jpAmt, lineWin:win, win:win + jpAmt, wins:ev.wins, doom, trig, add, added, free, fg:fgSnap, fgEnd};
+}
+
+/* ---------------- host glue ---------------- */
+const slRand = {int:(n) => rnd(n), f:() => rnd(1 << 30)/(1 << 30)};
+function slotJP(){ if(!G.slJP) G.slJP = {major:SL_JP_SEED.major, grand:SL_JP_SEED.grand}; return G.slJP; }
 function slotSpin(p, betIn){
   if(GAME() !== 'slots' || G.phase !== 'slots') return false;
-  const bet = Math.floor(Number(betIn) || 0), now = Date.now();
-  if(!CHIP_VALS.includes(bet)) return false;
-  if(p.slot && now - p.slot.at < SLOT_MIN_GAP) return false;
-  if(bet > p.chips){ addEvent({type:'toast', to:p.id, text:`Not enough chips for a ${fmt(bet)} spin.`, bad:true}); return true; }
+  const now = Date.now();
+  if(!p.sl) p.sl = {pots:[0, 0, 0], fg:null};
+  const st = p.sl, free = !!st.fg;
+  const bet = free ? st.fg.bet : Math.floor(Number(betIn) || 0);
+  if(!free && !CHIP_VALS.includes(bet)) return false;
+  if(p.slot && now - p.slot.at < SLOT_MIN_GAP + (p.slot.extra || 0)) return false;
+  if(!free && bet > p.chips){ addEvent({type:'toast', to:p.id, text:`Not enough chips for a ${fmt(bet)} spin.`, bad:true}); return true; }
   // a 'next round' curse at the slots wears off after a few spins
   if(p.curse && p.curse.spins != null && --p.curse.spins <= 0) p.curse = null;
-  p.chips -= bet;
-  const stops = [rnd(24), rnd(24), rnd(24)], line = slotLine(stops), r = slotEval(line);
-  const win = bet*r.mult;
-  p.chips += win;
+  const jp = slotJP();
+  if(!free){ p.chips -= bet; jp.major += SL_JP_GROW.major*bet/100; jp.grand += SL_JP_GROW.grand*bet/100; }
+  const r = slPlay(st, bet, slRand, jp);
+  for(const k of r.jpWins) if(SL_JP_SEED[k]) jp[k] = SL_JP_SEED[k];
+  p.chips += r.win;
   G.slotSeq = (G.slotSeq || 0) + 1;
-  p.slot = {id:G.slotSeq, stops, bet, win, mult:r.mult, kind:r.kind, label:r.label, at:now, spins:((p.slot && p.slot.spins) || 0) + 1};
-  p.delta = win - bet; p.result = win > bet ? 'win' : win === bet ? 'push' : 'lose';
-  if(win > bet){ p.wins++; if(p.renamed){ note(`${p.baseName} won their real name back!`, {delay:SLOT_SPIN_MS}); p.name = p.baseName; p.renamed = false; } }
-  else if(win < bet) p.losses++;
-  if(r.kind === 'jackpot' || r.kind === 'big') addEvent({type:'slotwin', pid:p.id, name:p.name, win, mult:r.mult, label:r.label, kind:r.kind});
-  if(r.kind === 'jackpot') say(`JACKPOT! ${p.name} hit three golden 33s!`);
-  // three skulls: the Wheel of Doom, once the last reel has stopped
-  if(r.kind === 'doom'){
-    if(G.settings.doom){
-      const g = G, id = p.id;
-      setTimeout(() => { if(G !== g || GAME() !== 'slots') return; const q = P(id); if(!q || q.left) return; say(`Three skulls for ${q.name}... spin the Wheel of Doom!`); applyCurse(q); broadcast(); }, SLOT_SPIN_MS - 600);
-    }
+  const kind = r.jpWins.length ? 'jackpot' : r.trig ? 'bonus' : r.doom ? 'doom' : r.win >= bet*15 ? 'big' : r.win > 0 ? 'win' : 'lose';
+  const label = r.jpWins.length ? r.jpWins.map(k => k.toUpperCase()).join(' + ') : r.trig ? 'FREE GAMES' : r.doom ? 'SKULLS' : r.win >= bet*15 ? 'BIG WIN' : r.win > 0 ? 'WIN' : '';
+  // extra time the client needs to show this result before the next spin
+  const extra = (r.nudged.length ? 450 : 0) + (r.trig ? 2600 : 0) + (r.jpWins.length ? 2200 : 0) + (r.fgEnd ? 2200 : 0) + (r.added.length ? 1200 : 0) + (kind === 'big' ? 1000 : 0);
+  p.slot = {id:G.slotSeq, bet, win:r.win, kind, label, at:now, extra, spins:((p.slot && p.slot.spins) || 0) + 1,
+    free:r.free, grid:r.grid, rows:r.rows, mults:r.mults, nudged:r.nudged, pre:r.pre, coins:r.coins, popped:r.popped, grew:r.grew, badges:r.badges,
+    jpWins:r.jpWins, jpAmts:r.jpAmts, wins:r.wins, doom:r.doom, trig:r.trig, add:r.add, added:r.added, fg:r.fg, fgEnd:r.fgEnd, pots:st.pots.slice()};
+  if(!free){ p.delta = r.win - bet; p.result = r.win > bet ? 'win' : r.win === bet ? 'push' : 'lose'; }
+  if(r.win > bet || (free && r.win > 0)){ p.wins++; if(p.renamed){ note(`${p.baseName} won their real name back!`, {delay:SLOT_SPIN_MS}); p.name = p.baseName; p.renamed = false; } }
+  else if(!free && r.win < bet) p.losses++;
+  r.jpWins.forEach((k, i) => { addEvent({type:'slotwin', pid:p.id, name:p.name, win:r.jpAmts[i], label:k.toUpperCase(), kind:'jackpot', jp:k}); });
+  if(r.jpWins.includes('grand')) say(`THE GRAND! ${p.name} just won ${fmt(r.jpAmts[r.jpWins.indexOf('grand')])}!`);
+  else if(r.jpWins.includes('major')) say(`${p.name} hit the MAJOR!`);
+  if(r.trig) addEvent({type:'slotwin', pid:p.id, name:p.name, win:0, label:`${r.trig.games} FREE GAMES`, kind:'bonus', feats:r.trig.feats});
+  if(kind === 'big') addEvent({type:'slotwin', pid:p.id, name:p.name, win:r.win, label:'BIG WIN', kind:'big'});
+  if(r.fgEnd && r.fg && r.fg.won >= bet*20) addEvent({type:'slotwin', pid:p.id, name:p.name, win:r.fg.won, label:'FREE GAMES', kind:'big'});
+  // skulls on reels 1, 3 and 5: the Wheel of Doom, once the reels have stopped
+  if(r.doom && G.settings.doom){
+    const g = G, id = p.id;
+    setTimeout(() => { if(G !== g || GAME() !== 'slots') return; const q = P(id); if(!q || q.left) return; say(`Skulls on reels one, three and five for ${q.name}... spin the Wheel of Doom!`); applyCurse(q); broadcast(); }, SLOT_SPIN_MS - 300);
   }
   return true;
 }
+// what everyone sees of a player's machine
+function slotView(p){
+  const s = p.slot, st = p.sl;
+  return {pots:st ? st.pots : [0, 0, 0], fg:st && st.fg ? {left:st.fg.left, total:st.fg.total, feats:st.fg.feats, bet:st.fg.bet, won:st.fg.won} : null,
+    last:s ? {id:s.id, bet:s.bet, win:s.win, extra:s.extra, kind:s.kind, label:s.label, spins:s.spins, free:s.free, grid:s.grid, rows:s.rows, mults:s.mults, nudged:s.nudged, pre:s.pre,
+      coins:s.coins, popped:s.popped, grew:s.grew, badges:s.badges, jpWins:s.jpWins, jpAmts:s.jpAmts, wins:s.wins, doom:s.doom, trig:s.trig, add:s.add, added:s.added,
+      fg:s.fg, fgEnd:s.fgEnd, pots:s.pots} : null};
+}
 function slotsOpen(){
   G.phase = 'slots'; G.turn = null; G.phaseTotal = 1; G.phaseEnds = 0;
+  slotJP();
   for(const p of G.players) Object.assign(p, {ready:false, inRound:false});
-  say(pick(["The slots are open! Spin as much as you like.", "Pick a machine and pull. Good luck!", "Three golden 33s pays 333 to 1. Spin away!"]));
+  say(pick(["The slots are open! Spin as much as you like.", "Pick a machine and fill those pots. Good luck!", "Golden Nights is open. The Grand is waiting!"]));
 }
 /* =====================================================================
    SOUND (synthesized, no files needed)
@@ -3784,7 +3927,7 @@ function consoleHTML(me){
   if(S.phase === 'lobby') return lobbyHTML();
   const c = me.curse && CURSES[me.curse], pc = me.pendingCurse && CURSES[me.pendingCurse];
   const curses = `${c ? `<span class="cursebadge" title="${esc(c.desc)}">${c.name}</span>` : ''}${pc ? `<span class="cursebadge pending" title="${esc(pc.desc)}">NEXT: ${pc.name}</span>` : ''}`;
-  const info = `<div class="cinfo"><span class="ci-bal"><small>BALANCE</small>${fmt(me.chips)}</span><span class="ci-name">${esc(me.name)}${me.renamed ? ` <small>(${esc(me.baseName)})</small>` : ''}${curses}</span>${S.settings.game === 'imposter' ? '<span class="ci-bet"><small>ENTRY</small>FREE</span>' : S.settings.game === 'slots' ? `<span class="ci-bet"><small>BET</small>${fmt(selChip)}</span>` : `<span class="ci-bet"><small>${S.settings.game === 'buckshot' ? 'STAKE' : 'TOTAL BET'}</small>${fmt(me.inRound || S.phase === 'betting' ? me.bet : 0)}</span>`}</div>`;
+  const info = `<div class="cinfo"><span class="ci-bal"><small>BALANCE</small>${fmt(S.settings.game === 'slots' ? SL.credit(me) : me.chips)}</span><span class="ci-name">${esc(me.name)}${me.renamed ? ` <small>(${esc(me.baseName)})</small>` : ''}${curses}</span>${S.settings.game === 'imposter' ? '<span class="ci-bet"><small>ENTRY</small>FREE</span>' : S.settings.game === 'slots' ? `<span class="ci-bet"><small>BET</small>${me.slot && me.slot.fg ? 'FREE' : fmt(selChip)}</span>` : `<span class="ci-bet"><small>${S.settings.game === 'buckshot' ? 'STAKE' : 'TOTAL BET'}</small>${fmt(me.inRound || S.phase === 'betting' ? me.bet : 0)}</span>`}</div>`;
   const g = S.settings.game;
   const ctl = g === 'blackjack' ? bjControls(me) : g === 'buckshot' ? bsControls(me) : g === 'imposter' ? impControls(me) : g === 'slots' ? SL.controls(me) : multiControls(me);
   return zoomFab() + info + `<div class="ctrl">${ctl}</div>`;
@@ -3800,7 +3943,7 @@ function rulesText(){
   } else if(st.game === 'roulette'){
     t = `Pick a chip, then press a bet button (as many as you like). NUMBERS opens the full layout for single numbers and columns. A single number pays <b>35:1</b>. Red/Black, Odd/Even, 1-18/19-36 pay <b>1:1</b>. Dozens and columns pay <b>2:1</b>. Green zero beats every outside bet.`;
   } else if(st.game === 'slots'){
-    t = `Everyone gets their own machine and spins whenever they like: no waiting for anyone. Pick a chip for your bet, then press <b>SPIN</b>${matchMedia('(pointer:coarse)').matches ? '' : ' (or Space)'}. One line across the middle pays.<br><br>Three golden <b>33s</b> is the jackpot: <b>333 to 1</b>. Three coins pay 100, three of Myla's bows 40, aces 20, dice 15, chips 10. Any two 33s pay 8, any mix of aces, dice and chips 2, and any single 33 gets you 2.${st.doom ? '<br><br><b>Three skulls</b> spin the <b>Wheel of Doom</b>.' : ''} Big wins pop up for the whole table.`;
+    t = `Everyone gets their own machine and spins whenever they like: no waiting for anyone. Pick a chip for your bet, then press <b>SPIN</b>${matchMedia('(pointer:coarse)').matches ? '' : ' (or Space)'}. 5 reels, 4 rows, 40 lines; stacked wilds can turn 2x or 3x.<br><br>Coins fill the three <b>pots</b>. When one pops you get free games: <b>Nudging Wilds</b>, <b>Jackpot Wilds</b> or <b>Expanded Reels</b> (5 games for one pot, 8 for two, 12 for all three). Collect 3 jackpot wilds of a kind to win the <b>Mini, Minor, Major or Grand</b>.${st.doom ? '<br><br><b>Skulls on reels 1, 3 and 5</b> spin the <b>Wheel of Doom</b>.' : ''} Big wins pop up for the whole table.`;
   } else if(st.game === 'buckshot'){
     t = `Put down a stake and face <b>The Dealer</b>. The shotgun is loaded with a mix of <b class="r">LIVE</b> and <b>BLANK</b> shells. You see how many of each, but not the order.<br><br>On your turn, shoot <b>The Dealer</b> or <b>yourself</b>. A blank on yourself gives you another turn. The Dealer takes a turn after each player. Run out of lives and you're down for the round.<br><br><b>Items:</b> Magnifying Glass (peek at the chambered shell), Hand Saw (next shot does 2 damage), Beer (eject the chambered shell), Handcuffs (The Dealer skips his next turn).<br><br>Beat The Dealer in all <b>3 rounds</b>: survivors are paid <b>${BS_PAYS} to 1</b>, fallen teammates get their stake back. If everyone goes down, The Dealer keeps it all.`;
   } else if(st.game === 'imposter'){
@@ -4177,9 +4320,10 @@ function tbarStatus(p, isTurn){
   const g = S.settings.game, me = p.id === MY_ID;
   if(!p.connected) return ['away', 'AWAY'];
   if(g === 'slots' && S.phase === 'slots'){
-    const sl = p.slot, st = SL.state(p);
-    if(st.spinning) return ['turn', 'SPINNING'];
-    if(sl && sl.kind === 'jackpot') return ['ok', 'JACKPOT +' + short(sl.win)];
+    const v = p.slot, sl = v && v.last, st = SL.state(p);
+    if(st.spinning) return ['turn', v && v.fg ? 'FREE GAMES' : 'SPINNING'];
+    if(v && v.fg) return ['turn', `FREE GAMES ${v.fg.left}`];
+    if(sl && sl.kind === 'jackpot') return ['ok', sl.label + ' +' + short(sl.win)];
     if(sl && sl.win > sl.bet) return ['ok', '+' + short(sl.win)];
     return ['dim', short(p.chips) + ' chips'];
   }
@@ -4233,46 +4377,63 @@ function renderTbar(){
   } else if(fab) fab.remove();
 }
 /* =====================================================================
-   SLOTS ON SCREEN: symbol art, the reel window, the spin animation
-   (shared by the classic view and the 3D machines), your machine and
-   your friends' machines, and the SPIN controls.
+   SLOTS ON SCREEN: "Whylo's 33 Golden Nights".
+   The art, the machine face (pots, 5 reels, the info bar), the jackpot
+   meters and the topper (shared by the classic view and the 3D cabinets),
+   the spin animation and everything after it (nudges, coins flying to the
+   pots, pots popping, free games, jackpots), your machine and your
+   friends' machines, and the controls.
    ===================================================================== */
 const SL = (() => {
-  const DUR = [1.0, 1.45, 1.9];            // seconds until each reel stops (matches SLOT_SPIN_MS)
-  const anims = new Map(), seen = new Map(), shownAt = new Map();
+  const FW = 600, FH = 760, MW = 600, MH = 170, TW = 600, TH = 300;
+  const RX = 14, RW = 572, CW = RW/5;
+  const Y4 = 208, H4 = 472, Y6 = 14, H6 = 666;        // reel window (top, height) for 4 and 6 rows
+  const BAR = 690;
+  const LAND = SL_STOPS[4] + 0.16, NUDGE = 0.42, FLY = 0.45;
+  const POT_X = [104, 300, 496], POT_Y = 150;
+  const POT_COL = {n:['#5aa8ff', '#123c8c', '#9fd0ff'], j:['#ff4d61', '#7c0b1d', '#ffb0b8'], e:['#45dd84', '#0c5c2d', '#aaf5c8']};
+  const JP_COL = {grand:['#ff3b3b', '#7a0710'], major:['#3fd46a', '#0b5a26'], minor:['#b45cff', '#4a1280'], mini:['#ff9d2e', '#8a4206']};
+  const LINE_COL = ['#ffd23d', '#ff5a7a', '#5ad1ff', '#7dff6a', '#ff9d2e', '#d27dff', '#ffffff', '#3dffd2', '#ff6ad5', '#b8ff3d'];
+  const FILL = ['A', '33', 'K', 'dice', 'Q', 'bow', 'J', 'chip', 'T', 'W', 'N', 'A', 'dice', 'K', 'chip', 'Q', 'bow', 'J', 'N', 'T', 'W', '33'];
+  const anims = new Map(), seen = new Map(), meterShown = new Map();
   let pending = 0, loopOn = false;
-  const startStops = (id) => { let h = 0; for(const ch of String(id)) h = (h*31 + ch.charCodeAt(0)) | 0; h = Math.abs(h); return [h % 24, (h >> 5) % 24, (h >> 10) % 24]; };
+  const nowMs = () => performance.now();
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v)), lerp = (a, b, t) => a + (b - a)*t;
+  const easeOut = u => 1 - Math.pow(1 - u, 3);
+  const easeBack = u => { const c = 1.7; return 1 + (c + 1)*Math.pow(u - 1, 3) + c*Math.pow(u - 1, 2); };
 
   /* ---------- symbol art (drawn once, 128 px) ---------- */
   const sprites = {};
-  function rr(x, X, Y, W, H, r){ x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + W, Y, X + W, Y + H, r); x.arcTo(X + W, Y + H, X, Y + H, r); x.arcTo(X, Y + H, X, Y, r); x.arcTo(X, Y, X + W, Y, r); x.closePath(); }
+  function rr(x, X, Y, W, H, r){ r = Math.min(r, W/2, H/2); x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + W, Y, X + W, Y + H, r); x.arcTo(X + W, Y + H, X, Y + H, r); x.arcTo(X, Y + H, X, Y, r); x.arcTo(X, Y, X + W, Y, r); x.closePath(); }
+  function star(x, sx, sy, s){ x.beginPath(); x.moveTo(sx, sy - s); x.lineTo(sx + s*0.3, sy - s*0.3); x.lineTo(sx + s, sy); x.lineTo(sx + s*0.3, sy + s*0.3); x.lineTo(sx, sy + s); x.lineTo(sx - s*0.3, sy + s*0.3); x.lineTo(sx - s, sy); x.lineTo(sx - s*0.3, sy - s*0.3); x.fill(); }
+  function goldCoin(x, cx, cy, r){
+    const g = x.createRadialGradient(cx - r*0.3, cy - r*0.35, r*0.1, cx, cy, r); g.addColorStop(0, '#fff3b8'); g.addColorStop(0.6, '#e8b63c'); g.addColorStop(1, '#94600f');
+    x.fillStyle = g; x.beginPath(); x.arc(cx, cy, r, 0, Math.PI*2); x.fill();
+    x.lineWidth = Math.max(2, r*0.08); x.strokeStyle = '#7a4d0c'; x.stroke();
+    x.lineWidth = Math.max(1.5, r*0.05); x.strokeStyle = 'rgba(122,77,12,0.7)'; x.beginPath(); x.arc(cx, cy, r*0.8, 0, Math.PI*2); x.stroke();
+  }
+  const ROYAL = {A:['A', '#ff7a88', '#a30f26'], K:['K', '#8cc6ff', '#1a4fa8'], Q:['Q', '#e0a6ff', '#6a20a8'], J:['J', '#94f0a0', '#1d7a34'], T:['10', '#ffc47a', '#a8560e'], N:['9', '#7af0e2', '#127a70']};
+  const COIN = {Bn:['#5aa8ff', '#0f3a8a'], Bj:['#ff4d61', '#8a0f1e'], Be:['#45dd84', '#0f6a34']};
   function drawSym(x, k){
-    x.save(); x.lineJoin = 'round';
+    x.save(); x.lineJoin = 'round'; x.textAlign = 'center'; x.textBaseline = 'middle';
     if(k === '33'){
       const g = x.createLinearGradient(0, 22, 0, 106); g.addColorStop(0, '#fff6c4'); g.addColorStop(0.45, '#f2c544'); g.addColorStop(1, '#a86c12');
-      x.font = 'bold 84px Georgia, serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
-      x.lineWidth = 10; x.strokeStyle = '#6b0c1c'; x.strokeText('33', 64, 68);
+      x.font = 'bold 84px Georgia, serif'; x.lineWidth = 10; x.strokeStyle = '#6b0c1c'; x.strokeText('33', 64, 68);
       x.fillStyle = g; x.fillText('33', 64, 68);
-      x.fillStyle = '#fff'; for(const [sx, sy, s] of [[18, 22, 7], [110, 30, 5], [104, 104, 6]]){ x.beginPath(); x.moveTo(sx, sy - s); x.lineTo(sx + s*0.3, sy - s*0.3); x.lineTo(sx + s, sy); x.lineTo(sx + s*0.3, sy + s*0.3); x.lineTo(sx, sy + s); x.lineTo(sx - s*0.3, sy + s*0.3); x.lineTo(sx - s, sy); x.lineTo(sx - s*0.3, sy - s*0.3); x.fill(); }
+      x.fillStyle = '#fff'; for(const [sx, sy, s] of [[18, 22, 7], [110, 30, 5], [104, 104, 6]]) star(x, sx, sy, s);
     } else if(k === 'W'){
-      const g = x.createRadialGradient(50, 46, 6, 64, 64, 54); g.addColorStop(0, '#fff3b8'); g.addColorStop(0.6, '#e8b63c'); g.addColorStop(1, '#94600f');
-      x.fillStyle = g; x.beginPath(); x.arc(64, 64, 50, 0, Math.PI*2); x.fill();
-      x.lineWidth = 4; x.strokeStyle = '#7a4d0c'; x.stroke();
-      x.lineWidth = 3; x.strokeStyle = 'rgba(122,77,12,0.75)'; x.beginPath(); x.arc(64, 64, 40, 0, Math.PI*2); x.stroke();
-      x.font = 'bold 54px Georgia, serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#6b3f08'; x.fillText('W', 64, 67);
+      goldCoin(x, 64, 56, 44);
+      x.font = 'bold 50px Georgia, serif'; x.fillStyle = '#6b3f08'; x.fillText('W', 64, 59);
+      const rg = x.createLinearGradient(0, 88, 0, 120); rg.addColorStop(0, '#e0213f'); rg.addColorStop(1, '#7a0616');
+      x.fillStyle = rg; x.strokeStyle = '#3a020a'; x.lineWidth = 3;
+      x.beginPath(); x.moveTo(8, 92); x.lineTo(120, 92); x.lineTo(112, 106); x.lineTo(120, 120); x.lineTo(8, 120); x.lineTo(16, 106); x.closePath(); x.fill(); x.stroke();
+      x.font = 'bold 24px Georgia, serif'; x.fillStyle = '#ffe58a'; x.fillText('WILD', 64, 107);
     } else if(k === 'bow'){
       const g = x.createLinearGradient(0, 30, 0, 100); g.addColorStop(0, '#ff6b7a'); g.addColorStop(1, '#a50f27');
       x.fillStyle = g; x.strokeStyle = '#4a0610'; x.lineWidth = 4;
       for(const s of [-1, 1]){ x.beginPath(); x.moveTo(64, 64); x.quadraticCurveTo(64 + s*30, 26, 64 + s*56, 34); x.quadraticCurveTo(64 + s*48, 64, 64 + s*56, 94); x.quadraticCurveTo(64 + s*30, 102, 64, 64); x.closePath(); x.fill(); x.stroke(); }
       x.fillStyle = '#c8142f'; rr(x, 52, 50, 24, 28, 7); x.fill(); x.stroke();
       x.strokeStyle = 'rgba(255,255,255,0.45)'; x.lineWidth = 3; for(const s of [-1, 1]){ x.beginPath(); x.moveTo(64 + s*16, 50); x.quadraticCurveTo(64 + s*34, 40, 64 + s*46, 44); x.stroke(); }
-    } else if(k === 'ace'){
-      x.fillStyle = '#fffdf6'; x.strokeStyle = '#6d6a62'; x.lineWidth = 3; rr(x, 26, 10, 76, 108, 9); x.fill(); x.stroke();
-      x.fillStyle = '#111'; x.font = 'bold 22px Georgia, serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('A', 38, 26);
-      x.save(); x.translate(90, 102); x.rotate(Math.PI); x.fillText('A', 0, 0); x.restore();
-      // spade
-      x.beginPath(); x.moveTo(64, 34); x.bezierCurveTo(44, 54, 36, 62, 40, 76); x.bezierCurveTo(44, 88, 58, 88, 62, 80); x.lineTo(56, 96); x.lineTo(72, 96); x.lineTo(66, 80);
-      x.bezierCurveTo(70, 88, 84, 88, 88, 76); x.bezierCurveTo(92, 62, 84, 54, 64, 34); x.closePath(); x.fill();
     } else if(k === 'dice'){
       const g = x.createLinearGradient(0, 18, 0, 110); g.addColorStop(0, '#ff5b5b'); g.addColorStop(1, '#a3121c');
       x.fillStyle = g; x.strokeStyle = '#4a070b'; x.lineWidth = 4; rr(x, 20, 20, 88, 88, 18); x.fill(); x.stroke();
@@ -4283,7 +4444,7 @@ const SL = (() => {
       x.lineWidth = 3; x.strokeStyle = '#0d2f66'; x.beginPath(); x.arc(64, 64, 50, 0, Math.PI*2); x.stroke();
       x.fillStyle = '#2a6fd1'; x.beginPath(); x.arc(64, 64, 30, 0, Math.PI*2); x.fill();
       x.lineWidth = 3; x.strokeStyle = '#fff'; x.setLineDash([6, 5]); x.beginPath(); x.arc(64, 64, 30, 0, Math.PI*2); x.stroke(); x.setLineDash([]);
-      x.font = 'bold 26px Georgia, serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#fff'; x.fillText('W', 64, 66);
+      x.font = 'bold 26px Georgia, serif'; x.fillStyle = '#fff'; x.fillText('W', 64, 66);
     } else if(k === 'skull'){
       const glow = x.createRadialGradient(64, 64, 10, 64, 64, 62); glow.addColorStop(0, 'rgba(160,30,200,0.55)'); glow.addColorStop(1, 'rgba(160,30,200,0)');
       x.fillStyle = glow; x.fillRect(0, 0, 128, 128);
@@ -4292,6 +4453,18 @@ const SL = (() => {
       x.fillStyle = '#1b1418'; for(const ex of [49, 79]){ x.beginPath(); x.ellipse(ex, 58, 10, 12, 0, 0, Math.PI*2); x.fill(); }
       x.beginPath(); x.moveTo(64, 68); x.lineTo(58, 80); x.lineTo(70, 80); x.closePath(); x.fill();
       x.lineWidth = 3; for(const tx of [52, 60, 68, 76]){ x.beginPath(); x.moveTo(tx, 86); x.lineTo(tx, 95); x.stroke(); }
+    } else if(ROYAL[k]){
+      const [t, c1, c2] = ROYAL[k], g = x.createLinearGradient(0, 18, 0, 112); g.addColorStop(0, '#ffffff'); g.addColorStop(0.35, c1); g.addColorStop(1, c2);
+      x.font = `bold ${t.length > 1 ? 76 : 96}px Georgia, serif`;
+      x.lineWidth = 12; x.strokeStyle = '#1a0a10'; x.strokeText(t, 64, 70);
+      x.lineWidth = 4; x.strokeStyle = '#f2c544'; x.strokeText(t, 64, 70);
+      x.fillStyle = g; x.fillText(t, 64, 70);
+    } else if(COIN[k]){
+      goldCoin(x, 64, 64, 50);
+      const [c1, c2] = COIN[k], g = x.createRadialGradient(56, 54, 4, 64, 64, 28); g.addColorStop(0, '#ffffff'); g.addColorStop(0.35, c1); g.addColorStop(1, c2);
+      x.fillStyle = g; x.beginPath(); for(let i = 0; i < 8; i++){ const a = i*Math.PI/4 + Math.PI/8, R = 30; x.lineTo(64 + Math.cos(a)*R, 64 + Math.sin(a)*R); } x.closePath(); x.fill();
+      x.lineWidth = 3; x.strokeStyle = 'rgba(255,255,255,0.7)'; x.stroke();
+      x.fillStyle = '#fff'; star(x, 64, 64, 12);
     }
     x.restore();
   }
@@ -4301,117 +4474,445 @@ const SL = (() => {
     return (sprites[k] = c);
   }
   const symURL = (k) => { const c = sprite(k); if(!c._url) c._url = c.toDataURL(); return c._url; };
+  function potURL(f){ const k = 'pot' + f; if(sprites[k]) return sprites[k]._url;
+    const c = document.createElement('canvas'); c.width = 200; c.height = 150; const x = c.getContext('2d'); drawPot(x, 100, 112, f, 7, {t:0, label:false}); c._url = c.toDataURL(); sprites[k] = c; return c._url; }
 
-  /* ---------- the reel window (3 reels, payline across the middle) ---------- */
-  // pos[r] = strip index sitting on the payline (fractional while spinning); spd = cells per second
-  function drawWindow(x, W, H, pos, spd = [0, 0, 0], hl = 0, kind = ''){
-    const rw = W/3, cell = H/3;
-    x.clearRect(0, 0, W, H);
-    for(let r = 0; r < 3; r++){
-      const x0 = r*rw, p = pos[r], strip = SLOT_STRIPS[r], fast = Math.abs(spd[r]) > 6;
-      const bg = x.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#b9ae99'); bg.addColorStop(0.5, '#fffaf0'); bg.addColorStop(1, '#b9ae99');
-      x.fillStyle = bg; x.fillRect(x0, 0, rw, H);
-      const base = Math.floor(p), sz = cell*0.82;
-      for(let idx = base - 2; idx <= base + 3; idx++){
-        const y = H/2 + (p - idx)*cell; if(y < -cell || y > H + cell) continue;
-        const k = strip[((idx % 24) + 24) % 24], img = sprite(k);
-        if(fast){ x.globalAlpha = 0.55; x.drawImage(img, x0 + rw/2 - sz/2, y - sz*0.85, sz, sz*1.7); x.globalAlpha = 1; }
-        else x.drawImage(img, x0 + rw/2 - sz/2, y - sz/2, sz, sz);
+  /* ---------- background art behind the reels (drawn once) ---------- */
+  let bgC = null;
+  function bgArt(){
+    if(bgC) return bgC;
+    bgC = document.createElement('canvas'); bgC.width = FW; bgC.height = FH; const x = bgC.getContext('2d');
+    const g = x.createLinearGradient(0, 0, 0, FH); g.addColorStop(0, '#0b0322'); g.addColorStop(0.18, '#2a0838'); g.addColorStop(0.27, '#5a0c2a'); g.addColorStop(0.3, '#1a0410'); g.addColorStop(1, '#0a0206');
+    x.fillStyle = g; x.fillRect(0, 0, FW, FH);
+    const R = slPrng(77);
+    for(let i = 0; i < 90; i++){ x.fillStyle = `rgba(255,${230 + R()*25|0},${190 + R()*60|0},${0.3 + R()*0.6})`; x.fillRect(R()*FW, R()*170, R() < 0.15 ? 2.4 : 1.4, R() < 0.15 ? 2.4 : 1.4); }
+    // golden haze and a skyline of casinos
+    const h = x.createRadialGradient(300, 214, 10, 300, 214, 330); h.addColorStop(0, 'rgba(255,190,80,0.55)'); h.addColorStop(1, 'rgba(255,190,80,0)'); x.fillStyle = h; x.fillRect(0, 60, FW, 160);
+    let bx = 0; while(bx < FW){ const w = 26 + R()*46, ht = 30 + R()*70; x.fillStyle = '#14061c'; x.fillRect(bx, 206 - ht, w, ht);
+      x.fillStyle = 'rgba(255,207,106,0.75)'; for(let wy = 206 - ht + 6; wy < 200; wy += 9) for(let wx = bx + 4; wx < bx + w - 4; wx += 8) if(R() < 0.45) x.fillRect(wx, wy, 3, 4);
+      bx += w + 2; }
+    return bgC;
+  }
+
+  /* ---------- pots ---------- */
+  function drawPot(x, cx, by, f, lvl, o){
+    const [c1, c2, c3] = POT_COL[f], t = o.t || 0;
+    x.save();
+    if(o.shake) x.translate(Math.sin(t*70)*5*o.shake, Math.cos(t*55)*2*o.shake);
+    if(o.dim) x.globalAlpha = 0.4;
+    const fullness = lvl/SL_POT_MAX, glowA = Math.max(o.lit || 0, o.active ? 0.6 + 0.3*Math.sin(t*5) : 0, fullness > 0.6 ? (fullness - 0.5)*0.9 : 0, o.shake || 0);
+    if(glowA > 0){ const gg = x.createRadialGradient(cx, by - 60, 10, cx, by - 60, 110); gg.addColorStop(0, c1); gg.addColorStop(1, 'rgba(0,0,0,0)'); x.globalAlpha *= clamp(glowA); x.fillStyle = gg; x.fillRect(cx - 110, by - 170, 220, 220); x.globalAlpha = o.dim ? 0.4 : 1; }
+    // coin heap
+    const hh = 6 + fullness*58, rimY = by - 62;
+    if(lvl > 0){
+      const cg = x.createLinearGradient(0, rimY - hh, 0, rimY + 6); cg.addColorStop(0, '#fff3b0'); cg.addColorStop(0.5, '#f0bd3a'); cg.addColorStop(1, '#9a6410');
+      x.fillStyle = cg; x.beginPath(); x.ellipse(cx, rimY + 2, 70, hh, 0, Math.PI, 0); x.fill();
+      const R = slPrng(f.charCodeAt(0) + lvl*13);
+      for(let i = 0; i < 8 + lvl*3; i++){ const a = R()*Math.PI, rr2 = Math.sqrt(R()); const px = cx + Math.cos(a)*62*rr2, py = rimY + 2 - Math.sin(a)*hh*rr2;
+        x.fillStyle = R() < 0.5 ? '#ffe27a' : '#d89a22'; x.beginPath(); x.ellipse(px, py, 9, 4.5, R()*0.6 - 0.3, 0, Math.PI*2); x.fill(); x.strokeStyle = 'rgba(110,60,0,0.6)'; x.lineWidth = 1; x.stroke(); }
+      if(fullness > 0.6){ x.fillStyle = '#fff'; for(let i = 0; i < 3; i++){ const a = t*2 + i*2.1; star(x, cx + Math.cos(a)*50, rimY - hh*0.6 + Math.sin(a*1.3)*hh*0.4, 4 + 3*Math.abs(Math.sin(a*2))); } }
+    }
+    // the bowl
+    const bg = x.createLinearGradient(cx - 80, 0, cx + 80, 0); bg.addColorStop(0, c2); bg.addColorStop(0.35, c1); bg.addColorStop(0.55, c3); bg.addColorStop(0.75, c1); bg.addColorStop(1, c2);
+    x.fillStyle = bg; x.strokeStyle = '#1a0a06'; x.lineWidth = 3;
+    x.beginPath(); x.moveTo(cx - 76, rimY); x.bezierCurveTo(cx - 76, by - 10, cx - 44, by, cx, by); x.bezierCurveTo(cx + 44, by, cx + 76, by - 10, cx + 76, rimY); x.closePath(); x.fill(); x.stroke();
+    x.fillStyle = 'rgba(255,255,255,0.18)'; x.beginPath(); x.ellipse(cx - 34, by - 36, 12, 18, -0.4, 0, Math.PI*2); x.fill();
+    const rg = x.createLinearGradient(0, rimY - 8, 0, rimY + 8); rg.addColorStop(0, '#ffe58a'); rg.addColorStop(1, '#9a6410');
+    x.strokeStyle = rg; x.lineWidth = 8; x.beginPath(); x.ellipse(cx, rimY, 76, 9, 0, 0, Math.PI*2); x.stroke();
+    // pips showing how full it is
+    for(let i = 0; i < SL_POT_MAX; i++){ x.fillStyle = i < lvl ? '#ffe58a' : 'rgba(0,0,0,0.45)'; x.beginPath(); x.arc(cx - 45 + i*10, by - 22, 3.2, 0, Math.PI*2); x.fill(); }
+    if(o.label !== false){
+      const ly = by + 4; rr(x, cx - 86, ly, 172, 44, 10);
+      const lg = x.createLinearGradient(0, ly, 0, ly + 44); lg.addColorStop(0, c2); lg.addColorStop(1, '#0a0206'); x.fillStyle = lg; x.fill();
+      x.lineWidth = 2.5; x.strokeStyle = o.active || o.lit ? '#ffe58a' : c1; x.stroke();
+      x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = 'bold 17px Arial, sans-serif';
+      x.shadowColor = c1; x.shadowBlur = 8;
+      const [w1, w2] = SL_FEAT_NAMES[f].split(' '); x.fillText(w1, cx, ly + 14); x.fillText(w2, cx, ly + 32); x.shadowBlur = 0;
+    }
+    if(o.burst){ const u = o.burst; x.globalAlpha = 1 - u; const fg2 = x.createRadialGradient(cx, by - 60, 4, cx, by - 60, 40 + u*240); fg2.addColorStop(0, '#fff'); fg2.addColorStop(0.3, c3); fg2.addColorStop(1, 'rgba(0,0,0,0)');
+      x.fillStyle = fg2; x.fillRect(cx - 300, by - 330, 600, 600);
+      for(let i = 0; i < 14; i++){ const a = i/14*Math.PI*2, d = 30 + u*170; goldCoin(x, cx + Math.cos(a)*d, by - 60 + Math.sin(a)*d*0.8 + u*u*60, 9); } }
+    x.restore();
+  }
+
+  /* ---------- reel cells ---------- */
+  function cellSym(x, k, X, Y, w, h, blur){
+    const s = Math.min(w, h)*0.84, img = sprite(k);
+    if(blur){ x.globalAlpha = 0.55; x.drawImage(img, X + w/2 - s/2, Y + h/2 - s*0.8, s, s*1.6); x.globalAlpha = 1; }
+    else x.drawImage(img, X + w/2 - s/2, Y + h/2 - s/2, s, s);
+  }
+  function wildPanel(x, X, Y, w, h, t){
+    const g = x.createLinearGradient(X, Y, X, Y + h); g.addColorStop(0, '#4a0818'); g.addColorStop(0.5, '#a3122f'); g.addColorStop(1, '#3a0612');
+    x.fillStyle = g; rr(x, X + 3, Y + 3, w - 6, h - 6, 12); x.fill();
+    x.save(); x.clip();
+    x.fillStyle = 'rgba(255,220,120,0.5)'; const R = slPrng(Math.round(X*7 + h)); for(let i = 0; i < h/14; i++) star(x, X + 8 + R()*(w - 16), Y + 8 + R()*(h - 16), 1.5 + R()*2.5*(0.6 + 0.4*Math.sin(t*4 + i)));
+    x.restore();
+    rr(x, X + 3, Y + 3, w - 6, h - 6, 12); x.lineWidth = 4; x.strokeStyle = '#f2c544'; x.stroke();
+    const s = Math.min(w - 10, h - 10);
+    if(h > w*1.6){
+      const c = Y + h/2, cr = s*0.4; goldCoin(x, X + w/2, c - s*0.3, cr);
+      x.font = `bold ${Math.round(cr*1.1)}px Georgia, serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#6b3f08'; x.fillText('W', X + w/2, c - s*0.3 + 2);
+      x.font = `bold ${Math.round(w*0.24)}px Georgia, serif`; x.textAlign = 'center'; x.textBaseline = 'middle';
+      const letters = 'WILD'; const step = Math.min(w*0.26, (h*0.5 - s*0.3)/4);
+      x.fillStyle = '#ffe58a'; x.strokeStyle = '#3a020a'; x.lineWidth = 5;
+      [...letters].forEach((ch, i) => { const yy = c + s*0.35 + i*step; if(yy < Y + h - 10){ x.strokeText(ch, X + w/2, yy); x.fillText(ch, X + w/2, yy); } });
+    } else x.drawImage(sprite('W'), X + w/2 - s/2, Y + h/2 - s/2, s, s);
+  }
+  function drawColumn(x, col, X, top, rh, t, o = {}){
+    let i = 0;
+    while(i < col.length){
+      if(col[i] === 'W'){ let j = i; while(j + 1 < col.length && col[j + 1] === 'W') j++; wildPanel(x, X, top + i*rh, CW, (j - i + 1)*rh, t); i = j + 1; continue; }
+      const k = col[i], Y = top + i*rh;
+      if(o.glowCoins && SL_COIN[k]){ const gg = x.createRadialGradient(X + CW/2, Y + rh/2, 4, X + CW/2, Y + rh/2, rh*0.6); gg.addColorStop(0, POT_COL[SL_COIN[k]][0]); gg.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = gg; x.fillRect(X, Y, CW, rh); }
+      if(o.skulls && k === 'skull'){ const gg = x.createRadialGradient(X + CW/2, Y + rh/2, 4, X + CW/2, Y + rh/2, rh*0.65); gg.addColorStop(0, 'rgba(200,80,255,0.95)'); gg.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = gg; x.fillRect(X, Y, CW, rh); }
+      cellSym(x, k, X, Y, CW, rh, false);
+      i++;
+    }
+  }
+
+  /* ---------- the spin animation ---------- */
+  function begin(p, prevP){
+    const L = p.slot.last, rows = L.rows, pl = prevP && prevP.slot && prevP.slot.last;
+    const prevCols = pl ? pl.grid : null;
+    const fin = L.grid.map((c, r) => { const pr = (L.pre || []).find(q => q[0] === r); return pr ? pr[1] : c; });
+    const reels = [];
+    for(let r = 0; r < 5; r++){
+      const F = 12 + r*4, fill = [], prev = [];
+      for(let i = 0; i < F; i++) fill.push(FILL[(r*7 + i*5 + L.id*3) % FILL.length]);
+      for(let i = 0; i < rows; i++) prev.push(prevCols ? prevCols[r][i % prevCols[r].length] : FILL[(r*3 + i) % FILL.length]);
+      reels.push({V:[...fin[r], ...fill, ...prev], T:rows + F});
+    }
+    anims.set(p.id, {id:L.id, t0:nowMs(), reels, rows, prevRows:pl ? pl.rows : rows, prevPots:prevP && prevP.slot ? prevP.slot.pots.slice() : L.pots.slice()});
+  }
+  function reelPos(R, r, t){
+    const st = SL_STOPS[r];
+    if(t >= st + 0.16) return [0, 0];
+    if(t >= st){ const w = (t - st)/0.16; return [-0.2*Math.sin(Math.PI*w), 0]; }
+    const u = t/st; return [R.T*Math.pow(1 - u, 2.6), R.T*2.6*Math.pow(1 - u, 1.6)/st];
+  }
+  // where a player's machine is in its show right now
+  function info(p, tNow = nowMs()){
+    const L = p && p.slot && p.slot.last, a = p && anims.get(p.id);
+    if(!L || !a || a.id !== L.id) return {t:99, spinning:false, done:true, revealed:true, reveal:0, a:null, L:L || null, end:true, endT:0};
+    const t = (tNow - a.t0)/1000, reveal = LAND + (L.nudged && L.nudged.length ? NUDGE : 0), endT = (SLOT_SPIN_MS + (L.extra || 0))/1000 + 0.35;
+    return {t, spinning:t < LAND, done:t >= reveal, revealed:t >= reveal, reveal, a, L, end:t >= endT, endT};
+  }
+
+  /* ---------- the machine face: pots, reels, info bar ---------- */
+  function drawFace(x, W, H, p, tNow, mine){
+    const I = info(p, tNow), L = I.L, a = I.a, t = I.t, T = tNow/1000;
+    const view = p.slot || {pots:[0, 0, 0], fg:null};
+    const rows = L ? L.rows : 4;
+    x.save(); x.setTransform(W/FW, 0, 0, H/FH, 0, 0);
+    x.drawImage(bgArt(), 0, 0);
+    let ex = rows === 6 ? 1 : 0;
+    if(a && a.prevRows !== rows){ const u = easeOut(clamp(t/0.4)); ex = rows === 6 ? u : 1 - u; }
+    const top = lerp(Y4, Y6, ex), wh = lerp(H4, H6, ex), rh = wh/rows;
+    if(ex < 1) drawPots(x, p, I, view, T);
+    // frame + reel backgrounds
+    const fg1 = x.createLinearGradient(0, top - 10, 0, top + wh + 10); fg1.addColorStop(0, '#fff2b0'); fg1.addColorStop(0.5, '#c8922c'); fg1.addColorStop(1, '#7a4d0c');
+    rr(x, RX - 9, top - 9, RW + 18, wh + 18, 14); x.fillStyle = fg1; x.fill();
+    x.save(); x.beginPath(); x.rect(RX, top, RW, wh); x.clip();
+    for(let r = 0; r < 5; r++){ const X0 = RX + r*CW, g = x.createLinearGradient(0, top, 0, top + wh); g.addColorStop(0, '#d8cdb6'); g.addColorStop(0.5, '#fffaf0'); g.addColorStop(1, '#d8cdb6'); x.fillStyle = g; x.fillRect(X0, top, CW, wh); }
+    for(let r = 0; r < 5; r++) drawReel(x, r, top, rh, rows, wh, I, T);
+    for(let r = 0; r < 5; r++){ const sh = x.createLinearGradient(0, top, 0, top + wh); sh.addColorStop(0, 'rgba(20,8,6,0.45)'); sh.addColorStop(0.12, 'rgba(20,8,6,0)'); sh.addColorStop(0.88, 'rgba(20,8,6,0)'); sh.addColorStop(1, 'rgba(20,8,6,0.45)'); x.fillStyle = sh; x.fillRect(RX + r*CW, top, CW, wh); x.fillStyle = 'rgba(60,30,10,0.5)'; if(r) x.fillRect(RX + r*CW - 1, top, 2, wh); }
+    if(L && I.revealed) afterReveal(x, top, rh, rows, I, T);
+    else if(L) multBadges(x, top, rh, I, T);
+    x.restore();
+    if(L && !L.free && L.coins.length && a && t >= LAND && t < LAND + FLY) flyCoins(x, top, rh, L, (t - LAND)/FLY);
+    drawBar(x, p, I, view, mine, T);
+    overlays(x, I, T);
+    x.restore();
+  }
+  function drawReel(x, r, top, rh, rows, wh, I, T){
+    const L = I.L, a = I.a, t = I.t, X0 = RX + r*CW;
+    if(!L){ const col = []; for(let i = 0; i < rows; i++) col.push(FILL[(r*5 + i*3) % FILL.length]); drawColumn(x, col, X0, top, rh, T); return; }
+    if(a && t < SL_STOPS[r] + 0.16){
+      const R = a.reels[r], [ti, spd] = reelPos(R, r, t), V = R.V, n = V.length, blur = spd > 9;
+      for(let k = Math.floor(ti) - 1; k <= Math.floor(ti) + rows + 1; k++){
+        const y = top + (k - ti)*rh; if(y > top + wh || y + rh < top) continue;
+        cellSym(x, V[((k % n) + n) % n], X0, y, CW, rh, blur);
       }
-      // the curve of the drum: darker toward the top and bottom
-      const sh = x.createLinearGradient(0, 0, 0, H); sh.addColorStop(0, 'rgba(20,8,6,0.62)'); sh.addColorStop(0.24, 'rgba(20,8,6,0.0)'); sh.addColorStop(0.76, 'rgba(20,8,6,0.0)'); sh.addColorStop(1, 'rgba(20,8,6,0.62)');
-      x.fillStyle = sh; x.fillRect(x0, 0, rw, H);
-      x.fillStyle = 'rgba(0,0,0,0.55)'; x.fillRect(x0 + rw - 2, 0, 4, H);
+      return;
     }
-    // payline
-    const col = hl ? (kind === 'doom' ? '#c04dff' : '#ffd23d') : 'rgba(200,20,40,0.85)';
-    x.strokeStyle = col; x.lineWidth = hl ? Math.max(3, H*0.018) : Math.max(2, H*0.01); x.beginPath(); x.moveTo(0, H/2); x.lineTo(W, H/2); x.stroke();
-    if(hl){ x.lineWidth = Math.max(4, H*0.025); x.strokeStyle = col; x.globalAlpha = 0.5 + 0.5*hl; x.strokeRect(3, H/2 - cell/2 + 2, W - 6, cell - 4); x.globalAlpha = 1; }
+    const pre = a && L.pre && L.pre.find(q => q[0] === r);
+    if(pre && t < I.reveal){
+      const col = pre[1], u = easeBack(clamp((t - LAND)/NUDGE));
+      col.forEach((k, i) => { if(k !== 'W') cellSym(x, k, X0, top + i*rh, CW, rh, false); });
+      const ws = col.map((k, i) => k === 'W' ? i : -1).filter(i => i >= 0), a0 = ws[0], b0 = ws[ws.length - 1];
+      const a1 = lerp(a0, 0, u), b1 = lerp(b0, rows - 1, u);
+      if(t >= LAND) wildPanel(x, X0, top + a1*rh, CW, (b1 - a1 + 1)*rh, T);
+      else drawColumn(x, col, X0, top, rh, T);
+      return;
+    }
+    drawColumn(x, L.grid[r], X0, top, rh, T, {glowCoins:a && !L.free && t < LAND + FLY, skulls:L.doom && I.revealed});
+  }
+  function multBadge(x, X, Y, m, s = 1){
+    x.save(); x.translate(X, Y); x.scale(s, s);
+    const g = x.createRadialGradient(0, -4, 2, 0, 0, 30); g.addColorStop(0, m === 3 ? '#ffd0ff' : '#fff6c4'); g.addColorStop(1, m === 3 ? '#a020c0' : '#d0901a');
+    x.fillStyle = g; x.beginPath(); x.arc(0, 0, 28, 0, Math.PI*2); x.fill(); x.lineWidth = 3; x.strokeStyle = '#3a0a10'; x.stroke();
+    x.font = 'bold 26px Georgia, serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#3a0a10'; x.fillText(m + 'X', 0, 2);
+    x.restore();
+  }
+  function multBadges(x, top, rh, I, T){
+    const L = I.L, t = I.t;
+    for(let r = 0; r < 5; r++){
+      if(L.mults[r] <= 1) continue;
+      const nud = L.nudged.includes(r);
+      if(t < SL_STOPS[r] + 0.16 || (nud && t < I.reveal)) continue;
+      const col = L.grid[r], i = col.indexOf('W'); if(i < 0) continue;
+      const pop = clamp((t - (nud ? I.reveal : SL_STOPS[r] + 0.16))/0.25);
+      multBadge(x, RX + r*CW + CW/2, top + i*rh + 34, L.mults[r], easeBack(pop) || 0.01);
+    }
+  }
+  function afterReveal(x, top, rh, rows, I, T){
+    const L = I.L, t = I.t, tr = t - I.reveal;
+    multBadges(x, top, rh, I, T);
+    // jackpot badges on wilds
+    for(const [r, row, kind] of L.badges || []){
+      const pop = I.a ? clamp((tr - r*0.08)/0.25) : 1; if(pop <= 0) continue;
+      const [c1, c2] = JP_COL[kind], cx = RX + r*CW + CW/2, cy = top + row*rh + rh/2;
+      x.save(); x.translate(cx, cy); const s = easeBack(pop); x.scale(s, s);
+      rr(x, -50, -17, 100, 34, 9); const g = x.createLinearGradient(0, -17, 0, 17); g.addColorStop(0, c1); g.addColorStop(1, c2); x.fillStyle = g; x.fill();
+      x.lineWidth = 3; x.strokeStyle = '#ffe58a'; x.stroke();
+      x.font = 'bold 20px Arial, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#fff'; x.fillText(kind.toUpperCase(), 0, 1);
+      x.restore();
+    }
+    // winning lines
+    const wins = L.wins || []; if(!wins.length || overlayOn(I)) return;
+    const lines = rows === 6 ? SL_L6 : SL_L4;
+    const pathOf = (li) => lines[li].map((row, r) => [RX + r*CW + CW/2, top + row*rh + rh/2]);
+    const drawLine = (w, wdt, alpha) => {
+      const pts = pathOf(w[0]), col = LINE_COL[w[0] % LINE_COL.length];
+      x.globalAlpha = alpha; x.lineJoin = 'round'; x.lineCap = 'round';
+      x.strokeStyle = 'rgba(0,0,0,0.55)'; x.lineWidth = wdt + 4; x.beginPath(); x.moveTo(RX - 4, pts[0][1]); pts.forEach(q => x.lineTo(q[0], q[1])); x.lineTo(RX + RW + 4, pts[4][1]); x.stroke();
+      x.strokeStyle = col; x.lineWidth = wdt; x.stroke(); x.globalAlpha = 1;
+      return pts;
+    };
+    if(tr < 1.3 || wins.length === 1){
+      const pulse = 0.65 + 0.35*Math.sin(T*9);
+      for(const w of wins) drawLine(w, 4, pulse);
+      if(wins.length === 1) boxCells(x, top, rh, lines, wins[0], T, L.bet);
+    } else {
+      const w = wins[Math.floor((tr - 1.3)/0.9) % wins.length];
+      drawLine(w, 6, 1); boxCells(x, top, rh, lines, w, T, L.bet);
+    }
+  }
+  function boxCells(x, top, rh, lines, w, T, bet){
+    const L = lines[w[0]], col = LINE_COL[w[0] % LINE_COL.length];
+    x.lineWidth = 4; x.strokeStyle = col; x.shadowColor = col; x.shadowBlur = 12;
+    for(let r = 0; r < w[1]; r++){ rr(x, RX + r*CW + 4, top + L[r]*rh + 4, CW - 8, rh - 8, 10); x.stroke(); }
+    x.shadowBlur = 0;
+    if(bet){
+      const v = Math.round(bet*w[3]/SL_LINEBET), last = w[1] - 1, cx = RX + last*CW + CW/2, cy = top + L[last]*rh + rh - 18;
+      const txt = (w[4] > 1 ? `${w[4]}X  ` : '') + fmt(v);
+      x.font = 'bold 22px Arial, sans-serif'; const tw = x.measureText(txt).width + 18;
+      rr(x, cx - tw/2, cy - 15, tw, 30, 8); x.fillStyle = 'rgba(10,4,8,0.85)'; x.fill(); x.lineWidth = 2; x.strokeStyle = col; x.stroke();
+      x.fillStyle = '#ffe58a'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(txt, cx, cy + 1);
+    }
+  }
+  function flyCoins(x, top, rh, L, u){
+    for(const [r, row, f] of L.coins){
+      const i = SL_FEATS.indexOf(f), sx = RX + r*CW + CW/2, sy = top + row*rh + rh/2, ex2 = POT_X[i], ey = POT_Y - 70;
+      const e = easeOut(u), px = lerp(sx, ex2, e), py = lerp(sy, ey, e) - Math.sin(Math.PI*e)*90;
+      x.drawImage(sprite('B' + f), px - 30, py - 30, 60, 60);
+    }
+  }
+  function drawPots(x, p, I, view, T){
+    const L = I.L, a = I.a, t = I.t, fg = view.fg;
+    SL_FEATS.forEach((f, i) => {
+      let lvl = view.pots[i], shake = 0, burst = 0, lit = 0;
+      if(L && a && !L.free){
+        if(t < LAND + FLY) lvl = a.prevPots[i];
+        if(L.popped.includes(f)){
+          if(t >= LAND + FLY && t < LAND + 1.1){ lvl = SL_POT_MAX; shake = clamp((t - LAND - FLY)/0.5); }
+          else if(t >= LAND + 1.1 && t < LAND + 1.5){ lvl = 0; burst = (t - LAND - 1.1)/0.4; }
+        }
+        if(L.trig && L.trig.random && t > LAND && t < LAND + 1.0){ const k = Math.floor(Math.pow((t - LAND)/1.0, 0.55)*16); lit = (k % 3 === i) ? 1 : 0; }
+      }
+      const active = !!(fg && fg.feats[f]) || !!(L && L.free && L.fg && L.fg.feats[f]);
+      const inFg = !!fg || !!(L && L.free && !(L.fgEnd && I.end));
+      drawPot(x, POT_X[i], POT_Y, f, lvl, {shake, burst, lit, active:inFg && active, dim:inFg && !active, t:T});
+    });
+  }
+  function field(x, label, value, cx, w, hot){
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.font = 'bold 15px Arial, sans-serif'; x.fillStyle = '#f2c544'; x.fillText(label, cx, BAR + 16);
+    x.font = `bold ${value.length > 9 ? 22 : 26}px Arial, sans-serif`; x.fillStyle = hot ? '#ffe58a' : '#fff'; x.fillText(value, cx, BAR + 44);
+  }
+  function drawBar(x, p, I, view, mine, T){
+    const L = I.L;
+    const g = x.createLinearGradient(0, BAR, 0, FH); g.addColorStop(0, '#1a0a14'); g.addColorStop(1, '#050205'); x.fillStyle = g; x.fillRect(0, BAR - 4, FW, FH - BAR + 4);
+    x.fillStyle = '#c8922c'; x.fillRect(0, BAR - 4, FW, 3);
+    const unrevealed = L && !I.revealed ? L.win : 0;
+    field(x, 'CREDIT', fmt(Math.max(0, p.chips - unrevealed)), 100, 180);
+    const fgNow = L && L.free ? L.fg : null, fgv = view.fg;
+    if(fgNow || (fgv && fgv.left > 0)){
+      const played = fgNow ? fgNow.played : 0, total = fgNow ? fgNow.total : fgv.total;
+      x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = 'bold 15px Arial, sans-serif'; x.fillStyle = '#7dff9a'; x.fillText('FREE GAMES', 300, BAR + 16);
+      x.font = 'bold 26px Arial, sans-serif'; x.fillStyle = '#fff'; x.fillText(played ? `${played} OF ${total}` : `${total}`, 300, BAR + 44);
+      const wonBefore = fgNow ? fgNow.won - (I.revealed ? 0 : L.win) : 0;
+      const shown = fgNow && I.revealed ? lerp(fgNow.won - L.win, fgNow.won, clamp((I.t - I.reveal)/0.8)) : wonBefore;
+      field(x, 'TOTAL WIN', fmt(Math.round(Math.max(0, shown))), 500, 180, true);
+    } else {
+      const bet = mine ? selChip : L ? L.bet : 0;
+      field(x, 'BET', bet ? fmt(bet) : '-', 300, 140);
+      const w = L && I.revealed ? L.win*clamp((I.t - I.reveal)/(L.win >= L.bet*15 ? 1.8 : 0.7)) : 0;
+      field(x, 'WIN', w > 0 ? fmt(Math.round(w)) : '0', 500, 180, w > 0);
+    }
+    x.fillStyle = 'rgba(200,146,44,0.5)'; x.fillRect(196, BAR + 8, 2, 46); x.fillRect(402, BAR + 8, 2, 46);
+  }
+  function overlayOn(I){ const L = I.L, t = I.t, rev = I.reveal; if(!L || !I.a) return false;
+    if(L.trig && t >= LAND + 1.3 && t < LAND + 2.8) return true;
+    if(L.jpWins && L.jpWins.length && t >= rev && t < rev + 2.2) return true;
+    if(L.fgEnd && t >= rev + (L.jpWins.length ? 2.2 : 0) && t < rev + (L.jpWins.length ? 2.2 : 0) + 2.2) return true;
+    return false; }
+  function card(x, u, title, sub, big, col = '#ffd23d', col2 = '#7a0710'){
+    const s = 0.7 + 0.3*easeBack(clamp(u*4)), al = clamp(Math.min(u*6, (1 - u)*6));
+    x.save(); x.globalAlpha = al; x.fillStyle = 'rgba(5,2,8,0.6)'; x.fillRect(0, 0, FW, BAR - 4);
+    x.translate(300, 380); x.scale(s, s);
+    rr(x, -260, -120, 520, 240, 24); const g = x.createLinearGradient(0, -120, 0, 120); g.addColorStop(0, col2); g.addColorStop(1, '#14040a'); x.fillStyle = g; x.fill();
+    x.lineWidth = 6; x.strokeStyle = col; x.stroke();
+    x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = col; x.shadowColor = col; x.shadowBlur = 18;
+    x.font = 'bold 50px Georgia, serif'; x.fillText(title, 0, -58);
+    x.shadowBlur = 0; x.fillStyle = '#fff'; x.font = 'bold 22px Arial, sans-serif';
+    String(sub).split('\n').forEach((ln, i, arr) => x.fillText(ln, 0, -4 + i*28 - (arr.length - 1)*6));
+    if(big){ x.font = 'bold 46px Arial, sans-serif'; x.fillStyle = '#ffe58a'; x.fillText(big, 0, 74); }
+    x.restore();
+  }
+  function overlays(x, I, T){
+    const L = I.L, t = I.t, rev = I.reveal; if(!L || !I.a) return;
+    if(L.trig){ const s = LAND + 1.3, d = 1.5; if(t >= s && t < s + d) card(x, (t - s)/d, 'FREE GAMES', L.trig.feats.map(f => SL_FEAT_NAMES[f]).join('\n'), `${L.trig.games} GAMES`, '#ffd23d', '#5a0a2a'); }
+    if(L.added && L.added.length && t >= rev && t < rev + 1.2) card(x, (t - rev)/1.2, '+5 FREE GAMES', L.added.map(f => SL_FEAT_NAMES[f]).join('\n') + '\nADDED', '', '#7dff9a', '#0b3a1e');
+    let k = rev;
+    if(L.jpWins && L.jpWins.length){ if(t >= k && t < k + 2.2){ const kind = L.jpWins[0], [c1, c2] = JP_COL[kind]; card(x, (t - k)/2.2, kind.toUpperCase(), L.jpWins.length > 1 ? L.jpWins.map(q => q.toUpperCase()).join(' + ') : 'JACKPOT', '+' + fmt(L.jpAmts.reduce((a, b) => a + b, 0)), c1, c2); } k += 2.2; }
+    else if(L.kind === 'big' && t >= k && t < k + 1.8){ const u = (t - k)/1.8; card(x, u, 'BIG WIN', '', fmt(Math.round(L.win*clamp(u/0.7))), '#ffd23d', '#6a3a06'); }
+    if(L.fgEnd && L.fg && t >= k && t < k + 2.2) card(x, (t - k)/2.2, 'FREE GAMES', 'COMPLETE', fmt(L.fg.won), '#7dff9a', '#0b3a1e');
+    if(L.doom && t >= rev && t < rev + 1.6) card(x, (t - rev)/1.6, 'SKULLS!', S && S.settings.doom ? 'Reels 1, 3 and 5...\nWHEEL OF DOOM!' : 'Lucky the Wheel of Doom is off', '', '#d27dff', '#2a0a3a');
   }
 
-  /* ---------- spin animation state ---------- */
-  function restStops(p){ return p && p.slot ? p.slot.stops.slice() : startStops(p ? p.id : 'x'); }
-  // where each reel of player p is right now, and how fast it's moving
-  function state(p, now = performance.now()){
-    const a = p && anims.get(p.id);
-    if(!a) return {pos:restStops(p), spd:[0, 0, 0], spinning:false, done:true, t:99};
-    const t = (now - a.t0)/1000, pos = [], spd = [];
-    for(let r = 0; r < 3; r++){
-      const d = DUR[r], D = a.to[r] - a.from[r];
-      if(t < d){ const u = t/d, e = 1 - Math.pow(1 - u, 3); pos.push(a.from[r] + D*e); spd.push(3*D*Math.pow(1 - u, 2)/d); }
-      else if(t < d + 0.18){ const w = (t - d)/0.18; pos.push(a.to[r] + 0.16*Math.sin(Math.PI*w)*(1 - w)); spd.push(0); }
-      else { pos.push(a.to[r]); spd.push(0); }
-    }
-    const done = t >= DUR[2] + 0.05;
-    if(t > DUR[2] + 0.4) anims.delete(p.id);
-    return {pos, spd, spinning:!done, done, t};
+  /* ---------- jackpot meters + topper ---------- */
+  function jpVal(k, bet, pid){
+    const jp = (S && S.sl && S.sl.jp) || SL_JP_SEED;
+    if(SL_JP_FIXED[k]) return bet*SL_JP_FIXED[k];
+    const key = pid + k, want = jp[k] || SL_JP_SEED[k], cur = meterShown.get(key);
+    const v = cur == null || want < cur - 1 ? want : cur + (want - cur)*0.08;
+    meterShown.set(key, v); return bet*v;
   }
-  const revealed = (p) => !anims.has(p.id) || state(p).done;
-  function begin(p, prevPos){
-    const to = [];
-    for(let r = 0; r < 3; r++){ const from = prevPos[r], want = p.slot.stops[r]; let d = ((want - from) % 24 + 24) % 24; to.push(from + 24*(2 + r) + d); }
-    anims.set(p.id, {from:prevPos.slice(), to, t0:performance.now(), id:p.slot.id});
-    loop();
-  }
-  // redraw the classic-view canvases every frame while something spins
-  function loop(){
-    if(loopOn) return; loopOn = true;
-    const step = () => {
-      if(!anims.size || !S || S.settings.game !== 'slots'){ loopOn = false; drawAll(); return; }
-      drawAll(); requestAnimationFrame(step);
+  function meterBet(p, mine){ const s = p && p.slot; if(s && s.fg) return s.fg.bet; if(mine) return selChip || 25; return (s && s.last && s.last.bet) || 25; }
+  function drawMeters(x, W, H, p, tNow, mine){
+    const T = tNow/1000, bet = meterBet(p, mine), I = info(p, tNow), L = I.L;
+    const fgSnap = L && L.free && L.fg && L.fg.feats.j ? L.fg : null;
+    x.save(); x.setTransform(W/MW, 0, 0, H/MH, 0, 0);
+    const g = x.createLinearGradient(0, 0, 0, MH); g.addColorStop(0, '#1a0812'); g.addColorStop(1, '#050206'); x.fillStyle = g; x.fillRect(0, 0, MW, MH);
+    const won = L && I.revealed && I.a ? (L.jpWins || []) : [];
+    const plate = (k, X, Y, w, h, big) => {
+      const [c1, c2] = JP_COL[k], flash = won.includes(k) && I.t - I.reveal < 4 ? 0.5 + 0.5*Math.sin(T*16) : 0;
+      rr(x, X, Y, w, h, 12); const pg = x.createLinearGradient(0, Y, 0, Y + h); pg.addColorStop(0, flash ? '#fff6c4' : c1); pg.addColorStop(1, c2); x.fillStyle = pg; x.fill();
+      x.lineWidth = 3; x.strokeStyle = '#ffe58a'; x.stroke();
+      x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#ffe58a'; x.font = `bold ${big ? 17 : 14}px Arial, sans-serif`; x.fillText(k.toUpperCase(), X + w/2, Y + (big ? 14 : 12));
+      const v = fmt(Math.round(jpVal(k, bet, p ? p.id : '')));
+      x.fillStyle = '#fff'; x.shadowColor = '#000'; x.shadowBlur = 6; x.font = `bold ${big ? (v.length > 9 ? 36 : 42) : (v.length > 8 ? 22 : 26)}px Arial, sans-serif`; x.fillText(v, X + w/2, Y + h/2 + (big ? 10 : 7)); x.shadowBlur = 0;
+      if(fgSnap){ for(let i = 0; i < 3; i++){ x.fillStyle = i < (fgSnap.jp[k] || 0) - (won.includes(k) || I.revealed ? 0 : 0) ? '#ffe58a' : 'rgba(0,0,0,0.5)'; x.beginPath(); x.arc(X + w/2 - 16 + i*16, Y + h - 9, 5, 0, Math.PI*2); x.fill(); } }
     };
-    requestAnimationFrame(step);
+    plate('grand', 120, 6, 360, 76, true);
+    plate('major', 8, 90, 188, 74); plate('minor', 206, 90, 188, 74); plate('mini', 404, 90, 188, 74);
+    x.restore();
+  }
+  let topC = null;
+  function drawTopper(x, W, H, tNow){
+    const T = tNow/1000;
+    if(!topC){
+      topC = document.createElement('canvas'); topC.width = TW; topC.height = TH; const c = topC.getContext('2d');
+      const g = c.createLinearGradient(0, 0, 0, TH); g.addColorStop(0, '#2a0838'); g.addColorStop(0.6, '#6a0c2a'); g.addColorStop(1, '#1a0410'); c.fillStyle = g; c.fillRect(0, 0, TW, TH);
+      c.save(); c.translate(300, 170); for(let i = 0; i < 24; i++){ c.rotate(Math.PI/12); c.fillStyle = i % 2 ? 'rgba(255,200,90,0.10)' : 'rgba(255,120,60,0.06)'; c.beginPath(); c.moveTo(0, 0); c.lineTo(-40, -420); c.lineTo(40, -420); c.closePath(); c.fill(); } c.restore();
+      const R = slPrng(5); c.fillStyle = '#fff'; for(let i = 0; i < 40; i++) star(c, R()*TW, R()*TH, 1 + R()*3);
+      c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.font = 'italic bold 62px Georgia, serif'; c.shadowColor = '#ff9a3d'; c.shadowBlur = 18; c.fillStyle = '#fff1c4'; c.fillText("Whylo's", 300, 62);
+      const gg = c.createLinearGradient(0, 80, 0, 220); gg.addColorStop(0, '#fff6c4'); gg.addColorStop(0.5, '#f2c544'); gg.addColorStop(1, '#a86c12');
+      c.shadowBlur = 24; c.font = 'bold 150px Georgia, serif'; c.lineWidth = 14; c.strokeStyle = '#4a0610'; c.strokeText('33', 300, 158); c.fillStyle = gg; c.fillText('33', 300, 158);
+      c.shadowBlur = 0; c.drawImage(sprite('bow'), 420, 80, 90, 90);
+      // ribbon
+      const rg = c.createLinearGradient(0, 228, 0, 282); rg.addColorStop(0, '#e0213f'); rg.addColorStop(1, '#6a0412'); c.fillStyle = rg; c.strokeStyle = '#ffe58a'; c.lineWidth = 3;
+      c.beginPath(); c.moveTo(70, 230); c.lineTo(530, 230); c.lineTo(510, 256); c.lineTo(530, 282); c.lineTo(70, 282); c.lineTo(90, 256); c.closePath(); c.fill(); c.stroke();
+      c.font = 'bold 32px Georgia, serif'; c.fillStyle = '#ffe58a'; c.fillText('GOLDEN NIGHTS', 300, 258);
+    }
+    x.save(); x.setTransform(W/TW, 0, 0, H/TH, 0, 0); x.drawImage(topC, 0, 0);
+    // chasing bulbs round the edge
+    const n = 40; for(let i = 0; i < n; i++){ const u = i/n, per = 2*(TW + TH), d = u*per; let bx, by;
+      if(d < TW){ bx = d; by = 7; } else if(d < TW + TH){ bx = TW - 7; by = d - TW; } else if(d < 2*TW + TH){ bx = TW - (d - TW - TH); by = TH - 7; } else { bx = 7; by = TH - (d - 2*TW - TH); }
+      const on = (i + Math.floor(T*8)) % 4 === 0; x.fillStyle = on ? '#fff6c4' : '#a06a1a'; x.beginPath(); x.arc(bx, by, on ? 5 : 3.5, 0, Math.PI*2); x.fill(); }
+    x.restore();
   }
 
   /* ---------- reacting to new spins ---------- */
   function transitions(prev, s){
     if(s.settings.game !== 'slots'){ seen.clear(); anims.clear(); return; }
-    const now = performance.now();
     for(const p of s.players){
-      const id = p.slot ? p.slot.id : 0, was = seen.get(p.id);
+      const L = p.slot && p.slot.last, id = L ? L.id : 0, was = seen.get(p.id);
       if(was === undefined || !prev || prev.settings.game !== 'slots'){ seen.set(p.id, id); continue; }
-      if(id === was) continue;
+      if(id === was || !L) continue;
       seen.set(p.id, id);
-      const pp = prev.players.find(x => x.id === p.id);
-      const cur = state(pp || p, now).pos.map(v => ((v % 24) + 24) % 24);
-      begin(p, cur);
-      if(p.id === MY_ID){ pending = 0; mySounds(p.slot); }
-      setTimeout(() => { if(S && S.settings.game === 'slots'){ lastConsole = ''; render(); } }, DUR[2]*1000 + 120);
+      begin(p, prev.players.find(x => x.id === p.id));
+      if(p.id === MY_ID){
+        pending = 0; mySounds(L);
+        const I = info(p);
+        setTimeout(() => { if(S && S.settings.game === 'slots'){ lastConsole = ''; render(); } }, I.reveal*1000 + 60);
+        if(L.extra) setTimeout(() => { if(S && S.settings.game === 'slots'){ lastConsole = ''; render(); } }, I.endT*1000 + 60);
+      }
     }
+    loop();
   }
-  function mySounds(sl){
+  function mySounds(L){
     if(!SFX.on) return;
-    for(let i = 0; i < 26; i++) setTimeout(() => tone(700 + (i % 3)*90, 0.02, {type:'square', vol:0.022}), i*70);
-    DUR.forEach(d => setTimeout(() => { tone(150, 0.1, {type:'square', vol:0.07}); noise(0.05, {freq:900, vol:0.25}); }, d*1000));
-    setTimeout(() => {
-      if(sl.kind === 'jackpot'){ banner('JACKPOT! 33 33 33'); sfx('big'); confetti(220); buzz([80, 60, 80, 60, 200]); }
-      else if(sl.kind === 'big'){ banner('BIG WIN!', true); sfx('big'); confetti(120); }
-      else if(sl.kind === 'doom') sfx('doom');
-      else if(sl.win > sl.bet) sfx('win');
-      else if(sl.win > 0) sfx('push');
-    }, DUR[2]*1000 + 60);
+    const at = (s, f) => setTimeout(f, s*1000);
+    for(let i = 0; i < 18; i++) at(i*0.075, () => tone(620 + (i % 4)*70, 0.02, {type:'square', vol:0.02}));
+    SL_STOPS.forEach(d => at(d, () => { tone(140, 0.09, {type:'square', vol:0.06}); noise(0.04, {freq:900, vol:0.2}); }));
+    const rev = LAND + (L.nudged.length ? NUDGE : 0);
+    if(L.nudged.length) at(LAND, () => { for(let i = 0; i < 6; i++) setTimeout(() => tone(300 + i*90, 0.05, {type:'triangle', vol:0.06}), i*60); });
+    if(!L.free && L.coins.length) at(LAND, () => L.coins.forEach((c, i) => setTimeout(() => tone(1250 + i*160, 0.08, {type:'sine', vol:0.07}), i*90)));
+    if(L.trig) at(LAND + 1.1, () => { sfx('big'); buzz([60, 40, 120]); });
+    at(rev + 0.05, () => {
+      if(L.jpWins.length){ sfx('big'); confetti(220); buzz([80, 60, 80, 60, 200]); banner(L.jpWins.length > 1 ? 'JACKPOTS!' : L.jpWins[0].toUpperCase() + '!'); }
+      else if(L.kind === 'big'){ sfx('big'); confetti(120); }
+      else if(L.kind === 'doom') sfx('doom');
+      else if(L.win > 0) sfx(L.win >= L.bet || L.free ? 'win' : 'push');
+    });
+    if(L.fgEnd) at(rev + (L.jpWins.length ? 2.2 : 0) + 0.15, () => { sfx('win'); if(L.fg && L.fg.won >= L.bet*20) confetti(90); });
   }
-  function spin(){
+  function spin(auto){
     if(!S || S.settings.game !== 'slots' || S.phase !== 'slots') return;
     const me = S.players.find(p => p.id === MY_ID); if(!me) return;
-    const now = performance.now();
-    if(anims.has(MY_ID) && !state(me, now).done) return;
-    if(pending && now - pending < 2500) return;
-    if(!CHIP_VALS.includes(selChip)) selChip = 25;
-    if(selChip > me.chips){ toast(me.chips >= MIN_BET ? 'Not enough chips for that bet. Pick a smaller chip.' : "You're out of chips. Beg Myla for more.", 'bad'); return; }
-    pending = now; actx(); sfx('chip');
-    send({t:'slot', bet:selChip});
+    const fg = me.slot && me.slot.fg, I = info(me);
+    if(fg && !auto) return;                              // free games play themselves
+    if(I.a && (!I.done || I.t < (SLOT_MIN_GAP + (I.L.extra || 0))/1000 + 0.05)) return;
+    if(pending && nowMs() - pending < 2500) return;
+    if(!fg){
+      if(!CHIP_VALS.includes(selChip)) selChip = 25;
+      if(selChip > me.chips){ toast(me.chips >= MIN_BET ? 'Not enough chips for that bet. Pick a smaller chip.' : "You're out of chips. Beg Myla for more.", 'bad'); return; }
+    }
+    pending = nowMs(); actx(); if(!auto) sfx('chip');
+    send({t:'slot', bet:fg ? fg.bet : selChip});
     lastConsole = ''; render();
   }
-  const busy = () => { const me = S && S.players.find(p => p.id === MY_ID); return !!(me && ((pending && performance.now() - pending < 2500) || (anims.has(MY_ID) && !state(me).done))); };
+  // free games spin themselves once the last result has been shown
+  setInterval(() => {
+    if(!S || S.settings.game !== 'slots' || S.phase !== 'slots' || document.hidden) return;
+    const me = S.players.find(p => p.id === MY_ID); if(!me || !me.slot || !me.slot.fg || me.slot.fg.left <= 0) return;
+    const I = info(me); if(I.a && I.t < I.endT + (I.L.win > 0 ? 0.9 : 0.25)) return;
+    spin(true);
+  }, 200);
+  const busy = () => { const me = S && S.players.find(p => p.id === MY_ID); if(!me) return false; const I = info(me);
+    return !!((pending && nowMs() - pending < 2500) || (I.a && !I.done) || (me.slot && me.slot.fg)); };
 
   /* ---------- classic view: your machine + friends' machines ---------- */
   function machineHTML(p, big){
-    const me = p.id === MY_ID;
+    const me = p.id === MY_ID, s = big ? 1 : 0.5;
     return `<div class="smach${big ? ' big' : ' mini'}${me ? ' me' : ''}" data-pid="${esc(p.id)}">
-      <div class="smTop"><b>WHYLO'S</b><span>33</span></div>
-      <div class="smWin"><canvas width="${big ? 480 : 240}" height="${big ? 300 : 150}"></canvas></div>
-      <div class="smFoot"><span class="sname">${me ? 'YOU' : esc(p.name)}</span><span class="swon"></span></div>
+      ${big ? '<div class="smTitle"><i>Whylo\'s</i> <b>33</b> <span>GOLDEN NIGHTS</span></div>' : ''}
+      <canvas class="smMeter" width="${MW*s}" height="${MH*s}"></canvas>
+      <canvas class="smFace" width="${FW*s}" height="${FH*s}"></canvas>
+      ${big ? '' : `<div class="smFoot"><span class="sname">${esc(p.name)}</span></div>`}
     </div>`;
   }
   function render2D(me){
@@ -4420,60 +4921,87 @@ const SL = (() => {
     if(box._k !== key){
       box._k = key;
       const others = S.players.filter(p => !p.left && p.id !== MY_ID);
+      const first = !box.innerHTML;
       box.innerHTML = `${me ? machineHTML(me, true) : ''}<div class="sfriends">${others.map(p => machineHTML(p, false)).join('')}</div>`;
+      // make sure your whole machine sits above the controls
+      if(first) setTimeout(() => { const m = box.querySelector('.smach.big'), con = document.querySelector('.console');
+        if(!m || !con) return; const over = m.getBoundingClientRect().bottom - con.getBoundingClientRect().top + 6; if(over > 0) window.scrollBy({top:over, behavior:'smooth'}); }, 120);
     }
-    drawAll();
-    if(anims.size) loop();
+    drawAll(); loop();
   }
   function drawAll(){
     if(typeof W3 !== 'undefined' && W3.enabled()) return;
     const box = $('#slotsRoom'); if(!box || !S) return;
-    const now = performance.now();
+    const t = nowMs();
     box.querySelectorAll('.smach').forEach(el => {
       const p = S.players.find(x => x.id === el.dataset.pid); if(!p) return;
-      const st = state(p, now), cv = el.querySelector('canvas'), sl = p.slot;
-      const show = sl && st.done, win = show && sl.win > 0;
-      const hl = win || (show && sl.kind === 'doom') ? 0.5 + 0.5*Math.sin(now/120) : 0;
-      drawWindow(cv.getContext('2d'), cv.width, cv.height, st.pos, st.spd, hl, sl && sl.kind);
-      el.classList.toggle('won', !!(show && sl.win > sl.bet)); el.classList.toggle('jack', !!(show && sl.kind === 'jackpot'));
-      el.classList.toggle('doom', !!(show && sl.kind === 'doom')); el.classList.toggle('spinning', st.spinning);
-      const w = el.querySelector('.swon');
-      const txt = !sl ? `${short(p.chips)} chips` : st.spinning ? 'SPINNING...' : sl.win > 0 ? `${sl.label} +${short(sl.win)}` : sl.kind === 'doom' ? 'SKULLS!' : `${short(p.chips)} chips`;
-      if(w.textContent !== txt) w.textContent = txt;
+      const mine = p.id === MY_ID, fc = el.querySelector('.smFace'), mc = el.querySelector('.smMeter');
+      drawFace(fc.getContext('2d'), fc.width, fc.height, p, t, mine);
+      drawMeters(mc.getContext('2d'), mc.width, mc.height, p, t, mine);
+      const I = info(p, t), L = I.L;
+      el.classList.toggle('won', !!(L && I.a && I.revealed && !I.end && L.win > L.bet));
+      el.classList.toggle('fg', !!(p.slot && p.slot.fg));
     });
-    if(box.querySelector('.won,.doom') && !loopOn && !(drawAll.t > now - 90)){ drawAll.t = now; setTimeout(() => { if(!loopOn) drawAll(); }, 110); }
+  }
+  function loop(){
+    if(loopOn) return; loopOn = true; let last = 0;
+    const step = (ts) => {
+      if(!S || S.settings.game !== 'slots' || (typeof W3 !== 'undefined' && W3.enabled()) || !$('#slotsRoom')){ loopOn = false; return; }
+      const active = [...anims.values()].some(a => (ts - a.t0)/1000 < 8);
+      if(active || ts - last > 90){ last = ts; drawAll(); }
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   }
 
   /* ---------- your controls ---------- */
   function controls(me){
-    const st = state(me), sl = me.slot, spinning = busy();
-    if(me.chips < MIN_BET && !spinning) return `<div class="msg">You're broke. Myla might take pity on you...</div><button class="btn xl" data-act="beg">Beg Myla for ${BEG_AMOUNT} chips</button>`;
+    const I = info(me), L = I.L, fg = me.slot && me.slot.fg, spinning = busy();
+    if(!fg && me.chips < MIN_BET && !spinning) return `<div class="msg">You're broke. Myla might take pity on you...</div><button class="btn xl" data-act="beg">Beg Myla for ${BEG_AMOUNT} chips</button>`;
     let line;
-    if(spinning) line = 'Good luck...';
-    else if(sl && st.done && sl.win > sl.bet) line = `<b class="g">${sl.label}!</b> You won <b class="g">${fmt(sl.win)}</b>.`;
-    else if(sl && st.done && sl.win > 0) line = `<b>${sl.label}</b>: your ${fmt(sl.bet)} back.`;
-    else if(sl && st.done && sl.kind === 'doom') line = S.settings.doom ? '<b class="r">THREE SKULLS.</b> The Wheel of Doom is spinning for you...' : '<b class="r">THREE SKULLS.</b> Lucky the Wheel of Doom is off.';
-    else line = matchMedia('(pointer:coarse)').matches ? 'Pick a chip for your bet, then SPIN.' : 'Pick a chip for your bet, then SPIN (or press Space).';
-    return `<div class="betbar g-slots">${chipTray(me)}<div class="slotbtns"><button class="btn ghost sm" data-act="slotpays">PAYS</button><button class="spinBtn${spinning ? ' busy' : ''}" data-act="slotspin" ${spinning || selChip > me.chips ? 'disabled' : ''} aria-label="Spin for ${fmt(selChip)} chips"><span>SPIN</span><small>${short(selChip)}</small></button></div></div>
+    const names = (fs) => fs.map(f => `<b>${SL_FEAT_NAMES[f].toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</b>`).join(' + ');
+    if(fg) line = `<b class="g">FREE GAMES</b>: ${fg.left} left with ${names(SL_FEATS.filter(f => fg.feats[f]))}. Won so far <b class="g">${fmt(fg.won)}</b>.`;
+    else if(spinning) line = 'Good luck...';
+    else if(L && L.fgEnd && L.fg) line = `Free games over. You won <b class="g">${fmt(L.fg.won)}</b>.`;
+    else if(L && L.jpWins.length) line = `<b class="g">${L.jpWins.map(k => k.toUpperCase()).join(' + ')}!</b> You won <b class="g">${fmt(L.win)}</b>.`;
+    else if(L && L.win > 0) line = `You won <b class="g">${fmt(L.win)}</b>${L.win < L.bet ? ` (of your ${fmt(L.bet)})` : ''}.`;
+    else if(L && L.doom) line = S.settings.doom ? '<b class="r">SKULLS on reels 1, 3 and 5.</b> The Wheel of Doom is spinning for you...' : '<b class="r">SKULLS on reels 1, 3 and 5.</b> Lucky the Wheel of Doom is off.';
+    else line = 'Coins fill the pots. The fuller a pot, the more likely it pops into free games.';
+    const btn = fg ? `<button class="spinBtn busy" disabled aria-label="Free games playing"><span>FREE</span><small>${fg.left} LEFT</small></button>`
+      : `<button class="spinBtn${spinning ? ' busy' : ''}" data-act="slotspin" ${spinning || selChip > me.chips ? 'disabled' : ''} aria-label="Spin for ${fmt(selChip)} chips"><span>SPIN</span><small>${short(selChip)}</small></button>`;
+    return `<div class="betbar g-slots">${chipTray(me)}<div class="slotbtns"><button class="btn ghost sm" data-act="slotpays">PAYS</button>${btn}</div></div>
       <div class="msg">${line}</div>`;
   }
   function paysHTML(){
-    const row = (syms, txt, pay) => `<div class="prow"><span class="psyms">${syms.map(k => `<img src="${symURL(k)}" alt="${esc(SLOT_NAMES[k])}">`).join('')}</span><span class="ptxt">${txt}</span><b>${pay}</b></div>`;
-    return `<div class="dlg slotpays"><h3>What pays</h3><p class="hint">One line across the middle. Pays are times your bet.</p>
-      ${row(['33', '33', '33'], 'Jackpot', '333&times;')}${row(['W', 'W', 'W'], 'Three coins', '100&times;')}${row(['bow', 'bow', 'bow'], "Three of Myla's bows", '40&times;')}
-      ${row(['ace', 'ace', 'ace'], 'Three aces', '20&times;')}${row(['dice', 'dice', 'dice'], 'Three dice', '15&times;')}${row(['chip', 'chip', 'chip'], 'Three chips', '10&times;')}
-      ${row(['33', '33'], 'Any two 33s', '8&times;')}${row(['ace', 'dice', 'chip'], 'Any mix of aces, dice and chips', '2&times;')}${row(['33'], 'Any one 33', '2&times;')}
-      ${row(['skull', 'skull', 'skull'], S && S.settings.doom ? 'Three skulls spin the Wheel of Doom' : 'Three skulls (Wheel of Doom is off)', S && S.settings.doom ? '&#9760;' : '0')}
+    const bet = selChip || 25, me = S && S.players.find(p => p.id === MY_ID);
+    const pay = (k, n) => fmt(Math.round(bet*SL_PAY[k][n]/SL_LINEBET));
+    const rows = ['W', '33', 'bow', 'dice', 'chip', 'A', 'K', 'Q', 'J', 'T', 'N'].map(k => `<div class="prow"><span class="psyms"><img src="${symURL(k)}" alt="${esc(SL_NAMES[k])}"></span><span class="ptxt">${esc(SL_NAMES[k])}</span><b>${pay(k, 5)}</b><b>${pay(k, 4)}</b><b>${pay(k, 3)}</b></div>`).join('');
+    const pots = SL_FEATS.map(f => `<div class="potrow"><img src="${potURL(f)}" alt=""><div><b>${SL_FEAT_NAMES[f]}</b><br>${{n:'Any part of a wild stack nudges to fill the whole reel, with a chance of a 2x or 3x multiplier.', j:'Wilds can show a jackpot. Collect 3 of the same jackpot in one bonus to win it.', e:'The reels grow to 5 x 6 and 20 more lines play: 60 in all.'}[f]}</div></div>`).join('');
+    const jp = SL_JP_KINDS.map(k => `<span class="jpv jp-${k}"><small>${k.toUpperCase()}</small>${fmt(Math.round(jpVal(k, bet, 'pays')))}</span>`).join('');
+    return `<div class="dlg slotpays"><h3>Whylo's 33 Golden Nights</h3>
+      <p class="hint">5 reels, 4 rows, 40 lines. Wins pay left to right on a line. Your bet covers all 40 lines. Pays below are for a <b>${fmt(bet)}</b> bet.</p>
+      <h4>Pots and free games</h4>
+      <p class="hint">Coins land on reels 2, 3 and 4 and fill the pot of their colour. A pot can pop at any time, and the fuller it is, the more likely. Any losing spin can also pop a random pot. One pot gives <b>5 free games</b>, two give <b>8</b>, all three give <b>12</b> with every feature. In free games, a coin of a new colour can add its feature and 5 more games.</p>
+      ${pots}
+      <h4>Jackpots</h4><div class="jprow">${jp}</div>
+      <p class="hint">Mini and Minor are 15x and 50x your bet. Major and Grand grow with every spin at the table.</p>
+      <h4>Line pays</h4><div class="prow phead"><span class="psyms"></span><span class="ptxt"></span><b>5</b><b>4</b><b>3</b></div>${rows}
+      <p class="hint">Wilds stack and stand in for every symbol except coins and skulls. Any wild can turn into a 2x or 3x wild; two on one line add up (2x + 3x = 5x).${S && S.settings.doom ? ' <b>Skulls on reels 1, 3 and 5</b> spin the Wheel of Doom.' : ''}</p>
       <div class="btnrow"><button class="btn" data-act="closemodal">Got it</button></div></div>`;
   }
-  return {drawWindow, sprite, symURL, state, revealed, transitions, spin, busy, render2D, drawAll, controls, paysHTML, DUR, get anims(){ return anims; }};
+  // your chips as the machine shows them (a win counts once the reels have shown it)
+  const credit = (p) => { const I = info(p); return p.chips - (I.L && I.a && !I.revealed ? I.L.win : 0); };
+  return {sprite, symURL, potURL, state:info, info, credit, transitions, spin, busy, render2D, drawAll, drawFace, drawMeters, drawTopper, controls, paysHTML,
+    FW, FH, MW, MH, TW, TH, get anims(){ return anims; }};
 })();
 
-// a big win anywhere at the table: tell everyone once the reels stop
+// big moments anywhere at the table: tell everyone once the reels stop
 function slotWinEvent(e){
   if(e.pid === MY_ID) return;
-  setTimeout(() => toast(`<b>${esc(e.name)}</b> ${e.kind === 'jackpot' ? 'hit the <b class="g">JACKPOT</b>' : `got <b class="g">${esc(e.label)}</b>`} +${fmt(e.win)}`, e.kind === 'jackpot' ? 'gold' : '', true), SL.DUR[2]*1000 + 100);
-  if(e.kind === 'jackpot') setTimeout(() => { confetti(80); sfx('big'); }, SL.DUR[2]*1000 + 100);
+  const d = (SLOT_SPIN_MS + 200);
+  if(e.kind === 'jackpot'){ setTimeout(() => { toast(`<b>${esc(e.name)}</b> won the <b class="g">${esc(e.label)}</b> +${fmt(e.win)}`, 'gold', true); confetti(e.jp === 'grand' || e.jp === 'major' ? 160 : 60); sfx('big'); }, d); return; }
+  if(e.kind === 'bonus'){ setTimeout(() => toast(`<b>${esc(e.name)}</b> popped the pots: <b class="g">${esc(e.label)}</b>`, '', true), d); return; }
+  setTimeout(() => toast(`<b>${esc(e.name)}</b> ${e.label === 'FREE GAMES' ? 'won' : 'got a <b class="g">BIG WIN</b>'} +${fmt(e.win)}${e.label === 'FREE GAMES' ? ' in free games' : ''}`, '', true), d);
 }
 /* =====================================================================
    MAIN RENDER
@@ -5046,7 +5574,7 @@ const LINEUP = [
   {k:'blackjack', name:'Blackjack', line:"Beat Myla to 21, or play the house special: 33.", who:'1-6 players', turns:'Take turns hitting and standing'},
   {k:'roulette', name:'Roulette', line:'Bet on numbers and colors, then watch the ball drop.', who:'1-6 players', turns:'Myla spins, or take turns on Relaxed pace'},
   {k:'baccarat', name:'Baccarat', line:'Player or Banker? Closest to 9 wins.', who:'1-6 players', turns:'Myla deals, or take turns on Relaxed pace'},
-  {k:'slots', name:'Slots', line:'Your own machine. Spin as fast as you like. Three 33s pays 333 to 1.', who:'1-6 players', turns:'Everyone spins at once'},
+  {k:'slots', name:'Slots', line:'Your own 5-reel machine. Fill the pots for free games and chase the Grand.', who:'1-6 players', turns:'Everyone spins at once'},
   {k:'buckshot', name:'Buckshot', line:'A shotgun, live shells and The Dealer. Survive.', who:'1-6 players', turns:'Take turns pulling the trigger'},
   {k:'imposter', name:'Imposter', line:"One friend doesn't know the secret word. Find them.", who:'3-6 players', turns:'Take turns giving clues'},
 ];
@@ -5054,7 +5582,7 @@ function gameIcon(k){
   if(k === 'blackjack') return `<div class="gi giCards"><div class="card">${cardFaceSVG({r:'A', s:'♠'}, true)}</div><div class="card">${cardFaceSVG({r:'K', s:'♥'}, true)}</div></div>`;
   if(k === 'roulette') return `<div class="gi giWheel">${wheelSVG()}</div>`;
   if(k === 'baccarat') return `<div class="gi giBac"><span class="p">PLAYER<b>9</b></span><span class="b">BANKER<b>7</b></span></div>`;
-  if(k === 'slots') return `<div class="gi giSlots">${['33', 'bow', '33'].map(s => `<img src="${SL.symURL(s)}" alt="">`).join('')}</div>`;
+  if(k === 'slots') return `<div class="gi giSlots">${['33', 'W', 'bow'].map(s => `<img src="${SL.symURL(s)}" alt="">`).join('')}</div>`;
   if(k === 'buckshot') return `<div class="gi giShells">${shellIcon(true)}${shellIcon(false)}${shellIcon(true)}${shellIcon(true)}</div>`;
   return `<div class="gi giImp"><svg viewBox="0 0 96 64" aria-hidden="true"><g fill="#f3e3c4"><circle cx="18" cy="24" r="9"/><path d="M4 60c0-12 6-20 14-20s14 8 14 20z"/><circle cx="78" cy="24" r="9"/><path d="M64 60c0-12 6-20 14-20s14 8 14 20z"/></g><g fill="#ff4d5e"><circle cx="48" cy="20" r="11"/><path d="M31 62c0-14 7-23 17-23s17 9 17 23z"/></g><text x="48" y="25" text-anchor="middle" font-size="15" font-weight="800" fill="#2a0610" font-family="Rubik,Arial,sans-serif">?</text></svg></div>`;
 }
@@ -5094,7 +5622,7 @@ function renderHome(msg, info){
         <div><h3>Blackjack</h3><p>Get closer to the target than Myla without going over: <b>21</b> (she stands on 17) or <b>33</b> (she stands on 29, and exactly 33 pays 2:1). Players take turns: hit, stand or double. Blackjack pays 3:2. Side bets: Perfect Pairs and 21+3.</p></div>
         <div><h3>Roulette</h3><p>Everyone places chips on the layout, then Myla spins (on Relaxed pace, players take turns spinning). A single number pays 35:1, red/black and odd/even pay 1:1.</p></div>
         <div><h3>Baccarat</h3><p>Bet on Player, Banker or Tie, then Myla deals (on Relaxed pace, players take turns). Closest to 9 wins. Player 1:1, Banker 0.95:1, Tie 8:1.</p></div>
-        <div><h3>Slots</h3><p>Everyone gets their own machine and spins whenever they like. Pick a chip for your bet and press SPIN. Three golden 33s pays 333 to 1. With the Wheel of Doom on, three skulls spin the wheel.</p></div>
+        <div><h3>Slots</h3><p>Everyone gets their own 5-reel, 40-line machine and spins whenever they like. Coins fill three pots; a pot that pops gives free games with Nudging Wilds, Jackpot Wilds or Expanded Reels. Collect 3 jackpot wilds to win the Mini, Minor, Major or Grand. With the Wheel of Doom on, skulls on reels 1, 3 and 5 spin the wheel.</p></div>
         <div><h3>Buckshot</h3><p>Put down a stake and face The Dealer with a shotgun of live and blank shells. Players take turns: shoot The Dealer or yourself. Use items, survive all 3 rounds, and get paid.</p></div>
         <div><h3>Imposter</h3><p>Free party game for 3 or more. Everyone gets the secret word except the imposter. Take turns giving one-word clues, then vote out the imposter.</p></div>
         <div><h3>Wheel of Doom</h3><p>When it's on, losing spins the wheel: taxes, earthquakes, upside-down screens, cursed aces, embarrassing names. The host can turn it off.</p></div>
@@ -9583,37 +10111,78 @@ W3.games.imposter = (() => {
   return {build, sync, frame, idle, camera, tap, hover};
 })();
 /* =====================================================================
-   3D SLOTS: a curved bank of six Whylo's slot machines. Everyone sits on
-   a stool at their own machine and spins whenever they like; the reels
-   are a live screen drawn by SL.drawWindow (same art as the classic view).
-   Myla works the floor at the end of the bank.
+   3D SLOTS: a curved bank of six tall "Whylo's 33 Golden Nights" cabinets.
+   Each one has a curved portrait screen (pots, reels, info bar drawn by
+   SL.drawFace), a jackpot meter panel, a lit topper, a button deck and
+   glowing side panels. Everyone sits on a stool at their own machine and
+   spins whenever they like. Myla works the floor at the end of the bank.
    ===================================================================== */
 W3.games.slots = (() => {
-  const {Node, geo, mat, V, qEuler, qRot, wait, canvasTex, tween} = G3;
+  const {Node, Geo, geo, mat, V, qEuler, qRot, wait, canvasTex, tween} = G3;
   const ORDER = [2, 3, 1, 4, 0, 5];
-  const F = [0, 0, 0.95], RAD = 2.1, STEP = 0.42;     // the bank curves around F, machines face it
-  const WIN_W = 0.5, WIN_H = 0.3125, WIN_Y = 1.26, FRONT = 0.082;
-  const DECK_Y = 0.905, DECK_Z = 0.19;
+  const F = [0, 0, 0.95], RAD = 2.15, STEP = 0.42;     // the bank curves around F, machines face it
+  const SW = 0.54;                                     // screen width
+  const SC = {top:1.86, z0:-0.04, th0:0.10, a:0.30, R:0.62, phi:0.62}; SC.L = SC.a + SC.R*SC.phi;
+  const DECK_Y = 0.9, DECK_Z = 0.2, DECK_T = 0.16, DN = [0, Math.cos(DECK_T), Math.sin(DECK_T)];
+  const MET_H = 0.19, TOP_H = 0.33;
   const cache = new Map(); const cg = (k, f) => { if(!cache.has(k)) cache.set(k, f()); return cache.get(k); };
-  let X = null, D = null, M = [], prevS = null, myWinUntil = 0, myWinHtml = '';
+  let X = null, D = null, M = [], prevS = null, topTex = null, topAt = 0;
+
+  /* ---------- the curved screen's profile (y, z), top to bottom ---------- */
+  const prof = () => cg('slProf', () => {
+    const n = 28, ds = SC.L/n, pts = []; let y = SC.top, z = SC.z0;
+    const thAt = (s) => s <= SC.a ? SC.th0 : SC.th0 + (s - SC.a)/SC.R;
+    for(let i = 0; i <= n; i++){ const s = i*ds; pts.push({y, z, th:thAt(s), s}); const tm = thAt(s + ds/2); y -= Math.cos(tm)*ds; z += Math.sin(tm)*ds; }
+    return pts;
+  });
+  const profAt = (s) => { const P = prof(), k = clampI(Math.round(s/SC.L*(P.length - 1)), 0, P.length - 1); return P[k]; };
+  const clampI = (v, a, b) => Math.max(a, Math.min(b, v));
+  // a point on (or off) the screen surface, machine-local
+  const scr = (u, s, off = 0) => { const p = profAt(s), ny = Math.sin(p.th), nz = Math.cos(p.th); return [(u - 0.5)*SW, p.y + ny*off, p.z + nz*off]; };
+  function curvedScreen(w, off){
+    const g = new Geo(), P = prof(), n = P.length - 1;
+    for(let j = 0; j <= n; j++){ const p = P[j], ny = Math.sin(p.th), nz = Math.cos(p.th);
+      for(let i = 0; i <= 1; i++) g.v(-w/2 + i*w, p.y + ny*off, p.z + nz*off, 0, ny, nz, i, 1 - p.s/SC.L); }
+    for(let j = 0; j < n; j++){ const a = j*2; g.q(a, a + 2, a + 3, a + 1); }
+    return g;
+  }
+  // the cabinet body behind the screen: the screen profile extruded across the cabinet
+  function bodyGeo(){
+    const P = prof(), bot = P[P.length - 1];
+    let pts = P.map(p => [-(p.y - Math.sin(p.th)*0.004), p.z - Math.cos(p.th)*0.004]);
+    pts.push([-(bot.y - 0.01), -0.31], [-SC.top, -0.31]);
+    let area = 0; for(let k = 0; k < pts.length; k++){ const a = pts[k], b = pts[(k + 1) % pts.length]; area += a[0]*b[1] - b[0]*a[1]; }
+    if(area < 0) pts = pts.reverse();
+    return geo.shape(pts, -0.31, 0.31, {bottom:true});
+  }
 
   /* ---------- art ---------- */
-  const signTex = () => cg('slotSign', () => canvasTex(512, 200, (x, W, H) => {
-    const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#5a0614'); g.addColorStop(1, '#22020a'); x.fillStyle = g; x.fillRect(0, 0, W, H);
-    for(let i = 0; i < 26; i++){ const t = i/25; x.fillStyle = i % 2 ? '#ffd86a' : '#fff4c8'; x.beginPath(); x.arc(14 + t*(W - 28), 12, 5, 0, Math.PI*2); x.fill(); x.beginPath(); x.arc(14 + t*(W - 28), H - 12, 5, 0, Math.PI*2); x.fill(); }
-    x.textAlign = 'center'; x.textBaseline = 'middle';
-    x.font = 'italic bold 64px Georgia, serif'; x.shadowColor = '#ff9a3d'; x.shadowBlur = 18; x.fillStyle = '#fff1c4'; x.fillText("Whylo's", W*0.4, H/2 + 4);
-    x.font = 'bold 92px Georgia, serif'; const gg = x.createLinearGradient(0, 40, 0, 160); gg.addColorStop(0, '#fff6c4'); gg.addColorStop(1, '#e0a020'); x.fillStyle = gg; x.fillText('33', W*0.8, H/2 + 6);
+  const hexTex = () => cg('slHex', () => canvasTex(256, 512, (x, W, H) => {
+    x.fillStyle = '#050304'; x.fillRect(0, 0, W, H);
+    const r = 18, hh = r*Math.sqrt(3);
+    for(let row = -1; row < H/hh + 1; row++) for(let col = -1; col < W/(r*1.5) + 1; col++){
+      const cx = col*r*1.5, cy = row*hh + (col % 2 ? hh/2 : 0);
+      x.beginPath(); for(let k = 0; k < 6; k++){ const a = k*Math.PI/3; x.lineTo(cx + Math.cos(a)*(r - 3), cy + Math.sin(a)*(r - 3)); } x.closePath();
+      const lit = (row*7 + col*3) % 5 === 0;
+      x.strokeStyle = lit ? '#ffc070' : '#ff8a1c'; x.lineWidth = lit ? 3 : 2; x.shadowColor = '#ff8a1c'; x.shadowBlur = 8; x.stroke();
+      if(lit){ x.fillStyle = 'rgba(255,140,30,0.25)'; x.fill(); }
+    }
+    x.shadowBlur = 0; const g = x.createLinearGradient(0, 0, W, 0); g.addColorStop(0, 'rgba(0,0,0,0.6)'); g.addColorStop(0.5, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,0.6)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
   }));
-  const beltTex = () => cg('slotBelt', () => canvasTex(512, 96, (x, W, H) => {
-    x.fillStyle = '#140306'; x.fillRect(0, 0, W, H);
-    x.drawImage(SL.sprite('33'), 14, 10, 76, 76); x.drawImage(SL.sprite('33'), 84, 10, 76, 76); x.drawImage(SL.sprite('33'), 154, 10, 76, 76);
-    x.font = 'bold 54px Georgia, serif'; x.textAlign = 'left'; x.textBaseline = 'middle'; x.fillStyle = '#ffd23d'; x.shadowColor = '#ff8a2a'; x.shadowBlur = 12; x.fillText('= 333 to 1', 248, H/2 + 4);
+  const deckTex = () => cg('slDeck', () => canvasTex(360, 120, (x, W, H) => {
+    const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1a1024'); g.addColorStop(1, '#06040a'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    [['10', '#1f5fc4'], ['25', '#1d8a4a'], ['100', '#222'], ['500', '#6a2aa8'], ['1K', '#c07a14']].forEach(([t, c], i) => {
+      const cx = 36 + i*58; x.fillStyle = c; x.beginPath(); x.arc(cx, 46, 22, 0, Math.PI*2); x.fill(); x.lineWidth = 4; x.strokeStyle = '#fff'; x.setLineDash([5, 5]); x.stroke(); x.setLineDash([]);
+      x.fillStyle = '#fff'; x.font = 'bold 14px Arial'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(t, cx, 47); });
+    x.fillStyle = '#ffd23d'; x.font = 'bold 18px Arial'; x.textAlign = 'center'; x.fillText('BET', 160, 96);
+    x.fillStyle = '#ff4d61'; x.fillText('SPIN', 320, 47);
   }));
-  const lacquer = () => cg('slotLacq', () => mat({color:'#6e0c1d', rough:0.28, metal:0.25, env:0.9, coat:0.8}));
-  const blackGloss = () => cg('slotBlack', () => mat({color:'#0d0b0e', rough:0.18, metal:0.4, env:1, coat:0.9}));
-  const gold = () => cg('slotGold', () => mat({color:'#d8b04a', rough:0.22, metal:1}));
-  const chrome = () => cg('slotChrome', () => mat({color:'#d9dde2', rough:0.15, metal:1, env:1.2}));
+  const blackGloss = () => cg('slBlack', () => mat({color:'#0c0b0f', rough:0.2, metal:0.35, env:1, coat:0.8}));
+  const panelMat = () => cg('slPanel', () => mat({color:'#18171d', rough:0.32, metal:0.5, env:0.8}));
+  const metalDark = () => cg('slMetal', () => mat({color:'#2c2c33', rough:0.35, metal:0.85, env:1}));
+  const gold = () => cg('slGold', () => mat({color:'#d8b04a', rough:0.22, metal:1}));
+  const hexMat = () => cg('slHexM', () => mat({color:[1.25, 1.25, 1.25], map:hexTex(), unlit:true}));
+  const touchMat = () => cg('slTouchM', () => mat({color:[1.1, 1.1, 1.1], map:deckTex(), unlit:true}));
 
   function buildMachine(i){
     const ang = (i - 2.5)*STEP;
@@ -9621,54 +10190,67 @@ W3.games.slots = (() => {
     const yaw = W3T.yawTo(pos, F), dir = V.norm([F[0] - pos[0], 0, F[2] - pos[2]]);
     const root = new Node(); root.pos = pos; root.q = qEuler(0, yaw, 0); X.scene.add(root);
     const add = (g, m, p, q) => { const n = new Node(g, m); n.pos = p; if(q) n.q = q; root.add(n); return n; };
-    add(cg('smBase', () => geo.roundBox(0.68, 0.84, 0.5, 0.03, 2)), lacquer(), [0, 0.42, -0.02]);
-    add(cg('smKick', () => geo.box(0.7, 0.06, 0.52)), blackGloss(), [0, 0.03, -0.02]);
-    add(cg('smDeck', () => geo.roundBox(0.7, 0.05, 0.26, 0.018, 2)), blackGloss(), [0, 0.87, 0.15], qEuler(0.22, 0, 0));
-    add(cg('smDeckTrim', () => geo.box(0.7, 0.012, 0.012)), gold(), [0, 0.86, 0.285]);
-    add(cg('smUpper', () => geo.roundBox(0.68, 0.76, 0.32, 0.03, 2)), lacquer(), [0, 1.28, -0.08]);
-    add(cg('smBezel', () => geo.roundBox(WIN_W + 0.05, WIN_H + 0.05, 0.02, 0.012, 2)), gold(), [0, WIN_Y, FRONT - 0.006]);
-    const tex = canvasTex(480, 300, (x, W, H) => SL.drawWindow(x, W, H, [i*3 % 24, i*7 % 24, i*11 % 24]));
-    add(cg('smScreen', () => geo.quad(WIN_W, WIN_H)), mat({color:[0.86, 0.85, 0.83], map:tex, unlit:true}), [0, WIN_Y, FRONT + 0.006]);
-    add(cg('smGlass', () => geo.quad(WIN_W, WIN_H)), cg('smGlassM', () => mat({color:'#ffffff', rough:0.05, metal:0, alpha:0.06, blend:'add', depthWrite:false, env:1.4})), [0, WIN_Y, FRONT + 0.012]);
-    add(cg('smBelt', () => geo.quad(0.52, 0.098)), cg('smBeltM', () => mat({color:[1.2, 1.2, 1.2], map:beltTex(), unlit:true})), [0, 1.0, FRONT + 0.004]);
-    // topper with the glowing sign
-    const topM = mat({color:'#8a0f22', rough:0.25, metal:0.3, emissive:'#ff2a44', emisMult:0.6});
-    add(cg('smTop', () => geo.roundBox(0.72, 0.3, 0.34, 0.09, 3)), topM, [0, 1.81, -0.08]);
-    const signM = mat({color:[1.5, 1.45, 1.4], map:signTex(), unlit:true});
-    add(cg('smSign', () => geo.quad(0.62, 0.24)), signM, [0, 1.81, 0.095]);
-    // side light strips
-    const stripM = mat({color:'#3a2a08', rough:0.4, emissive:'#ffcf6a', emisMult:1.6});
-    for(const s of [-1, 1]) add(cg('smStrip', () => geo.box(0.014, 0.74, 0.014)), stripM, [s*0.345, 1.28, 0.08]);
-    // buttons on the deck: SPIN (red, glowing) + three bet buttons
-    const deckPt = (x) => [x, DECK_Y - 0.008, DECK_Z];
+    const P = prof(), bot = P[P.length - 1];
+    const rail = mat({color:'#3a2208', rough:0.4, emissive:'#ff9d2e', emisMult:1.8});
+    // lower cabinet with glowing hex side panels
+    add(cg('cbBase', () => geo.roundBox(0.6, 0.86, 0.5, 0.025, 2)), blackGloss(), [0, 0.43, -0.07]);
+    add(cg('cbKick', () => geo.box(0.62, 0.05, 0.52)), metalDark(), [0, 0.025, -0.07]);
+    add(cg('cbDoor', () => geo.roundBox(0.48, 0.52, 0.012, 0.012, 2)), panelMat(), [0, 0.42, 0.183]);
+    add(cg('cbDoorLine', () => geo.box(0.44, 0.008, 0.008)), rail, [0, 0.71, 0.19]);
+    for(const s of [-1, 1]) add(cg('cbHex', () => geo.quad(0.46, 0.76)), hexMat(), [s*0.302, 0.45, -0.07], qEuler(0, s*Math.PI/2, 0));
+    // button deck: bet screen, a big SPIN button and a service button
+    const dq = qEuler(DECK_T, 0, 0), dp = (x, h = 0.026, z = 0) => [x, DECK_Y + DN[1]*h - Math.sin(DECK_T)*z, DECK_Z + DN[2]*h + Math.cos(DECK_T)*z];
+    add(cg('cbDeck', () => geo.roundBox(0.64, 0.05, 0.3, 0.02, 2)), blackGloss(), [0, DECK_Y, DECK_Z], dq);
+    add(cg('cbDeckTrim', () => geo.box(0.64, 0.012, 0.012)), rail, dp(0, -0.012, 0.15), dq);
+    add(cg('cbTouch', () => geo.quad(0.3, 0.1)), touchMat(), dp(-0.02, 0.0262, -0.01), qEuler(DECK_T - Math.PI/2, 0, 0));
     const spinM = mat({color:'#ff2a3c', rough:0.3, emissive:'#ff1f33', emisMult:1.4});
-    const spinB = add(cg('smSpinB', () => geo.cylinder(0.034, 0.036, 0.018, 20)), spinM, deckPt(0.19), qEuler(0.22, 0, 0));
-    for(const [k, x] of [[0, -0.22], [1, -0.14], [2, -0.06]]) add(cg('smBetB', () => geo.roundBox(0.055, 0.016, 0.04, 0.006, 2)), cg('smBetM' + k, () => mat({color:['#ffd23d', '#3fdc8a', '#55a8ff'][k], rough:0.35, emissive:['#ffb000', '#20c060', '#2a7fff'][k], emisMult:0.5})), deckPt(x), qEuler(0.22, 0, 0));
-    // the lever on the right-hand side (player's right = +x here)
-    const lever = new Node(); lever.pos = [0.37, 1.05, -0.02]; root.add(lever);
-    const hub = new Node(cg('smHub', () => geo.cylinder(0.04, 0.04, 0.05, 16)), chrome()); hub.q = qEuler(0, 0, Math.PI/2); hub.pos = [-0.012, 0, 0]; root.add(hub); hub.pos = [0.355, 1.05, -0.02];
-    const rod = new Node(cg('smRod', () => geo.cylinder(0.011, 0.011, 0.34, 10)), chrome()); rod.pos = [0.02, 0.17, 0]; lever.add(rod);
-    const knob = new Node(cg('smKnob', () => geo.sphere(0.04, 16, 12)), cg('smKnobM', () => mat({color:'#e8162c', rough:0.18, coat:1, env:1}))); knob.pos = [0.02, 0.35, 0]; lever.add(knob);
+    const spinB = add(cg('cbSpin', () => geo.cylinder(0.042, 0.045, 0.02, 24)), spinM, dp(0.23, 0.032), dq);
+    add(cg('cbBtn2', () => geo.cylinder(0.026, 0.028, 0.016, 20)), cg('slBtn2M', () => mat({color:'#f2c544', rough:0.3, emissive:'#ffb000', emisMult:0.7})), dp(-0.24, 0.03), dq);
+    // the face between deck and screen: ticket printer + bill slot
+    const fh = bot.y - DECK_Y - 0.02;
+    add(cg('cbFace', () => geo.roundBox(0.6, fh, 0.1, 0.01, 2)), blackGloss(), [0, DECK_Y + 0.02 + fh/2, bot.z - 0.05]);
+    for(const s of [-1, 1]){ add(cg('cbSlot', () => geo.roundBox(0.12, 0.06, 0.03, 0.008, 2)), metalDark(), [s*0.19, DECK_Y + 0.02 + fh*0.55, bot.z + 0.005]);
+      add(cg('cbSlotL', () => geo.box(0.08, 0.006, 0.01)), rail, [s*0.19, DECK_Y + 0.02 + fh*0.55, bot.z + 0.022]); }
+    // body + the curved screen with glowing rails
+    const body = new Node(cg('cbBody', bodyGeo), blackGloss()); body.q = qEuler(0, 0, -Math.PI/2); root.add(body);
+    const face = canvasTex(SL.FW/2, SL.FH/2, () => {});
+    const faceM = mat({color:[0.95, 0.95, 0.95], map:face, unlit:true, fog:false});
+    add(cg('cbScreen', () => curvedScreen(SW, 0.002)), faceM, [0, 0, 0]);
+    for(const s of [-1, 1]){ const path = P.map(p => [s*(SW/2 + 0.016), p.y + Math.sin(p.th)*0.006, p.z + Math.cos(p.th)*0.006]);
+      add(cg('cbRail' + s, () => geo.tube(path, 0.009, 8)), rail, [0, 0, 0]); }
+    // jackpot meters
+    add(cg('cbMetBox', () => geo.roundBox(0.62, MET_H, 0.27, 0.02, 2)), blackGloss(), [0, SC.top + MET_H/2, -0.175]);
+    const met = canvasTex(SL.MW/2, SL.MH/2, () => {});
+    const metM = mat({color:[0.95, 0.95, 0.95], map:met, unlit:true, fog:false});
+    add(cg('cbMet', () => geo.quad(SW, SW*SL.MH/SL.MW)), metM, [0, SC.top + MET_H/2, -0.038]);
+    add(cg('cbMetLine', () => geo.box(0.6, 0.008, 0.01)), rail, [0, SC.top + 0.004, -0.036]);
+    // topper with the title art, and a tower light
+    const ty = SC.top + MET_H + 0.012 + TOP_H/2;
+    add(cg('cbTopBox', () => geo.roundBox(0.64, TOP_H, 0.24, 0.035, 3)), blackGloss(), [0, ty, -0.18]);
+    add(cg('cbTopRim', () => geo.quad(0.6, 0.31)), gold(), [0, ty, -0.058]);
+    add(cg('cbTop', () => geo.quad(0.58, 0.29)), cg('slTopM', () => mat({color:[1.05, 1.05, 1.05], map:topTex, unlit:true})), [0, ty, -0.056]);
+    add(cg('cbTower', () => geo.cylinder(0.022, 0.022, 0.1, 16)), metalDark(), [0.25, ty + TOP_H/2 + 0.05, -0.2]);
+    const towerM = mat({color:'#ffd0a0', rough:0.3, emissive:'#ffffff', emisMult:0.8});
+    add(cg('cbTowerC', () => geo.cylinder(0.024, 0.024, 0.05, 16)), towerM, [0, 0, 0]).pos = [0.25, ty + TOP_H/2 + 0.125, -0.2];
     // stool
-    const chair = V.add(pos, V.scale(dir, 0.7)), seatYaw = W3T.yawTo(chair, pos);
+    const chair = V.add(pos, V.scale(dir, 0.8)), seatYaw = W3T.yawTo(chair, pos);
     const st = W3T.stool(); st.pos = [chair[0], 0, chair[2]]; st.q = qEuler(0, seatYaw, 0); X.scene.add(st);
-    root.traverse(n => { n.castShadow = n === root ? false : n.castShadow; });
-    return {i, ang, pos, yaw, dir, root, tex, chair, seatYaw, lever, lev:{a:0}, spinB, topM, stripM, signM, flash:0, drawn:'', slotId:null, pid:null};
+    return {i, ang, pos, yaw, dir, root, face, faceM, met, metM, full:false, chair, seatYaw, spinB, spinM, rail, towerM, slotId:null, pid:null, drawnAt:0, metAt:0, dp};
   }
   // machine-local point -> world
   const mw = (m, v) => V.add(m.pos, qRot(m.root.quat(), v));
 
   function build(ctx){
-    X = ctx; M = []; prevS = null; myWinUntil = 0;
-    { const me = S && S.players.find(p => p.id === MY_ID); refreshLabels.myShown = me && me.slot ? me.slot.id : null; }
+    X = ctx; M = []; prevS = null;
+    if(!topTex) topTex = canvasTex(SL.TW, SL.TH, (x, W, H) => SL.drawTopper(x, W, H, performance.now()));
     const room = W3R.casino(); ctx.scene.add(room.root);
     for(let i = 0; i < 6; i++) M.push(buildMachine(i));
     // Myla works the floor at the right end of the bank
-    const a = 3.6*STEP, mp = [F[0] + Math.sin(a)*(RAD - 0.35), 0, F[2] - Math.cos(a)*(RAD - 0.35)];
+    const a = 3.65*STEP, mp = [F[0] + Math.sin(a)*(RAD - 0.3), 0, F[2] - Math.cos(a)*(RAD - 0.3)];
     D = ctx.actor('myla', null, {standing:true, special:'myla'}); ctx.place(D, mp, W3T.yawTo(mp, F));
     for(const k of ['R', 'L']){ const c = D.arms[k]; c.pos = ctx.local(D, [c.out*0.22, 0.8, 0.06]); c.q = ctx.hq(D, [0, -1, 0.15], [c.out, 0, 0]); }
-    const env = {...room.env, key:{...room.env.key, pos:[0, 3.1, 1.0], target:[0, 1.0, -0.9], angle:1.15, penumbra:0.6, range:4.6, near:0.3, far:8},
-      points:[...room.env.points.slice(0, 5), {pos:[0, 1.7, 0.2], color:[1.3, 1.05, 0.9], range:3.2}],
+    const env = {...room.env, key:{...room.env.key, pos:[0, 3.3, 1.1], target:[0, 1.1, -0.9], angle:1.2, penumbra:0.6, range:5, near:0.3, far:8},
+      points:[...room.env.points.slice(0, 5), {pos:[0, 1.8, 0.3], color:[1.2, 1.0, 0.9], range:3.2}],
       post:{...room.env.post, dofStart:1.2, dofRange:4}};
     return {env};
   }
@@ -9676,10 +10258,17 @@ W3.games.slots = (() => {
   const myMachine = () => { const n = W3.seatOf(MY_ID); const i = n < 0 ? null : seatIx(n); return i == null ? null : M[i]; };
   function restHands(A, m, dur = 0.4){
     const ps = [];
-    for(const k of ['R', 'L']){ const c = A.arms[k], p = mw(m, [c.out === -1 ? 0.13 : -0.13, DECK_Y + 0.012, DECK_Z - 0.03]);
+    for(const k of ['R', 'L']){ const c = A.arms[k], p = mw(m, m.dp(c.out === -1 ? 0.12 : -0.12, 0.04, 0.06));
       if(dur <= 0.001){ c.pos = p; c.q = X.hq(A, [-c.out*0.2, -0.3, 1]); continue; }
       ps.push(X.arm(c, p, {dur, q:X.hq(A, [-c.out*0.2, -0.3, 1]), pose:'relaxed'})); }
     return Promise.all(ps);
+  }
+  function setRes(m, full){
+    if(m.full === full) return; m.full = full;
+    const s = full ? 1 : 0.5;
+    m.face = canvasTex(SL.FW*s, SL.FH*s, () => {}); m.faceM.map = m.face;
+    m.met = canvasTex(SL.MW*s, SL.MH*s, () => {}); m.metM.map = m.met;
+    m.drawnAt = 0; m.metAt = 0;
   }
   function syncPlayers(){
     const want = new Set(['myla']);
@@ -9687,59 +10276,59 @@ W3.games.slots = (() => {
     S.players.forEach((p, n) => {
       const i = seatIx(n); if(i == null || p.left) return; want.add(p.id);
       const m = M[i], A = X.actor(p.id, W3.lookOf(p), {});
-      m.pid = p.id;
-      if(A.seat !== i){ A.seat = i; X.place(A, m.chair, m.seatYaw); restHands(A, m, 0); m.slotId = p.slot ? p.slot.id : 0; }
+      m.pid = p.id; setRes(m, p.id === MY_ID);
+      const L = p.slot && p.slot.last;
+      if(A.seat !== i){ A.seat = i; X.place(A, m.chair, m.seatYaw); restHands(A, m, 0); m.slotId = L ? L.id : 0; }
       A.isMe = p.id === MY_ID; A.av.headPivot.visible = !A.isMe; A.p = p;
-      // a new spin: press SPIN, the lever drops on its own
-      const id = p.slot ? p.slot.id : 0;
-      if(m.slotId !== id){ m.slotId = id; pressSpin(A, m); }
+      const id = L ? L.id : 0;
+      if(m.slotId !== id){ m.slotId = id; if(!L.free) pressSpin(A, m); else flashSpin(m); }
     });
+    for(const m of M) if(!m.pid) setRes(m, false);
     for(const id of [...X.actors.keys()]) if(!want.has(id)) X.removeActor(id);
   }
+  function flashSpin(m){ const base = m.spinBase || (m.spinBase = m.spinM.emis.slice()); m.spinM.emis = base.map(v => v*2.6 + 0.4); setTimeout(() => { m.spinM.emis = base.slice(); }, 180); }
   function pressSpin(A, m){
-    tween(m.lev, 'a', 1.0, 0.18).then(() => tween(m.lev, 'a', 0, 0.45));
+    flashSpin(m);
     X.gesture(A, async () => {
-      const c = A.arms.R, b = mw(m, [0.19, DECK_Y + 0.03, DECK_Z]);
+      const c = A.arms.R, b = mw(m, m.dp(0.23, 0.06));
       await X.arm(c, b, {dur:0.16, pose:'point', q:X.hq(A, [0.1, -0.85, 0.5])});
-      await X.arm(c, V.add(b, [0, -0.018, 0]), {dur:0.07});
+      await X.arm(c, mw(m, m.dp(0.23, 0.04)), {dur:0.07});
       await X.arm(c, b, {dur:0.08});
       await wait(0.25); await restHands(A, m, 0.35);
     });
   }
 
   /* ---------- the screens ---------- */
+  const EMPTY = [0, 1, 2, 3, 4, 5].map(i => ({id:'empty' + i, chips:0, slot:null}));
   function drawScreens(now){
+    const tAct = (p) => { const I = SL.info(p, now); return !!(I.a && I.t < I.endT + 2.5); };
     for(const m of M){
-      const p = m.pid ? S.players.find(x => x.id === m.pid) : null;
-      const st = p ? SL.state(p, now) : {pos:[m.i*3 % 24, m.i*7 % 24, m.i*11 % 24], spd:[0, 0, 0], spinning:false, done:true};
-      const sl = p && p.slot, show = sl && st.done, hl = show && (sl.win > 0 || sl.kind === 'doom') ? 0.5 + 0.5*Math.sin(now/120) : 0;
-      const key = st.pos.map(v => v.toFixed(3)).join(',') + '|' + hl.toFixed(2);
-      if(key !== m.drawn){ m.drawn = key; SL.drawWindow(m.tex.ctx, 480, 300, st.pos, st.spd, hl, sl && sl.kind); m.tex.dirty = true; }
-      // lights: flash on wins, purple for skulls
-      const big = show && sl.win >= sl.bet*10, any = show && sl.win > sl.bet, doom = show && sl.kind === 'doom';
-      const pulse = big ? 0.5 + 0.5*Math.sin(now/70) : any ? 0.5 + 0.5*Math.sin(now/160) : 0;
-      const want = doom ? [1.6, 0.4, 2.6] : any ? [2.4*(0.6 + pulse), 1.9*(0.6 + pulse), 0.6] : [1.6, 1.3, 0.55];
-      m.stripM.emis = want;
-      m.topM.emis = doom ? [0.5, 0.05, 0.8] : any ? [1.6*(0.4 + pulse), 0.2, 0.3] : [0.6, 0.1, 0.16];
-      m.lever.q = qEuler(m.lev.a*1.15, 0, 0);
+      const p = m.pid ? S.players.find(x => x.id === m.pid) : null, mine = !!p && p.id === MY_ID;
+      const act = p && tAct(p), gap = mine ? (act ? 0 : 90) : (act ? 60 : 250);
+      if(now - m.drawnAt >= gap){
+        m.drawnAt = now;
+        SL.drawFace(m.face.ctx, m.face.canvas.width, m.face.canvas.height, p || EMPTY[m.i], now, mine); m.face.dirty = true;
+      }
+      if(now - m.metAt >= (mine ? 100 : 400)){ m.metAt = now; SL.drawMeters(m.met.ctx, m.met.canvas.width, m.met.canvas.height, p || EMPTY[m.i], now, mine); m.met.dirty = true; }
+      // lights: gold flashes on wins, green in free games, purple for skulls
+      const I = p ? SL.info(p, now) : null, L = I && I.L, show = L && I.a && I.revealed && !I.end;
+      const pulse = 0.5 + 0.5*Math.sin(now/90);
+      m.rail.emis = p && p.slot && p.slot.fg ? [0.4, 1.8, 0.7] : show && L.doom ? [1.6, 0.4, 2.6] : show && L.win > L.bet ? [2.4*(0.6 + pulse), 1.8*(0.6 + pulse), 0.5] : [1.8, 0.95, 0.25];
+      m.towerM.emis = show && (L.jpWins.length || L.trig) ? [2.5*pulse, 2.2*pulse, 0.6] : [0.5, 0.42, 0.3];
     }
+    if(now - topAt > 120){ topAt = now; SL.drawTopper(topTex.ctx, topTex.canvas.width, topTex.canvas.height, now); topTex.dirty = true; }
   }
 
   /* ---------- labels ---------- */
   function refreshLabels(){
     const L = [], now = performance.now();
     S.players.forEach((p, n) => {
-      const i = seatIx(n); if(i == null || p.left) return;
+      const i = seatIx(n); if(i == null || p.left || p.id === MY_ID) return;
       const A = X.actors.get(p.id); if(!A) return;
-      const st = SL.state(p, now), sl = p.slot;
-      if(p.id === MY_ID){
-        if(sl && st.done && sl.win > 0 && sl.id !== refreshLabels.myShown){ refreshLabels.myShown = sl.id; myWinUntil = now + 3200; myWinHtml = `${esc(sl.label)} <b>+${fmt(sl.win)}</b>`; }
-        if(now < myWinUntil){ const m = M[i]; L.push({key:'mywin', at:mw(m, [0, WIN_Y + WIN_H/2 + 0.07, FRONT]), html:myWinHtml, cls:'w3tot win'}); }
-        return;
-      }
-      let em = st.spinning ? 'SPINNING' : sl && sl.win > sl.bet ? `+${short(sl.win)}` : sl && sl.kind === 'doom' ? 'SKULLS' : '';
-      L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.34, 0]), html:`<b>${esc(p.name)}</b><span>${short(p.chips)}</span>${em ? `<em>${em}</em>` : ''}`,
-        cls:'w3name' + (st.spinning ? ' turn' : '') + (!p.connected ? ' away' : '')});
+      const I = SL.info(p, now), sl = I.L, fg = p.slot && p.slot.fg;
+      const em = fg ? `FREE GAMES ${fg.left}` : I.spinning ? 'SPINNING' : sl && I.revealed && sl.win > sl.bet ? `+${short(sl.win)}` : sl && I.revealed && sl.doom ? 'SKULLS' : '';
+      L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.34, 0]), html:`<b>${esc(p.name)}</b><span>${short(SL.credit(p))}</span>${em ? `<em>${em}</em>` : ''}`,
+        cls:'w3name' + (I.spinning || fg ? ' turn' : '') + (!p.connected ? ' away' : '')});
     });
     L.push(...W3.sayLabel('MYLA', () => V.add(D.av.headPivot.worldPos(), [0, 0.38, 0])));
     X.labels(L);
@@ -9754,11 +10343,11 @@ W3.games.slots = (() => {
   function frame(ctx, dt){
     const now = performance.now();
     drawScreens(now);
-    // people watch their own reels; Myla keeps an eye on whoever just won
-    const hot = S.players.find(p => p.slot && p.slot.win > p.slot.bet*5 && SL.state(p, now).done && p.id !== MY_ID);
+    // people watch their own screen; Myla keeps an eye on whoever just won big
+    const hot = S.players.find(p => { const I = SL.info(p, now); return p.id !== MY_ID && I.L && I.revealed && !I.end && I.L.win > I.L.bet*5; });
     const hA = hot && X.actors.get(hot.id);
-    D.av.lookTarget = hA ? hA.av.headPivot.worldPos() : [0, 1.2, 0.2];
-    for(const A of X.actors.values()){ if(A === D || A.seat == null) continue; A.av.lookTarget = mw(M[A.seat], [0, WIN_Y, FRONT]); }
+    D.av.lookTarget = hA ? hA.av.headPivot.worldPos() : [0, 1.3, 0.2];
+    for(const A of X.actors.values()){ if(A === D || A.seat == null) continue; A.av.lookTarget = mw(M[A.seat], scr(0.5, SC.L*0.55)); }
     if((frame.t = (frame.t || 0) + dt) > 0.25){ frame.t = 0; refreshLabels(); }
   }
   function idle(ctx, A){
@@ -9770,18 +10359,18 @@ W3.games.slots = (() => {
       return;
     }
     const m = M[A.seat], k = Math.random() < 0.5 ? 'R' : 'L', c = A.arms[k];
-    X.gesture(A, () => X.arm(c, mw(m, [(c.out === -1 ? 0.13 : -0.13) + (Math.random() - 0.5)*0.06, DECK_Y + 0.012, DECK_Z - 0.03 + (Math.random() - 0.5)*0.03]), {dur:0.6, pose:Math.random() < 0.4 ? 'flat' : 'relaxed'}));
+    X.gesture(A, () => X.arm(c, mw(m, m.dp((c.out === -1 ? 0.12 : -0.12) + (Math.random() - 0.5)*0.06, 0.04, 0.06 + (Math.random() - 0.5)*0.04)), {dur:0.6, pose:Math.random() < 0.4 ? 'flat' : 'relaxed'}));
   }
   function camera(ctx){
     const m = myMachine();
-    if(!m) return {pos:[0, 1.75, 1.7], target:[0, 1.1, -0.9], fov:60};
-    const win = mw(m, [0, WIN_Y, FRONT]);
+    if(!m) return {pos:[0, 1.8, 1.8], target:[0, 1.4, -0.9], fov:60};
+    const mid = mw(m, scr(0.5, SC.L*0.5));
     if(ctx.zoom){
-      const n = mw(m, [0, WIN_Y, FRONT + 1]), nd = V.sub(n, win), d = W3.fitDist(WIN_W + 0.08, WIN_H + 0.1, 36);
-      return {pos:V.add(win, V.scale(nd, d)), target:win, fov:36, noLook:true, fixedFov:true, focus:d, expo:0.9};
+      const n = V.sub(mw(m, scr(0.5, SC.L*0.5, 1)), mid), d = W3.fitDist(SW + 0.06, SC.L + 0.05, 40);
+      return {pos:V.add(mid, V.scale(n, d)), target:mid, fov:40, noLook:true, fixedFov:true, focus:d, expo:0.9};
     }
-    const pos = V.add(V.add(m.chair, [0, 1.36, 0]), V.scale(m.dir, 0.3));
-    return {pos, target:V.add(win, [0, -0.1, 0]), fov:60, focus:V.dist(pos, win) + 0.1, pitchMax:0.7};
+    const pos = V.add(V.add(m.chair, [0, 1.32, 0]), V.scale(m.dir, 0.36)), tgt = mw(m, scr(0.5, SC.L*0.42));
+    return {pos, target:tgt, fov:62, focus:V.dist(pos, mid), pitchMax:0.9};
   }
   return {build, sync, frame, idle, camera, zoomStops:1};
 })();
