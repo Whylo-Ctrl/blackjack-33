@@ -242,7 +242,17 @@ button{font:inherit;color:inherit}
 .rb.hit .rbtn{background:radial-gradient(circle at 50% 35%,#5ff0a2,#1fb866 60%,#0d7a40);border-color:#b8ffd6;box-shadow:0 0 16px rgba(63,220,138,.5),0 6px 12px rgba(0,0,0,.5);color:#fff}
 .rb.stand .rbtn{background:radial-gradient(circle at 50% 35%,#ff7d8a,#e3283d 60%,#8e1324);border-color:#ffc4ca;box-shadow:0 0 16px rgba(255,77,94,.5),0 6px 12px rgba(0,0,0,.5);color:#fff}
 .rb.dbl .rbtn{background:radial-gradient(circle at 50% 35%,#ffc06b,#f08a1c 60%,#a5520a);border-color:#ffe0b3;box-shadow:0 0 16px rgba(240,138,28,.5),0 6px 12px rgba(0,0,0,.5);color:#fff}
-.rb.hit>span{color:#7dffb3}.rb.stand>span{color:#ff9aa4}.rb.dbl>span{color:#ffc06b}
+.rb.split .rbtn{background:radial-gradient(circle at 50% 35%,#8cc6ff,#2a7fe0 60%,#123c8c);border-color:#cfe6ff;box-shadow:0 0 16px rgba(60,140,255,.5),0 6px 12px rgba(0,0,0,.5);color:#fff}
+.rb.hit>span{color:#7dffb3}.rb.stand>span{color:#ff9aa4}.rb.dbl>span{color:#ffc06b}.rb.split>span{color:#8cc6ff}
+.sh.split{gap:10px;align-items:flex-end}
+.sph{position:relative;display:flex;flex-direction:column;align-items:center;padding:3px 3px 0;border-radius:10px;transition:background .2s,box-shadow .2s}
+.sph .tb{right:-10px;top:-10px}
+.sph.act{background:rgba(255,224,140,.12);box-shadow:0 0 0 2px rgba(255,214,90,.75),0 0 14px rgba(255,200,80,.35)}
+.sph.done{opacity:.8}
+.sph .hres{font-size:10px;font-weight:800;letter-spacing:.04em;margin-top:2px;padding:1px 6px;border-radius:999px;background:rgba(10,10,12,.85);color:#fff;white-space:nowrap}
+.sph .hres.w{color:#7dffb3}.sph .hres.l{color:#ff9aa4}.sph .hres.p{color:#ddd}
+.seat.cpt .sh.split{gap:4px}.seat.cpt .sph .hres{font-size:8.5px;padding:0 4px}
+
 /* bet buttons: pick a chip, then press where it goes */
 .betbar{flex-wrap:wrap;row-gap:10px}
 .betbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
@@ -1316,7 +1326,7 @@ function handleJoin(msg, conn){
     let nm = name, k = 2;
     while(G.players.some(x => x.name.toLowerCase() === nm.toLowerCase())) nm = name.slice(0,11) + ' ' + (k++);
     p = {id, name:nm, baseName:nm, renamed:false, chips:START_CHIPS, bet:0, bets:{}, betOrder:[], lastBets:null, lastGame:null, main:0, side:null, ready:false, inRound:false,
-         hand:[], status:'', result:'', delta:0, doubled:false, finalTotal:null, finalLimit:null, curse:null, lastCurse:null,
+         hand:[], splits:null, si:0, status:'', result:'', delta:0, doubled:false, finalTotal:null, finalLimit:null, curse:null, lastCurse:null,
          connected:true, left:false, lastSeen:Date.now(), begs:0, hits:0, wins:0, losses:0};
     const ghost = G.ghosts[id];
     if(ghost){ p.chips = ghost.chips; p.begs = ghost.begs; delete G.ghosts[id]; }
@@ -1398,7 +1408,7 @@ function startRound(){
   G.players = G.players.filter(p => !p.left);
   G.round++; G.phase = 'betting'; G.turn = null; G.turnOrder = [];
   G.dealer = {hand:[], hidden:true}; G.dealerBJ = false; G.bs = null; G.imp = null;
-  for(const p of G.players) Object.assign(p, {bet:0, bets:{}, betOrder:[], main:0, side:null, mainDelta:0, ready:false, inRound:false, hand:[], status:'', result:'', delta:0, doubled:false, hits:0, finalTotal:null, finalLimit:null});
+  for(const p of G.players) Object.assign(p, {bet:0, bets:{}, betOrder:[], main:0, side:null, mainDelta:0, ready:false, inRound:false, hand:[], splits:null, si:0, status:'', result:'', delta:0, doubled:false, hits:0, finalTotal:null, finalLimit:null});
   const g = GAME();
   if(g === 'slots'){ slotsOpen(); return; }
   if((g === 'blackjack' || g === 'baccarat') && G.shoe.length < DECKS*52*0.3){ G.shoe = newShoe(); note('Fresh shoe! Myla shuffles six decks.'); }
@@ -1526,7 +1536,7 @@ function deal(){
   const ps = G.players.filter(p => p.inRound);
   G.phase = 'playing'; G.dealer = {hand:[], hidden:true}; G.dealerBJ = false;
   for(const p of ps){
-    p.hand = []; p.status = 'playing'; p.main = p.bets.main || 0;
+    p.hand = []; p.splits = null; p.si = 0; p.status = 'playing'; p.main = p.bets.main || 0;
     if(activeCurse(p) === 'double'){
       const extra = Math.min(p.main, p.chips);
       if(extra > 0){ p.chips -= extra; p.main += extra; p.bet += extra; p.bets.main = p.main; note(`DOUBLE TROUBLE! ${p.name}'s bet got doubled to ${fmt(p.main)}.`, {bad:true}); }
@@ -1562,35 +1572,98 @@ function nextTurn(extra = 0){
     const p = P(order[i]); if(!p) continue;
     if(p.status === 'playing'){
       if(p.connected){ G.turn = p.id; G.turnTotal = turnTime(p) + extra; G.turnEnds = Date.now() + G.turnTotal; return; }
-      p.status = 'stand';
+      standAll(p);
     }
   }
   G.turn = null;
   dealerPlay();
 }
+/* ---------- splitting ----------
+   Any two cards of the same value can be split (a 10 with a J too), up to
+   SPLIT_MAX hands. Each new hand gets the same bet. You can double after a
+   split; split aces get one card each; 21 after a split isn't a blackjack.
+   While split, p.splits holds every hand, p.si is the one being played and
+   p.hand points at its cards. */
+const SPLIT_MAX = 4;
+const curH = (p) => p.splits ? p.splits[p.si] : p;
+const hv = (p, cards) => handValue(cards, limitOf(p), activeCurse(p) === 'aces').total;
+const pairKey = (c) => isTen(c.r) ? '10' : c.r;
+function canSplit(p){
+  const h = curH(p);
+  return h.hand.length === 2 && !h.hits && !h.aces && pairKey(h.hand[0]) === pairKey(h.hand[1]) && (p.splits ? p.splits.length : 1) < SPLIT_MAX && p.chips >= h.main;
+}
+const handNo = (p) => p.splits ? ` (hand ${p.si + 1})` : '';
+// the hand being played is over: next split hand, or the next player
+function endHand(p, st){
+  if(!p.splits){ p.status = st; nextTurn(); return; }
+  p.splits[p.si].status = st; advanceHand(p);
+}
+function advanceHand(p){
+  const lim = limitOf(p);
+  while(p.si + 1 < p.splits.length){
+    p.si++; const h = p.splits[p.si]; p.hand = h.hand;
+    if(h.hand.length < 2) h.hand.push(draw());
+    const v = hv(p, h.hand);
+    if(v > lim){ h.status = 'bust'; continue; }
+    if(h.aces || v === lim){ h.status = 'stand'; continue; }
+    h.status = 'playing'; G.turnTotal = turnTime(p); G.turnEnds = Date.now() + G.turnTotal; return;
+  }
+  p.status = p.splits.every(h => h.status === 'bust') ? 'bust' : 'stand';
+  nextTurn();
+}
+// out of time, gone, or away: every hand still waiting stands (after getting its second card)
+function standAll(p){
+  if(!p.splits){ p.status = 'stand'; return; }
+  const lim = limitOf(p);
+  for(let i = p.si; i < p.splits.length; i++){
+    const h = p.splits[i]; if(h.status !== 'playing' && h.status !== 'waiting') continue;
+    if(h.hand.length < 2) h.hand.push(draw());
+    h.status = hv(p, h.hand) > lim ? 'bust' : 'stand';
+  }
+  p.si = p.splits.length - 1; p.hand = p.splits[p.si].hand;
+  p.status = p.splits.every(h => h.status === 'bust') ? 'bust' : 'stand';
+}
 function playerAct(p, a){
   if(G.phase !== 'playing' || G.turn !== p.id || p.status !== 'playing') return false;
-  const lim = limitOf(p);
+  const lim = limitOf(p), h = curH(p);
+  const resetClock = () => { G.turnTotal = turnTime(p); G.turnEnds = Date.now() + G.turnTotal; };
   if(a === 'hit'){
-    p.hand.push(draw()); p.hits++;
-    const v = pv(p);
-    if(v > lim){ p.status = 'bust'; note(`${p.name} BUSTS with ${v}!`, {bad:true}); nextTurn(); }
-    else if(v === lim){ p.status = 'stand'; if(v === TGT() && TGT() === 33) note(`${p.name} hit exactly 33!`); nextTurn(); }
-    else { G.turnTotal = turnTime(p); G.turnEnds = Date.now() + G.turnTotal; }
+    h.hand.push(draw()); h.hits = (h.hits || 0) + 1; if(h !== p) p.hits++;
+    const v = hv(p, h.hand);
+    if(v > lim){ note(`${p.name} BUSTS${handNo(p)} with ${v}!`, {bad:true}); endHand(p, 'bust'); }
+    else if(v === lim){ if(v === TGT() && TGT() === 33) note(`${p.name} hit exactly 33!`); endHand(p, 'stand'); }
+    else resetClock();
     return true;
   }
   if(a === 'stand'){
-    if(activeCurse(p) === 'nochicken' && p.hits === 0){ addEvent({type:'toast', to:p.id, text:'NO CHICKENS! You have to hit at least once first.', bad:true}); return true; }
-    p.status = 'stand'; nextTurn(); return true;
+    if(activeCurse(p) === 'nochicken' && !h.hits){ addEvent({type:'toast', to:p.id, text:'NO CHICKENS! You have to hit at least once first.', bad:true}); return true; }
+    endHand(p, 'stand'); return true;
   }
   if(a === 'double'){
-    if(p.hand.length !== 2 || p.hits > 0 || p.chips < p.main) return false;
-    p.chips -= p.main; p.bet += p.main; p.main *= 2; p.bets.main = p.main; p.hits++; p.doubled = true;
-    p.hand.push(draw());
-    const v = pv(p);
-    if(v > lim){ p.status = 'bust'; note(`${p.name} doubled down and BUSTED with ${v}!`, {bad:true}); }
-    else { p.status = 'stand'; note(`${p.name} doubled down: ${v}.`); }
-    nextTurn(); return true;
+    if(h.hand.length !== 2 || h.hits > 0 || p.chips < h.main) return false;
+    const add = h.main;
+    p.chips -= add; p.bet += add; p.hits++; h.doubled = true;
+    if(h === p){ p.main *= 2; p.bets.main = p.main; } else { h.main += add; h.hits = 1; p.main += add; }
+    h.hand.push(draw());
+    const v = hv(p, h.hand);
+    if(v > lim){ note(`${p.name} doubled down${handNo(p)} and BUSTED with ${v}!`, {bad:true}); endHand(p, 'bust'); }
+    else { note(`${p.name} doubled down${handNo(p)}: ${v}.`); endHand(p, 'stand'); }
+    return true;
+  }
+  if(a === 'split'){
+    if(!canSplit(p)) return false;
+    if(!p.splits){ p.splits = [{hand:p.hand, main:p.main, hits:0, doubled:false, status:'playing', aces:false}]; p.si = 0; }
+    const cur = p.splits[p.si], moved = cur.hand.pop(), bet = cur.main, aces = moved.r === 'A';
+    p.chips -= bet; p.bet += bet; p.main += bet;
+    cur.aces = aces;
+    p.splits.splice(p.si + 1, 0, {hand:[moved], main:bet, hits:0, doubled:false, status:'waiting', aces});
+    cur.hand.push(draw()); p.hand = cur.hand;
+    note(`${p.name} splits ${aces ? 'aces' : isTen(moved.r) ? 'tens' : moved.r + 's'}!`);
+    const v = hv(p, cur.hand);
+    if(v > lim) endHand(p, 'bust');
+    else if(aces || v === lim) endHand(p, 'stand');
+    else resetClock();
+    return true;
   }
   return false;
 }
@@ -1613,6 +1686,7 @@ function finishBlackjack(){
   G.dealerBJ = dBJ;
   if(!dBJ) say(dBust ? pick(LINES.dBust) : `Dealer has ${d}.`);
   for(const p of G.players.filter(p => p.inRound)){
+    if(p.splits){ finishSplit(p, T, d, dBust, dBJ); continue; }
     const v = pv(p);
     p.finalTotal = v; p.finalLimit = limitOf(p);
     let res;
@@ -1633,6 +1707,22 @@ function finishBlackjack(){
     p.result = res; p.mainDelta = delta; p.delta = delta + sideNet;
   }
   settle();
+}
+function finishSplit(p, T, d, dBust, dBJ){
+  let delta = 0;
+  for(const h of p.splits){
+    const v = hv(p, h.hand); h.total = v;
+    const res = dBJ || h.status === 'bust' ? 'lose' : (dBust || v > d) ? ((T === 33 && v === 33) ? 'win33' : 'win') : v < d ? 'lose' : 'push';
+    const m = h.main; let hd;
+    if(res === 'win'){ p.chips += m*2; hd = m; }
+    else if(res === 'win33'){ p.chips += m*3; hd = m*2; }
+    else if(res === 'push'){ p.chips += m; hd = 0; }
+    else hd = -m;
+    h.result = res; h.delta = hd; delta += hd;
+  }
+  p.finalTotal = p.splits[0].total; p.finalLimit = limitOf(p);
+  const sideNet = p.side ? Object.values(p.side).reduce((a,x) => a + x.net, 0) : 0;
+  p.result = delta > 0 ? 'win' : delta < 0 ? 'lose' : 'push'; p.mainDelta = delta; p.delta = delta + sideNet;
 }
 
 /* ---------- roulette ---------- */
@@ -1768,7 +1858,7 @@ function markAway(p){
   if(!p.connected) return;
   p.connected = false;
   note(`${p.name} lost connection.`, {bad:true});
-  if(G.phase === 'playing' && G.turn === p.id){ p.status = 'stand'; nextTurn(); }
+  if(G.phase === 'playing' && G.turn === p.id){ standAll(p); nextTurn(); }
 }
 function removePlayer(p){
   if(p.id === G.hostId) return;
@@ -1779,7 +1869,7 @@ function removePlayer(p){
     p.left = true; p.connected = false;
     if(G.phase === 'shotgun' && G.bs){ G.bs.lives[p.id] = 0; if(!bsPlayers().length && G.bs.stage !== 'over') bsPause({type:'matchLose'}, 600); else if(G.bs.turn === p.id) bsBeginTurn('dealer'); }
     else if(G.phase === 'imp' && G.imp && p.id === G.imp.imposter && G.imp.stage !== 'done'){ G.imp.why = 'left'; impFinish('crew'); }
-    else if(G.turn === p.id && G.phase === 'playing'){ p.status = 'stand'; nextTurn(); }
+    else if(G.turn === p.id && G.phase === 'playing'){ standAll(p); nextTurn(); }
   } else {
     if(G.phase === 'betting'){ p.chips += p.bet; p.bet = 0; }
     saveGhost(p); G.players = G.players.filter(x => x !== p);
@@ -1804,7 +1894,7 @@ function tick(){
     case 'playing':
       if(G.turn && now >= G.turnEnds){
         const p = P(G.turn);
-        if(p && p.status === 'playing'){ p.status = 'stand'; note(`${p.name} ran out of time and stands.`); }
+        if(p && p.status === 'playing'){ standAll(p); note(`${p.name} ran out of time and stands.`); }
         nextTurn(); ch = true;
       }
       break;
@@ -1846,6 +1936,8 @@ function viewFor(rid){
         pendingCurse:p.curse && !ac ? p.curse.id : null,
         connected:p.connected, begs:p.begs, hits:p.hits, main:p.main, side:p.side, mainDelta:p.mainDelta,
         canRebet:!!p.lastBets && p.lastGame === g,
+        si:p.si || 0, splits:p.splits ? p.splits.map(h => ({hand:blind ? h.hand.map(c => ({back:true, id:c.id})) : h.hand, total:blind ? null : (results && h.total != null ? h.total : hv(p, h.hand)),
+          status:h.status, doubled:h.doubled, main:h.main, hits:h.hits || 0, aces:!!h.aces, result:h.result || null, delta:h.delta ?? null})) : null,
         slot:slotView(p)};
     }),
     events:G.events.filter(e => !e.to || e.to === rid).slice(-15),
@@ -2903,7 +2995,7 @@ function playEvent(e){
 }
 
 function cardCount(st){
-  let n = st.dealer.hand.length + st.players.reduce((a,p) => a + p.hand.length, 0);
+  let n = st.dealer.hand.length + st.players.reduce((a,p) => a + handsOf(p).reduce((b, h) => b + h.length, 0), 0);
   if(st.bac) n += st.bac.player.length + st.bac.banker.length;
   return n;
 }
@@ -2915,6 +3007,8 @@ function transitions(prev, s){
   if(s.phase === 'playing' && s.turn === MY_ID && prev.turn !== MY_ID) setTimeout(() => { sfx('turn'); buzz(60); }, nNew > 3 ? 1200 : 150);
   if(s.phase === 'shooter' && s.turn === MY_ID && (prev.phase !== 'shooter' || prev.turn !== MY_ID)){ sfx('turn'); buzz(80); }
   if(me && pm && me.status === 'bust' && pm.status !== 'bust') sfx('bust');
+  else if(me && pm && me.splits && me.splits.filter(h => h.status === 'bust').length > (pm.splits || []).filter(h => h.status === 'bust').length) sfx('bust');
+  if(me && pm && me.splits && !pm.splits) sfx('chip');
   if(me && pm && me.status === 'blackjack' && pm.status !== 'blackjack') setTimeout(() => { banner('BLACKJACK!'); sfx('big'); confetti(90); }, 900);
   if(s.dealer.bj && !prev.dealer.bj) sfx('bust');
   if(me && pm && me.side && !pm.side){   // side bet paid when the cards came out
@@ -3096,11 +3190,13 @@ function late(cards){
   for(const c of cards){ const m = cardMeta.get(c.id); if(m){ const r = (m.d - (now - m.t0)/1000)*1000 + 420; if(r > d) d = r; } }
   return d > 0 ? {c:' late', s:` style="animation-delay:${Math.round(d)}ms"`, ms:d} : {c:'', s:'', ms:0};
 }
+// every hand a player has (more than one once they split)
+const handsOf = (p) => p && p.splits && p.splits.length ? p.splits.map(h => h.hand) : [(p && p.hand) || []];
 const handHTML = (cards, mini, sideIdx = -1) => `<div class="hand${cards.length >= 6 ? ' n6' : cards.length >= 4 ? ' n4' : ''}">${cards.map((c,i) => cardHTML(c, mini, i === sideIdx)).join('')}</div>`;
 function prepareCardMeta(){
   const ids = [];
   S.dealer.hand.forEach(c => ids.push(c.id));
-  S.players.forEach(p => p.hand.forEach(c => ids.push(c.id)));
+  S.players.forEach(p => handsOf(p).forEach(h => h.forEach(c => ids.push(c.id))));
   if(S.bac){ S.bac.player.forEach(c => ids.push(c.id)); S.bac.banker.forEach(c => ids.push(c.id)); }
   const fresh = ids.filter(id => !cardMeta.has(id));
   animBase = fresh.length ? Math.min(...fresh) : 0;
@@ -3618,15 +3714,29 @@ function sideSpot(p, k, mine, openB){
   const tagName = mine && openB ? 'button' : 'div';
   return `<${tagName} class="bspot s-${k}${openB ? ' open' : ''}"${mine && openB ? ` data-act="rk" data-k="${k}" aria-label="Bet on ${k === 'pp' ? 'Perfect Pairs' : '21+3'}"` : ''}>${inner ? '' : `<span class="sl">${lbl}</span>`}${inner}${tag}</${tagName}>`;
 }
+// a player who split: each hand side by side with its own total (and result at the end)
+function splitHTML(p, mini, compact){
+  const T = S.settings.target, playing = S.phase === 'playing' && S.turn === p.id && p.status === 'playing';
+  return p.splits.map((h, i) => {
+    const L = late(h.hand);
+    let tb = h.total == null ? `<span class="tb${L.c}"${L.s}>?</span>` : `<span class="tb${L.c}${h.status === 'bust' ? ' bust' : ''}${h.total === T && T === 33 ? ' t33' : ''}"${L.s}>${h.status === 'bust' ? 'BUST' : h.total}</span>`;
+    let res = '';
+    if(S.phase === 'results' && h.result){ const d = h.delta || 0; res = `<span class="hres ${d > 0 ? 'w' : d < 0 ? 'l' : 'p'}">${d > 0 ? '+' + short(d) : d < 0 ? (h.status === 'bust' ? 'BUST' : '-' + short(-d)) : 'PUSH'}</span>`; }
+    const act = playing && i === p.si, done = S.phase === 'playing' && (h.status === 'stand' || h.status === 'bust');
+    return `<div class="sph${act ? ' act' : ''}${done ? ' done' : ''}">${handHTML(h.hand, mini, h.doubled ? 2 : -1)}${tb}${res}</div>`;
+  }).join('');
+}
 function seatHTML(p, pos, mine){
   const panel = !pos, self = !mine && p.id === MY_ID;
-  const sz = GEO.sz, cw = mine ? sz.myCw : sz.oCw, mini = !mine && cw < 44, compact = !mine && GEO.phone;
+  const nH = p.inRound && p.splits ? p.splits.length : 1;
+  const sz = GEO.sz, cw0 = mine ? sz.myCw : sz.oCw, cw = nH > 1 && !panel ? Math.round(cw0*(nH >= 3 ? 0.68 : 0.82)) : cw0, mini = !mine && cw < 44, compact = !mine && GEO.phone;
   const cr = mine ? sz.cr : sz.ocr;
   const isTurn = S.phase === 'playing' && S.turn === p.id;
   const cards = p.inRound && p.hand.length > 0;
-  const handStr = cards ? handHTML(p.hand, mini, p.doubled ? 2 : -1) : '';
+  const split = cards && p.splits && p.splits.length > 1;
+  const handStr = split ? splitHTML(p, mini, compact) : cards ? handHTML(p.hand, mini, p.doubled ? 2 : -1) : '';
   let tb = '';
-  if(cards){
+  if(cards && !split){
     const L = late(p.hand);
     if(p.status === 'blackjack') tb = `<span class="tb bj${L.c}"${L.s}>BJ</span>`;
     else if(p.total == null) tb = `<span class="tb${L.c}"${L.s}>?</span>`;
@@ -3658,7 +3768,7 @@ function seatHTML(p, pos, mine){
     : `<div class="plaque"><b>${esc(p.name)}${p.id === S.hostId ? '<i class="host">HOST</i>' : ''}</b><span>${fmt(p.chips)}</span></div>`;
   return `<div class="seat${mine ? ' me' : ''}${panel ? ' zoom' : ''}${self ? ' self' : ''}${compact ? ' cpt' : ''}${isTurn ? ' turn' : ''}${!p.connected ? ' away' : ''}" style="${place}">
     ${S.phase === 'results' && p.inRound && !compact ? resultTag(p) : ''}
-    <div class="sh">${cards ? handStr : (note && !panel ? `<div class="snote">${note}</div>` : '')}${tb}</div>
+    <div class="sh${split ? ' split' : ''}">${cards ? handStr : (note && !panel ? `<div class="snote">${note}</div>` : '')}${tb}</div>
     ${spots}
     ${plaque}
     ${compact || panel ? '' : curseB}
@@ -3761,6 +3871,7 @@ const IC = {
   ok:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   plus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>',
   minus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>',
+  split:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20v-7M12 13L6 6M12 13l6-7M6 6v4M6 6h4M18 6v4M18 6h-4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
 const rbtn = (act, cls, icon, label, dis, extra = '') => `<div class="rb ${cls}"><button class="rbtn" data-act="${act}" ${dis ? 'disabled' : ''} aria-label="${label}"${extra}>${icon}</button><span>${label}</span></div>`;
 function chipTray(me){
@@ -3828,13 +3939,21 @@ function bjControls(me){
       const L = late(me.hand);
       if(me.status === 'blackjack') return `<div class="result bj${L.c}"${L.s}>BLACKJACK!</div><div class="msg">Waiting for the others...</div>`;
       if(S.turn === MY_ID && me.status === 'playing'){
-        const canDbl = me.hand.length === 2 && me.hits === 0 && me.chips >= me.main;
-        const chicken = me.curse === 'nochicken' && me.hits === 0;
+        const h = me.splits ? me.splits[me.si] : me, cs = h.hand || [];
+        const canDbl = cs.length === 2 && !h.hits && me.chips >= h.main;
+        const pk = (c) => ['10', 'J', 'Q', 'K'].includes(c.r) ? '10' : c.r;
+        const canSplit = cs.length === 2 && !h.hits && !h.aces && !cs.some(c => c.back) && pk(cs[0]) === pk(cs[1]) && (me.splits ? me.splits.length : 1) < 4 && me.chips >= h.main;
+        const chicken = me.curse === 'nochicken' && !h.hits;
+        const which = me.splits ? `Hand ${me.si + 1} of ${me.splits.length}: you` : 'You';
         return `${chicken ? '<div class="note">NO CHICKENS: you have to hit before you can stand.</div>' : ''}
           ${me.curse === 'blind' ? '<div class="note">BLINDFOLDED: ask your friends what you have...</div>' : ''}
-          <div class="acts" id="actRow">${rbtn('double', 'dbl', '<b>2&times;</b>', 'DOUBLE', !canDbl)}${rbtn('hit', 'hit', IC.plus, 'HIT', false)}${rbtn('stand', 'stand', IC.minus, 'STAND', false)}</div>
-          <div class="msg">You have <b>${me.total ?? '?'}</b>. Your move.</div>
+          <div class="acts" id="actRow">${rbtn('double', 'dbl', '<b>2&times;</b>', 'DOUBLE', !canDbl)}${rbtn('split', 'split', IC.split, 'SPLIT', !canSplit)}${rbtn('hit', 'hit', IC.plus, 'HIT', false)}${rbtn('stand', 'stand', IC.minus, 'STAND', false)}</div>
+          <div class="msg">${which} have <b>${(me.splits ? me.splits[me.si].total : me.total) ?? '?'}</b>.${canSplit ? ' You can <b>split</b> this pair.' : ' Your move.'}</div>
           ${timerBar('turn')}`;
+      }
+      if(me.splits){
+        const parts = me.splits.map((h, i) => `${h.status === 'bust' ? '<b class="r">BUST</b>' : `<b>${h.total ?? '?'}</b>`}`).join(' &middot; ');
+        return `<div class="msg">Your hands: ${parts}. ${me.status === 'bust' ? 'Myla thanks you for your donation.' : `Waiting for <b>${turnName()}</b>...`}</div>`;
       }
       if(me.status === 'bust') return `<div class="msg">Busted. Myla thanks you for your donation.</div>`;
       if(me.status === 'stand') return `<div class="msg">You stand on <b>${me.total ?? '?'}</b>. Waiting for <b>${turnName()}</b>...</div>`;
@@ -3850,8 +3969,10 @@ function bjControls(me){
       else if(me.result === 'win') txt = `YOU WIN +${fmt(md)}`;
       else if(me.result === 'push') txt = 'PUSH &middot; BET BACK';
       else txt = `${me.status === 'bust' ? 'BUSTED' : S.dealer.bj ? 'DEALER BLACKJACK' : 'YOU LOST'} -${fmt(-md)}`;
+      if(me.splits) txt = md > 0 ? `YOU WIN +${fmt(md)}` : md < 0 ? `${me.status === 'bust' ? 'BUSTED' : 'YOU LOST'} -${fmt(-md)}` : 'EVEN &middot; BETS BACK';
+      const hands = me.splits ? `<div class="msg sm">${me.splits.map((h, i) => `Hand ${i + 1}: ${h.status === 'bust' ? 'bust' : h.total} <b class="${h.delta > 0 ? 'g' : h.delta < 0 ? 'r' : ''}">${h.result === 'push' ? 'push' : (h.delta > 0 ? '+' : '-') + fmt(Math.abs(h.delta || 0))}</b>`).join(' &middot; ')}</div>` : '';
       const net = me.side && Object.keys(me.side).length ? `<div class="msg">Total this hand: <b class="${me.delta > 0 ? 'g' : me.delta < 0 ? 'r' : ''}">${me.delta > 0 ? '+' : me.delta < 0 ? '-' : ''}${fmt(Math.abs(me.delta))}</b></div>` : '';
-      return `<div class="result ${cls}">${txt}</div>${sideSummary(me)}${net}<div class="msg">Next hand in <b data-count="phase"></b>...</div>`;
+      return `<div class="result ${cls}">${txt}</div>${hands}${sideSummary(me)}${net}<div class="msg">Next hand in <b data-count="phase"></b>...</div>`;
     }
   }
   return '';
@@ -3939,7 +4060,7 @@ function rulesText(){
   const st = S.settings;
   let t;
   if(st.game === 'blackjack'){
-    t = `Get closer to <b>${st.target}</b> than Myla without going over. Everyone gets 2 cards; Myla's second card stays face-down until everyone's done (she peeks for blackjack when she shows an Ace or a 10).<br><br>An Ace + a 10/J/Q/K as your first two cards is a <b>Blackjack</b> and pays 3:2. Myla stands on <b>${st.target === 21 ? 17 : 29}</b>.${st.target === 33 ? ' Hitting exactly 33 pays 2:1.' : ''} Double = double your main bet and take exactly one more card.<br><br><b>Side bets</b> (optional, need a main bet): <b>Perfect Pairs</b> wins if your first two cards are a pair: mixed colors 6:1, same color 12:1, same suit 25:1. <b>21+3</b> uses your two cards + Myla's face-up card as a poker hand: flush 5:1, straight 10:1, three of a kind 30:1, straight flush 40:1, suited trips 100:1.`;
+    t = `Get closer to <b>${st.target}</b> than Myla without going over. Everyone gets 2 cards; Myla's second card stays face-down until everyone's done (she peeks for blackjack when she shows an Ace or a 10).<br><br>An Ace + a 10/J/Q/K as your first two cards is a <b>Blackjack</b> and pays 3:2. Myla stands on <b>${st.target === 21 ? 17 : 29}</b>.${st.target === 33 ? ' Hitting exactly 33 pays 2:1.' : ''} Double = double your main bet and take exactly one more card. <b>Split</b> = got a pair (any two 10s count)? Add the same bet again and play them as two hands. You can split again up to 4 hands and double after splitting; split aces get one card each, and 21 after a split isn't a blackjack.<br><br><b>Side bets</b> (optional, need a main bet): <b>Perfect Pairs</b> wins if your first two cards are a pair: mixed colors 6:1, same color 12:1, same suit 25:1. <b>21+3</b> uses your two cards + Myla's face-up card as a poker hand: flush 5:1, straight 10:1, three of a kind 30:1, straight flush 40:1, suited trips 100:1.`;
   } else if(st.game === 'roulette'){
     t = `Pick a chip, then press a bet button (as many as you like). NUMBERS opens the full layout for single numbers and columns. A single number pays <b>35:1</b>. Red/Black, Odd/Even, 1-18/19-36 pay <b>1:1</b>. Dozens and columns pay <b>2:1</b>. Green zero beats every outside bet.`;
   } else if(st.game === 'slots'){
@@ -4342,7 +4463,7 @@ function tbarStatus(p, isTurn){
   if(!p.inRound) return ['dim', 'WATCHING'];
   if(g === 'blackjack' && p.status === 'bust') return ['bad', 'BUST'];
   if(g === 'blackjack' && p.status === 'blackjack') return ['ok', 'BLACKJACK'];
-  if(g === 'blackjack' && S.phase === 'playing' && p.status === 'stand') return ['dim', 'STANDS ' + (p.total || '')];
+  if(g === 'blackjack' && S.phase === 'playing' && p.status === 'stand') return ['dim', p.splits ? p.splits.length + ' HANDS' : 'STANDS ' + (p.total || '')];
   return ['dim', g === 'imposter' ? 'IN THE GAME' : 'BET ' + short(p.bet)];
 }
 function tbarHTML(){
@@ -5126,7 +5247,7 @@ function act(a, b){
     case 'clearbets': send({t:'clearbets'}); break;
     case 'done': send({t:'done'}); sfx('chip'); break;
     case 'shoot': send({t:'shoot'}); sfx('chip'); b.disabled = true; break;
-    case 'hit': case 'stand': case 'double': {
+    case 'hit': case 'stand': case 'double': case 'split': {
       const now = Date.now(); if(now - lastActAt < 280) return; lastActAt = now;
       send({t:'act', a}); break;
     }
@@ -5619,7 +5740,7 @@ function renderHome(msg, info){
     <details class="rules tRules"${isWide() && innerWidth >= 900 ? ' open' : ''}><summary>How to play</summary>
       <div class="rgrid">
         <div><h3>Playing with friends</h3><p>One person opens a table and shares the 5-character code or the invite link. Everyone joins from their own phone or computer, on any Wi-Fi or mobile data. You'll see everyone's seat, chips and bets, and the game shows whose turn it is. Keep the host's tab open.</p></div>
-        <div><h3>Blackjack</h3><p>Get closer to the target than Myla without going over: <b>21</b> (she stands on 17) or <b>33</b> (she stands on 29, and exactly 33 pays 2:1). Players take turns: hit, stand or double. Blackjack pays 3:2. Side bets: Perfect Pairs and 21+3.</p></div>
+        <div><h3>Blackjack</h3><p>Get closer to the target than Myla without going over: <b>21</b> (she stands on 17) or <b>33</b> (she stands on 29, and exactly 33 pays 2:1). Players take turns: hit, stand, double, or split a pair into two hands. Blackjack pays 3:2. Side bets: Perfect Pairs and 21+3.</p></div>
         <div><h3>Roulette</h3><p>Everyone places chips on the layout, then Myla spins (on Relaxed pace, players take turns spinning). A single number pays 35:1, red/black and odd/even pay 1:1.</p></div>
         <div><h3>Baccarat</h3><p>Bet on Player, Banker or Tie, then Myla deals (on Relaxed pace, players take turns). Closest to 9 wins. Player 1:1, Banker 0.95:1, Tie 8:1.</p></div>
         <div><h3>Slots</h3><p>Everyone gets their own 5-reel, 40-line machine and spins whenever they like. Coins fill three pots; a pot that pops gives free games with Nudging Wilds, Jackpot Wilds or Expanded Reels. Collect 3 jackpot wilds to win the Mini, Minor, Major or Grand. With the Wheel of Doom on, skulls on reels 1, 3 and 5 spin the wheel.</p></div>
@@ -8488,10 +8609,18 @@ W3.games.blackjack = (() => {
   function wantCards(){
     const out = [];
     S.dealer.hand.forEach((c, i) => out.push({id:c.id, c, owner:'D', i, n:S.dealer.hand.length}));
-    S.players.forEach((p, n) => { const si = seatIx(n); if(si != null && p.inRound) p.hand.forEach((c, i) => out.push({id:c.id, c, owner:si, pid:p.id, i, n:p.hand.length})); });
+    S.players.forEach((p, n) => { const si = seatIx(n); if(si == null || !p.inRound) return;
+      const hs = handsOf(p), H = hs.length; hs.forEach((hand, h) => hand.forEach((c, i) => out.push({id:c.id, c, owner:si, pid:p.id, i, n:hand.length, h, H}))); });
     return out;
   }
-  const slot = (w) => w.owner === 'D' ? T.dealerCards(w.i, w.n) : T.seats[w.owner].cards(w.i, w.n);
+  // split hands sit side by side in front of the player
+  const HAND_GAP = [0, 0, 0.14, 0.115, 0.1];
+  function seatCard(s, i, n, h = 0, H = 1){
+    const p = s.cards(i, n); if(H < 2) return p;
+    const off = (h - (H - 1)/2)*HAND_GAP[Math.min(H, 4)];
+    return [p[0] + Math.sin(s.ang)*off, p[1], p[2] - Math.cos(s.ang)*off];
+  }
+  const slot = (w) => w.owner === 'D' ? T.dealerCards(w.i, w.n) : seatCard(T.seats[w.owner], w.i, w.n, w.h || 0, w.H || 1);
   function syncCards(){
     const want = wantCards(), ids = new Set(want.map(w => w.id));
     // gone: Myla sweeps everything to the discard tray
@@ -8503,14 +8632,14 @@ W3.games.blackjack = (() => {
       if(!r){ fresh.push(w); continue; }
       const back = !!w.c.back;
       if(r.back && !back){ r.back = false; r.node.setFace(w.c); X.gesture(D, () => flipCard(r)); }
-      if(r.i !== w.i || r.n !== w.n){ r.i = w.i; r.n = w.n; if(r.landed) X.fly(r.node, slot(w), {dur:0.25}); }
+      if(r.i !== w.i || r.n !== w.n || (r.h || 0) !== (w.h || 0) || (r.H || 1) !== (w.H || 1)){ r.i = w.i; r.n = w.n; r.h = w.h; r.H = w.H; if(r.landed) X.fly(r.node, slot(w), {dur:0.3, lift:0.03}); }
     }
     // deal in real order: first card to everyone, then the second...
     fresh.sort((a, b) => (a.i - b.i) || ((a.owner === 'D' ? 99 : a.owner) - (b.owner === 'D' ? 99 : b.owner)));
     for(const w of fresh){
       const node = W3A.card(w.c.back ? null : w.c); node.visible = false; X.scene.add(node);
       X.orient(node, -0.5, Math.PI, 0); node.pos = T.shoe.slice();
-      const r = {id:w.id, node, owner:w.owner, pid:w.pid, i:w.i, n:w.n, back:!!w.c.back, landed:false};
+      const r = {id:w.id, node, owner:w.owner, pid:w.pid, i:w.i, n:w.n, h:w.h, H:w.H, back:!!w.c.back, landed:false};
       cards.set(w.id, r);
       // a player's own hit: they tap the felt first
       let before = null;
@@ -8724,7 +8853,17 @@ W3.games.blackjack = (() => {
       if(!mine) L.push({key:'n' + p.id, at:() => V.add(A.av.headPivot.worldPos(), [0, 0.34, 0]),
         html:`<b>${esc(p.name)}</b><span>${short(p.chips)}</span>`, cls:'w3name' + (turn ? ' turn' : '') + (!p.connected ? ' away' : '')});
       const mineCards = all.filter(r => r.pid === p.id);
-      if(mineCards.length){
+      if(mineCards.length && p.splits && p.splits.length > 1){
+        const res = S.phase === 'results' && p.inRound && p.result, H = p.splits.length;
+        p.splits.forEach((h, hi) => {
+          const hc = mineCards.filter(r => (r.h || 0) === hi); if(!hc.length) return;
+          const v = shownValue(hc); let html = v == null ? '' : h.status === 'bust' && hc.every(r => r.landed) ? 'BUST' : String(v), cls = 'w3tot';
+          if(res && h.result){ const d = h.delta || 0; html = d > 0 ? `+${short(d)}` : d < 0 ? (h.status === 'bust' ? 'BUST' : `LOST ${short(-d)}`) : 'PUSH'; cls += d > 0 ? ' win' : d < 0 ? ' lose' : ' push'; }
+          else if(h.status === 'bust') cls += ' bust';
+          if(turn && hi === p.si) cls += ' turn';
+          if(html) L.push({key:'t' + p.id + '_' + hi, at:V.add(seatCard(s, 0, 1, hi, H), [0, 0.035, 0]), html, cls});
+        });
+      } else if(mineCards.length){
         const v = shownValue(mineCards); const res = S.phase === 'results' && p.inRound && p.result;
         let html = v == null ? '' : p.status === 'blackjack' && mineCards.every(r => r.landed) ? 'BJ' : p.status === 'bust' && mineCards.every(r => r.landed) ? 'BUST' : String(v), cls = 'w3tot';
         if(res){ const d = p.delta; html = p.result === 'bj' ? `BJ +${short(d)}` : d > 0 ? `+${short(d)}` : d < 0 ? `${p.status === 'bust' ? 'BUST' : 'LOST'} ${short(-d)}` : 'PUSH'; cls += d > 0 ? ' win' : d < 0 ? ' lose' : ' push'; }
@@ -8772,9 +8911,9 @@ W3.games.blackjack = (() => {
     if(i == null) return {pos:[0, 2.3, 2.3], target:[0, 0.75, -0.2], fov:55};
     const s = T.seats[i], dc = T.dealerCards(0, 1);
     if(ctx.zoom === 1){ // your hand, big enough to read
-      const me = S.players.find(p => p.id === MY_ID), n = Math.max(2, me && me.hand ? me.hand.length : 2);
-      const f = s.cards((n - 1)/2, n); f[1] = TOP;
-      return W3.frameUp(f, s.eye, 0.063 + 0.03*(n - 1) + 0.05, 0.088 + 0.012*(n - 1) + 0.05);
+      const me = S.players.find(p => p.id === MY_ID), hs = me ? handsOf(me) : [[]], H = hs.length, n = Math.max(2, ...hs.map(h => h.length));
+      const f = H > 1 ? V.scale(V.add(seatCard(s, (n - 1)/2, n, 0, H), seatCard(s, (n - 1)/2, n, H - 1, H)), 0.5) : s.cards((n - 1)/2, n); f[1] = TOP;
+      return W3.frameUp(f, s.eye, 0.063 + 0.03*(n - 1) + 0.05 + (H > 1 ? (H - 1)*HAND_GAP[Math.min(H, 4)] : 0), 0.088 + 0.012*(n - 1) + 0.05);
     }
     if(ctx.zoom === 2){ // Myla's hand, seen from your side
       const n = Math.max(2, S.dealer && S.dealer.hand ? S.dealer.hand.length : 2);
