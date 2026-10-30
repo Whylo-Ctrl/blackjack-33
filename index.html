@@ -852,9 +852,9 @@ body::before{display:none}
 .discard i{inset:20% 16% 22%;box-shadow:0 0 0 2px #f4ecd8,0 3px 0 1px #e8e0cc,0 4px 0 1px #b9b09a,0 6px 0 1px #e8e0cc,0 7px 0 1px #9d947e,0 8px 6px 1px rgba(0,0,0,.35)}
 
 /* ===================== WHYLO'S CASINO TITLE SCREEN ===================== */
-.title{width:100%;max-width:1080px;margin:0 auto;padding:22px 16px 40px;display:grid;gap:26px;grid-template-columns:minmax(0,1fr);grid-template-areas:"marq" "lineup" "panel" "rules"}
-.title.joining{grid-template-areas:"marq" "panel" "lineup" "rules"}
-.marqWrap{grid-area:marq;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"sign myla" "say myla";gap:12px 10px;align-items:end;max-width:780px;width:100%;margin:0 auto}
+.title{width:100%;max-width:1080px;margin:0 auto;padding:22px 16px 40px;display:grid;gap:26px;grid-template-columns:minmax(0,1fr);grid-template-areas:"marq" "wheel" "lineup" "panel" "rules"}
+.title.joining{grid-template-areas:"marq" "panel" "wheel" "lineup" "rules"}
+.marqWrap{grid-area:marq;max-width:640px;width:100%;margin:0 auto;justify-self:center}
 .marq{grid-area:sign;position:relative;border-radius:24px;padding:30px 22px 26px;text-align:center;isolation:isolate;
   background:radial-gradient(120% 150% at 50% 0%,#5a1338 0%,#2a0720 55%,#14030e 100%);
   box-shadow:0 0 0 3px #f1cf78,0 0 0 8px #3b0a23,0 0 0 10px #b8862b,0 22px 44px rgba(0,0,0,.6),inset 0 0 50px rgba(255,170,60,.16)}
@@ -871,15 +871,16 @@ body::before{display:none}
 .mqCas{display:flex;align-items:center;gap:14px;width:min(100%,420px);font-family:var(--display);font-size:clamp(18px,4.8vw,28px);letter-spacing:.55em;padding-left:.55em;color:#f1cf78;text-shadow:0 2px 0 #6e4a0e}
 .mqCas i{flex:1;height:2px;background:linear-gradient(90deg,transparent,#f1cf78)}
 .mqCas i:last-child{background:linear-gradient(90deg,#f1cf78,transparent)}
-.tMyla{grid-area:myla;position:relative;width:136px;height:170px;margin-bottom:-6px}
-.tSay{grid-area:say;position:relative;margin:0;background:#fff8e6;color:#3a1020;border-radius:16px 16px 4px 16px;padding:12px 16px;font-size:15px;line-height:1.45;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.tMyla{position:relative;width:136px;height:170px;margin-bottom:-6px;flex:none}
+.tSay{position:relative;margin:0;background:#fff8e6;color:#3a1020;border-radius:16px 16px 4px 16px;padding:12px 16px;font-size:15px;line-height:1.45;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 .tSay b{display:block;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.14em;color:#b0204f;margin-bottom:2px}
 .tSay .code{font-family:var(--display);letter-spacing:.12em;color:#b0204f}
 .tSay::after{content:'';position:absolute;right:-8px;bottom:6px;border:8px solid transparent;border-left-color:#fff8e6;border-right:0}
 .lineup{grid-area:lineup;min-width:0}
 .lineup h2,.tRules h3{font-family:var(--display);font-weight:400;letter-spacing:.12em;color:var(--gold);margin:0}
 .lineup h2{font-size:15px;text-align:center;margin-bottom:12px}
-.gtiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.gtiles{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.gtiles .gtile{flex:0 1 calc((100% - 48px)/5);min-width:0}
 .gtile{appearance:none;-webkit-appearance:none;position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:16px 12px 14px;border-radius:18px;cursor:pointer;
   background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border:1px solid rgba(241,207,120,.25);box-shadow:0 10px 24px rgba(0,0,0,.35);transition:transform .18s,box-shadow .18s,border-color .18s;color:var(--ink)}
 .gtile:hover{transform:translateY(-3px);border-color:rgba(241,207,120,.6)}
@@ -918,13 +919,14 @@ body::before{display:none}
 .tRules p{margin:0;font-size:14px;line-height:1.5;color:#e2d6dc}
 .tRules p b{color:var(--gold)}
 @media (min-width:900px){
-  .title{grid-template-columns:minmax(0,1fr) 460px;grid-template-areas:"marq marq" "lineup lineup" "rules panel";align-items:start;gap:30px 28px}
-  .title.joining{grid-template-areas:"marq marq" "lineup lineup" "rules panel"}
+  .title{grid-template-columns:minmax(0,1fr) 460px;grid-template-areas:"marq marq" "wheel wheel" "lineup lineup" "rules panel";align-items:start;gap:30px 28px}
+  .title.joining{grid-template-areas:"marq marq" "wheel wheel" "lineup lineup" "rules panel"}
   .tRules{align-self:start}
   .tRules[open]{grid-row:span 1}
 }
 @media (max-width:899px){
-  .gtiles{grid-template-columns:minmax(0,1fr)}
+  .gtiles{flex-direction:column;flex-wrap:nowrap}
+  .gtiles .gtile{flex:none;width:100%}
   .gtile{flex-direction:row;text-align:left;padding:12px 44px 12px 12px;gap:14px}
   .gi{width:92px;height:68px}
   .giCards .card{--cw:40px}
@@ -932,7 +934,6 @@ body::before{display:none}
   .gpick{top:50%;right:12px;margin-top:-12px}
 }
 @media (max-width:560px){
-  .marqWrap{grid-template-columns:minmax(0,1fr) 92px;grid-template-areas:"sign sign" "say myla"}
   .tMyla{width:92px;height:116px}
   .tMyla .mylaStand{transform:translateX(-50%) scale(.68);transform-origin:50% 100%}
   .marq{padding:24px 14px 20px}
@@ -1234,6 +1235,32 @@ button.rrow{cursor:pointer}button.rrow:hover{background:rgba(232,192,96,.12);bor
 .giRace i{display:grid;place-items:center;width:24px;height:28px;border-radius:4px;font:800 15px var(--ui);font-style:normal}
 .giRace small{position:absolute;right:-8px;bottom:-8px;background:#111;color:#ffd23d;border-radius:6px;padding:1px 5px;font:800 11px var(--ui)}
 @media (max-width:560px){.rrow{gap:8px;padding:6px 8px}.rnm b{font-size:13.5px}.betb.hz{min-width:48px;height:46px}.raceBox{padding:8px}}
+
+/* ---------- the Lucky Wheel on the home screen, under the sign ---------- */
+.hw{grid-area:wheel;display:flex;flex-direction:column;align-items:center;gap:18px;width:100%;max-width:1040px;justify-self:center}
+.hwMid{order:1;display:flex;justify-content:center}
+.hwInfo{order:2;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;width:100%;max-width:420px}
+.hwMyla{order:3;display:flex;align-items:flex-end;gap:10px;width:100%;max-width:520px}
+.hwMyla .tSay{flex:1;min-width:0}
+.hwWheel.lwWrap{width:min(300px,78vw)}
+.hwInfo h2{margin:0;font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.14em;color:var(--gold);text-shadow:0 0 14px rgba(255,190,80,.45)}
+.hwSub{margin:0;font-size:14px;color:#e7d9e0}.hwSub b{color:var(--gold)}
+.hwPrizes{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.hwPrizes li{display:flex;flex-direction:column;align-items:center;min-width:76px;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(232,192,96,.2)}
+.hwPrizes b{font:800 14px var(--ui);color:#fff1c4;white-space:nowrap}.hwPrizes span{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hwPrizes .pz-jp{border-color:#e8c060;background:rgba(232,192,96,.16)}.hwPrizes .pz-jp b{color:#ffd86b}
+.hwPrizes .pz-big{border-color:#d23c8c;background:rgba(210,60,140,.18)}.hwPrizes .pz-big b{color:#ffb6dc}
+.hwSpin{width:100%;max-width:320px}
+.hwSpin:disabled{opacity:.55;filter:grayscale(.6);cursor:default}
+.hw .lwRes{margin-top:0;min-height:26px;font-size:17px}
+.bkPerks b{color:var(--gold)}
+@media (min-width:1060px){
+  .hw{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:30px}
+  .hwMyla{order:0;justify-self:end;max-width:400px}
+  .hwMid{order:0}
+  .hwInfo{order:0;justify-self:start;max-width:330px}
+  .hwWheel.lwWrap{width:310px}
+}
 </style>
 </head>
 <body>
@@ -1540,6 +1567,7 @@ function handleJoin(msg, conn){
     if(!ghost && Number.isFinite(bank) && bank >= 0) p.chips = Math.min(bank, 1e9);   // chips saved on this player's device
     socialNew(p);
     if(ghost){ Object.assign(p, ghost); delete G.ghosts[id]; }
+    applyPerks(p, msg.perks);
     G.players.push(p);
     if(id !== G.hostId){
       note(`${nm} sat down at the table.`);
@@ -2921,28 +2949,40 @@ const LUCKY = [
   {k:'c', v:1000, w:9}, {k:'myst', w:5}, {k:'c', v:2000, w:4.5}, {k:'c', v:750, w:11}, {k:'jp', v:25000, w:0.25},
 ];
 const luckyLabel = (s) => s.k === 'c' || s.k === 'big' ? short(s.v) : s.k === 'jp' ? 'JACKPOT' : s.k === 'shield' ? 'SHIELD' : s.k === 'drink' ? 'DRINK' : '?';
+// one spin: which slice, and what it gives. away = spun on the home screen (perks wait for your next table)
+function luckyRoll(away){
+  const tot = LUCKY.reduce((a, s) => a + s.w, 0); let r = Math.random()*tot, i = 0;
+  for(; i < LUCKY.length - 1; i++){ r -= LUCKY[i].w; if(r <= 0) break; }
+  const s = LUCKY[i], o = {i, k:s.k, amt:0, shield:0, drinks:0, text:''};
+  const later = away ? ', waiting at your next table' : '';
+  if(s.k === 'c' || s.k === 'jp' || s.k === 'big'){ o.amt = s.v; o.text = s.k === 'jp' ? `THE JACKPOT! ${fmt(o.amt)} chips` : s.k === 'big' ? `the HUGE prize! ${fmt(o.amt)} chips` : `${fmt(o.amt)} chips`; }
+  else if(s.k === 'shield'){ o.shield = 1; o.text = `a Doom Shield (blocks your next Wheel of Doom)${later}`; }
+  else if(s.k === 'drink'){ o.drinks = 1; o.text = `a free drink from the bar${later}`; }
+  else {
+    const m = Math.random();
+    if(m < 0.6){ o.amt = 250*(1 + rnd(16)); o.text = `Mystery: ${fmt(o.amt)} chips`; }
+    else if(m < 0.8){ o.shield = 1; o.drinks = 1; o.text = `Mystery: a Doom Shield AND a free drink${later}`; }
+    else { o.drinks = 2; o.text = `Mystery: two free drinks${later}`; }
+  }
+  return o;
+}
 function wheelAct(p, day){
   day = String(day || '').slice(0, 10);
   if(!/^\d{4}-\d{2}-\d{2}$/.test(day)) return false;
   if(p.wheelDay === day){ addEvent({type:'toast', to:p.id, text:"You've had your free spin today. Come back tomorrow!", bad:true}); return true; }
   p.wheelDay = day;
-  const tot = LUCKY.reduce((a, s) => a + s.w, 0); let r = Math.random()*tot, i = 0;
-  for(; i < LUCKY.length - 1; i++){ r -= LUCKY[i].w; if(r <= 0) break; }
-  const s = LUCKY[i]; let text, amt = 0;
-  if(s.k === 'c' || s.k === 'jp' || s.k === 'big'){ amt = s.v; text = s.k === 'jp' ? `THE JACKPOT! ${fmt(amt)} chips` : s.k === 'big' ? `the HUGE prize! ${fmt(amt)} chips` : `${fmt(amt)} chips`; }
-  else if(s.k === 'shield'){ p.shield = (p.shield || 0) + 1; text = 'a Doom Shield (blocks your next Wheel of Doom)'; }
-  else if(s.k === 'drink'){ p.freeDrinks = (p.freeDrinks || 0) + 1; text = 'a free drink from the bar'; }
-  else {
-    const m = Math.random();
-    if(m < 0.6){ amt = 250*(1 + rnd(16)); text = `Mystery: ${fmt(amt)} chips`; }
-    else if(m < 0.8){ p.shield = (p.shield || 0) + 1; p.freeDrinks = (p.freeDrinks || 0) + 1; text = 'Mystery: a Doom Shield AND a free drink'; }
-    else { p.freeDrinks = (p.freeDrinks || 0) + 2; text = 'Mystery: two free drinks'; }
-  }
-  p.chips += amt;
-  addEvent({type:'wheel', pid:p.id, name:p.name, i, text, amt, k:s.k});
-  if(s.k === 'jp') say(`${p.name} hit the JACKPOT on the Lucky Wheel! ${fmt(amt)} chips!`);
-  else if(s.k === 'big') say(`Ten thousand chips for ${p.name}! The Lucky Wheel loves you tonight.`);
+  const o = luckyRoll(false);
+  p.chips += o.amt; p.shield = (p.shield || 0) + o.shield; p.freeDrinks = (p.freeDrinks || 0) + o.drinks;
+  addEvent({type:'wheel', pid:p.id, name:p.name, i:o.i, text:o.text, amt:o.amt, k:o.k});
+  if(o.k === 'jp') say(`${p.name} hit the JACKPOT on the Lucky Wheel! ${fmt(o.amt)} chips!`);
+  else if(o.k === 'big') say(`Ten thousand chips for ${p.name}! The Lucky Wheel loves you tonight.`);
   return true;
+}
+// prizes won on the home screen that come with you to the table
+function applyPerks(p, pk){
+  if(!pk || typeof pk !== 'object') return;
+  p.shield = (p.shield || 0) + Math.min(5, Math.max(0, Math.floor(Number(pk.shield) || 0)));
+  p.freeDrinks = (p.freeDrinks || 0) + Math.min(10, Math.max(0, Math.floor(Number(pk.drinks) || 0)));
 }
 /* =====================================================================
    INSIDE TRACK (host side): six-horse races. Bet to win on any horse at
@@ -5929,6 +5969,7 @@ const Social = (() => {
     const me = s.players.find(p => p.id === MY_ID); if(!me) return;
     Wallet.save(me.chips + ((s.phase === 'betting' || s.phase === 'lobby') ? (me.bet || 0) : 0));
     const pm = prev && prev.players.find(p => p.id === MY_ID);
+    if(!prev) store.set('perks', null);     // home-screen prizes were handed to the table when you joined
     if(!prev && LuckyWheel.ready()) setTimeout(() => { if(S && screen === 'table') toast('Your free <b>Lucky Wheel</b> spin is ready! Tap the smiley button up top.', '', true); }, 2500);
     Fame.edit(f => {
       f.peak = Math.max(f.peak || 0, me.chips);
@@ -6124,7 +6165,10 @@ const LuckyWheel = (() => {
   const ready = () => store.get('wheelDay', '') !== today();
   const N = LUCKY.length, SL = Math.PI*2/N;
   const COL = {c:['#b3122e', '#16161a'], shield:'#1f5fc4', drink:'#1c8c4c', myst:'#6c34cf', jp:'#e8c060', big:'#d23c8c'};
-  let cv = null, ang = 0, raf = 0, mode = 'idle', anim = null, lastTick = 0, tickT = 0, waitT = null, pending = null;
+  let cv = null, where = null, ang = 0, raf = 0, mode = 'idle', anim = null, lastTick = 0, tickT = 0, waitT = null, pending = null, drawnAt = 0;
+  // the wheel is either on the home screen or in the pop-up at a table
+  const els = () => where === 'home' ? {res:$('#lwHomeRes'), btn:$('#lwHomeSpin')} : {res:$('#lwRes'), btn:$('#lwSpin')};
+  function attach(c, w){ cv = c; where = w; mode = 'idle'; anim = null; pending = null; drawnAt = 0; start(); }
   function untilTomorrow(){ const n = new Date(), t = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1); const m = Math.ceil((t - n)/60000); return m >= 60 ? `${Math.floor(m/60)}h ${m % 60}m` : `${m}m`; }
   function draw(){
     if(!cv) return; const x = cv.getContext('2d'), W = cv.width, R = W/2 - 18, c = W/2;
@@ -6155,7 +6199,10 @@ const LuckyWheel = (() => {
   function loop(t){
     raf = 0; if(!cv || !cv.isConnected){ cv = null; return; }
     const now = performance.now();
+    if(mode === 'idle' && now - drawnAt < 66){ raf = requestAnimationFrame(loop); return; }   // resting: no need to redraw every frame
+    drawnAt = now;
     if(mode === 'spin'){ ang += 0.33; }
+    else if(mode === 'idle' && where === 'home' && ready()) ang += 0.006;    // drifts slowly, inviting a spin
     else if(mode === 'land' && anim){ const u = Math.min(1, (now - anim.t0)/anim.dur); ang = anim.a0 + anim.d*(1 - Math.pow(1 - u, 3)); if(u >= 1){ mode = 'idle'; done(); } }
     const k = Math.floor((ang + SL/2)/SL); if(k !== lastTick){ lastTick = k; if(mode !== 'idle' && now - tickT > 55){ tickT = now; sfx('tick'); } }
     draw(); raf = requestAnimationFrame(loop);
@@ -6168,12 +6215,42 @@ const LuckyWheel = (() => {
       <div class="lwRes" id="lwRes" aria-live="polite"></div>
       <div class="btnrow"><button class="btn xl" data-act="lwspin" id="lwSpin" ${r ? '' : 'disabled'}>${r ? 'SPIN' : 'COME BACK TOMORROW'}</button><button class="btn ghost" data-act="closemodal">Close</button></div></div>`;
   }
-  function open(){ Social.close(); openModal(html(), 'lucky'); cv = $('#lwcv'); mode = 'idle'; start(); }
+  function open(){ Social.close(); openModal(html(), 'lucky'); attach($('#lwcv'), 'modal'); }
+  /* ---------- on the home screen ---------- */
+  const PRIZES = [['25,000', 'Jackpot', 'jp'], ['10,000', 'Huge prize', 'big'], ['500 - 5,000', 'Chips', 'c'], ['Free', 'Drinks', 'drink'], ['Doom', 'Shields', 'shield'], ['?', 'Mystery', 'myst']];
+  function homeHTML(sayHTML){
+    const r = ready();
+    return `<section class="hw" aria-label="Lucky Wheel">
+      <div class="hwMyla"><p class="tSay">${sayHTML}</p><div class="tMyla"><div class="mylaStand" style="--mx:50%;height:170px;width:136px">${MYLA_BIG()}</div></div></div>
+      <div class="hwMid"><div class="lwWrap hwWheel"><canvas id="lwHome" width="560" height="560" aria-label="The Lucky Wheel"></canvas><i class="lwPtr"></i></div></div>
+      <div class="hwInfo"><h2>Lucky Wheel</h2><p class="hwSub">${r ? 'One free spin every day.' : `Next free spin in <b>${untilTomorrow()}</b>.`}</p>
+        <ul class="hwPrizes">${PRIZES.map(([v, l, k]) => `<li class="pz-${k}"><b>${v}</b><span>${l}</span></li>`).join('')}</ul>
+        <button class="btn xl hwSpin" id="lwHomeSpin" type="button" ${r ? '' : 'disabled'}>${r ? 'SPIN THE WHEEL' : 'COME BACK TOMORROW'}</button>
+        <div class="lwRes" id="lwHomeRes" aria-live="polite"></div></div>
+    </section>`;
+  }
+  function mountHome(){
+    const c = $('#lwHome'); if(!c) return;
+    attach(c, 'home');
+    const b = $('#lwHomeSpin'); if(b) b.onclick = () => { if(SFX.on) actx(); spinHome(); };
+  }
+  // no table needed: the prize goes straight into the chips saved on this device
+  function spinHome(){
+    if(!ready() || mode !== 'idle') return;
+    store.set('wheelDay', today());
+    const o = luckyRoll(true);
+    Wallet.save((Wallet.chips() ?? START_CHIPS) + o.amt);
+    if(o.shield || o.drinks){ const pk = store.get('perks', null) || {}; pk.shield = (pk.shield || 0) + o.shield; pk.drinks = (pk.drinks || 0) + o.drinks; store.set('perks', pk); }
+    Fame.edit(f => { f.peak = Math.max(f.peak || 0, Wallet.chips() || 0); if(o.k === 'jp') f.jp++; });
+    mode = 'spin'; start();
+    const {btn} = els(); if(btn){ btn.disabled = true; btn.textContent = 'GOOD LUCK...'; }
+    setTimeout(() => land({pid:MY_ID, ...o}), 700);
+  }
   function spin(){
     if(!ready() || mode !== 'idle') return;
     store.set('wheelDay', today());
     mode = 'spin'; start();
-    const b = $('#lwSpin'); if(b){ b.disabled = true; b.textContent = 'GOOD LUCK...'; }
+    const {btn} = els(); if(btn){ btn.disabled = true; btn.textContent = 'GOOD LUCK...'; }
     clearTimeout(waitT);
     waitT = setTimeout(() => { if(mode === 'spin'){ mode = 'idle'; store.set('wheelDay', ''); const b2 = $('#lwSpin'); if(b2){ b2.disabled = false; b2.textContent = 'SPIN'; } toast("The wheel didn't answer. Try again.", 'bad'); } }, 6000);
     send({t:'wheel', day:today()});     // the host answers straight away when it's you, so this goes last
@@ -6181,7 +6258,7 @@ const LuckyWheel = (() => {
   // the table told us where it stopped
   function land(e){
     clearTimeout(waitT); pending = e;
-    if(modalKind !== 'lucky' || !cv){ shown(e); return; }
+    if(!cv || !cv.isConnected || (where === 'modal' && modalKind !== 'lucky')){ shown(e); return; }
     const want = -e.i*SL + (Math.random() - 0.5)*SL*0.6;
     const base = Math.PI*2*3, a0 = ang, cur = ((a0 + base) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
     let d = base + ((want - cur) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
@@ -6190,16 +6267,18 @@ const LuckyWheel = (() => {
   function done(){ const e = pending; pending = null; if(e) shown(e); }
   function shown(e){
     const big = e.k === 'jp' || e.amt >= 2500;
-    const r = $('#lwRes'); if(r) r.innerHTML = `<b>You won ${esc(e.text)}!</b>`;
-    const b = $('#lwSpin'); if(b){ b.textContent = 'SEE YOU TOMORROW'; }
+    const {res, btn} = els(), here = !!(cv && cv.isConnected && (where === 'home' || modalKind === 'lucky'));
+    if(res) res.innerHTML = `<b>You won ${esc(e.text)}!</b>`;
+    if(btn){ btn.textContent = 'SEE YOU TOMORROW'; }
+    if(where === 'home' && typeof bankHTML === 'function'){ const bk = $('#bank'); if(bk){ bk.outerHTML = bankHTML(); bindBank(); } const sub = $('.hwSub'); if(sub) sub.innerHTML = `Next free spin in <b>${untilTomorrow()}</b>.`; }
     if(big){ sfx('big'); confetti(e.k === 'jp' ? 220 : e.k === 'big' ? 180 : 120); if(e.k === 'jp') banner('JACKPOT!'); else if(e.k === 'big') banner('HUGE WIN!'); } else sfx('win');
-    if(modalKind !== 'lucky') toast(`Lucky Wheel: you won <b>${esc(e.text)}</b>!`, '', true);
+    if(!here) toast(`Lucky Wheel: you won <b>${esc(e.text)}</b>!`, '', true);
   }
   function event(e){
     if(e.pid === MY_ID) land(e);
     else setTimeout(() => toast(`<b>${esc(e.name)}</b> won ${esc(e.text)} on the Lucky Wheel!`, '', true), 4400);
   }
-  return {ready, open, spin, event, today};
+  return {ready, open, spin, event, today, homeHTML, mountHome};
 })();
 /* =====================================================================
    INSIDE TRACK (client): the race film (2D canvas, also shown on the
@@ -6880,7 +6959,7 @@ async function createTable(){
   if(!ok){ hub = null; h.close(); return homeError(NO_RELAY); }
   isHost = true; G = newGame(code);
   setRoomURL(code);
-  handleJoin({id:MY_ID, name, look:myLookCode(), bank:Wallet.chips()}, null);
+  handleJoin({id:MY_ID, name, look:myLookCode(), bank:Wallet.chips(), perks:store.get('perks', null)}, null);
   const sg = store.get('startGame', 'blackjack');
   if(GAMES[sg] && sg !== G.settings.game){ G.settings.game = sg; G.events = []; broadcast(); }
   startHostLoop();
@@ -6944,7 +7023,7 @@ async function startClient(){
 }
 function sendJoin(){
   if(!hub) return;
-  hub.send('h', {t:'join', id:MY_ID, name:myName, look:myLookCode(), bank:Wallet.chips()});
+  hub.send('h', {t:'join', id:MY_ID, name:myName, look:myLookCode(), bank:Wallet.chips(), perks:store.get('perks', null)});
   clearTimeout(joinTimer);
   joinTimer = setTimeout(() => {
     if(!S) homeError(`Couldn't find table ${joinCode}. Check the code, and make sure the host still has the game open.`);
@@ -7039,9 +7118,8 @@ function renderHome(msg, info){
       <div class="marq"><i class="mqb a"></i><i class="mqb b"></i>
         <div class="mqIn"><span class="mqPre">Welcome to</span><h1 class="mqName">Whylo's</h1><span class="mqCas"><i></i>CASINO<i></i></span></div>
       </div>
-      <div class="tMyla"><div class="mylaStand" style="--mx:50%;height:170px;width:136px">${MYLA_BIG()}</div></div>
-      <p class="tSay"><b>Myla</b>${room ? `Your friends are waiting at table <span class="code">${esc(room)}</span>. Pull up a chair.` : `Hi, I'm Myla, your dealer tonight. Pick a game and bring your friends. They can join from anywhere.`}</p>
     </div>
+    ${LuckyWheel.homeHTML(`<b>Myla</b>${room ? `Your friends are waiting at table <span class="code">${esc(room)}</span>. Spin the wheel, then pull up a chair.` : `Hi, I'm Myla, your dealer tonight. Spin the Lucky Wheel for free chips every day, then pick a game and bring your friends.`}`)}
     <section class="lineup" aria-label="Games">
       <h2>${room ? 'Games at Whylo\'s' : 'Pick a game to start'}</h2>
       <div class="gtiles" role="radiogroup" aria-label="Starting game">${tiles}</div>
@@ -7084,8 +7162,9 @@ function renderHome(msg, info){
   if(joinLinkBtn) joinLinkBtn.onclick = () => { if(SFX.on) actx(); joinTable(room); };
   if(codeIn) codeIn.addEventListener('keydown', e => { if(e.key === 'Enter') joinBtn.click(); });
   nameIn.addEventListener('keydown', e => { if(e.key === 'Enter') (joinLinkBtn || createBtn).click(); });
-  if(!name) setTimeout(() => nameIn.focus(), 50);
+  if(!name) setTimeout(() => nameIn.focus({preventScroll:true}), 50);   // don't jump past the sign and the wheel
   bindBank();
+  LuckyWheel.mountHome();
   marqueeBulbs();
 }
 // your chips, saved on this device
@@ -7093,6 +7172,7 @@ function bankHTML(){
   const w = Wallet.chips();
   return `<div class="bank" id="bank"><div class="bk"><small>Your chips</small><b>${fmt(w ?? START_CHIPS)}</b></div>
     <p class="tNote">${w == null ? 'You start with 1,000 chips.' : 'Saved on this device.'} Your chips come with you to any table, in every game.</p>
+    ${(() => { const pk = store.get('perks', null) || {}, a = []; if(pk.shield) a.push(`${pk.shield} Doom Shield${pk.shield > 1 ? 's' : ''}`); if(pk.drinks) a.push(`${pk.drinks} free drink${pk.drinks > 1 ? 's' : ''}`); return a.length ? `<p class="tNote bkPerks">Waiting for you at your next table: <b>${a.join(' and ')}</b></p>` : ''; })()}
     <div class="bkbtns"><button class="btn ghost sm" id="fameBtn" type="button">${IC_TROPHY}<span>Hall of Fame</span></button>${w != null && w !== START_CHIPS ? `<button class="btn ghost sm" id="resetBank" type="button">Reset to 1,000</button>` : ''}</div></div>`;
 }
 function bindBank(){
