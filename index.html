@@ -242,6 +242,16 @@ button{font:inherit;color:inherit}
 .rb.hit .rbtn{background:radial-gradient(circle at 50% 35%,#5ff0a2,#1fb866 60%,#0d7a40);border-color:#b8ffd6;box-shadow:0 0 16px rgba(63,220,138,.5),0 6px 12px rgba(0,0,0,.5);color:#fff}
 .rb.stand .rbtn{background:radial-gradient(circle at 50% 35%,#ff7d8a,#e3283d 60%,#8e1324);border-color:#ffc4ca;box-shadow:0 0 16px rgba(255,77,94,.5),0 6px 12px rgba(0,0,0,.5);color:#fff}
 .rb.dbl .rbtn{background:radial-gradient(circle at 50% 35%,#ffc06b,#f08a1c 60%,#a5520a);border-color:#ffe0b3;box-shadow:0 0 16px rgba(240,138,28,.5),0 6px 12px rgba(0,0,0,.5);color:#fff}
+.rb.surr .rbtn{background:radial-gradient(circle at 50% 35%,#d8d8de,#8a8a94 60%,#45454d);border-color:#f2f2f6;box-shadow:0 0 12px rgba(220,220,230,.35),0 6px 12px rgba(0,0,0,.5);color:#fff}.rb.surr>span{color:#d8d8de;font-size:9.5px}
+.insb{display:block;margin:2px auto 0;width:max-content;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.06em;padding:1px 7px;border-radius:999px;background:#1d3b6e;border:1px solid #8cc6ff;color:#dbeaff}
+.insb.won{background:#0f5e33;border-color:#3fdc8a;color:#bfffd9}.insb.lost{opacity:.45;text-decoration:line-through}
+.shoe.cut::before{content:'';position:absolute;left:-10%;top:-26%;width:46%;height:54%;background:#f2d13a;border-radius:2px;transform:rotate(-14deg);box-shadow:0 1px 3px rgba(0,0,0,.5);z-index:2}
+.shufx{position:absolute;left:50%;top:22%;transform:translateX(-50%);z-index:20;width:150px;height:110px;pointer-events:none;animation:shufIn .25s ease both}
+.shufx i{position:absolute;bottom:22px;width:52px;height:72px;border-radius:5px;background:repeating-linear-gradient(0deg,#f4efe4 0 2px,#d9d2c4 2px 3px);box-shadow:0 3px 8px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.2)}
+.shufx i.a{left:14px;animation:rifL .7s ease-in-out 3}.shufx i.b{right:14px;animation:rifR .7s ease-in-out 3}
+.shufx span{position:absolute;left:50%;bottom:0;transform:translateX(-50%);white-space:nowrap;font-size:10px;font-weight:800;letter-spacing:.16em;color:#ffe9a8;text-shadow:0 1px 3px #000}
+@keyframes rifL{50%{transform:translateX(30px) rotate(6deg)}}@keyframes rifR{50%{transform:translateX(-30px) rotate(-6deg)}}@keyframes shufIn{from{opacity:0}}
+.insbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:4px 0}
 .rb.split .rbtn{background:radial-gradient(circle at 50% 35%,#8cc6ff,#2a7fe0 60%,#123c8c);border-color:#cfe6ff;box-shadow:0 0 16px rgba(60,140,255,.5),0 6px 12px rgba(0,0,0,.5);color:#fff}
 .rb.hit>span{color:#7dffb3}.rb.stand>span{color:#ff9aa4}.rb.dbl>span{color:#ffc06b}.rb.split>span{color:#8cc6ff}
 .sh.split{gap:10px;align-items:flex-end}
@@ -324,6 +334,21 @@ body.horror .betb.main{background:radial-gradient(circle at 50% 30%,#ff8a8a,#c02
 .hist i.red{background:#c8102e}.hist i.black{background:#151515}.hist i.green{background:#0a8a45}
 .hlbl{font-size:9.5px;letter-spacing:.16em;color:rgba(255,255,255,.6);font-weight:800}
 .board{display:grid;width:100%;max-width:900px;border:2px solid rgba(255,255,255,.8);border-radius:6px;overflow:hidden;user-select:none;-webkit-user-select:none;background:rgba(0,0,0,.08)}
+.board{position:relative}
+.hs{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;border:0;padding:0;background:transparent;z-index:3;cursor:pointer;touch-action:manipulation}
+.hs::before{content:'';position:absolute;inset:6px;border-radius:50%;background:rgba(255,236,170,0);transition:background .15s}
+.hs:hover::before,.hs:focus-visible::before{background:rgba(255,236,170,.75)}
+.hs .mk{min-width:22px;height:22px;font-size:9.5px}
+.hs.win .mk{animation:winpulse .8s ease-in-out infinite alternate}
+.board.v .hs{width:18px;height:18px;margin:-9px 0 0 -9px}
+.dlg.rltrack{max-width:min(980px,96vw);width:96vw}
+.track{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none}
+.track .tbg{fill:#0d5a31;stroke:#e9c76a;stroke-width:4}
+.track .tn{cursor:pointer}.track .tn circle.red{fill:#b3122e}.track .tn circle.black{fill:#141414}.track .tn circle.green{fill:#0a7a3e}
+.track .tn circle:first-child{stroke:#f4ecd8;stroke-width:2.5}.track .tn:hover circle:first-child{stroke:#ffd23d;stroke-width:5}
+.track text{fill:#fff;font:700 22px Georgia,serif;text-anchor:middle;pointer-events:none}
+.track .ts{cursor:pointer}.track .ts rect{fill:rgba(255,255,255,.04);stroke:rgba(233,199,106,.7);stroke-width:2.5}.track .ts:hover rect{fill:rgba(255,214,90,.18)}
+.track .ts text{font:800 21px Arial,sans-serif;letter-spacing:.03em;fill:#f6e7c0}.track .ts text.sub{font:600 17px Arial,sans-serif;fill:rgba(246,231,192,.7)}
 .board.h{grid-template-columns:1.1fr repeat(12,1fr) 1.25fr;grid-template-rows:repeat(3,50px) 40px 40px}
 .board.v{grid-template-columns:44px 40px repeat(3,1fr);grid-template-rows:36px repeat(12,32px) 34px}
 .rc{position:relative;border:0;margin:0;padding:0;background:transparent;color:#fff;font-family:var(--serif);font-size:16px;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6);display:grid;place-items:center;touch-action:manipulation;min-width:0}
@@ -379,6 +404,11 @@ body.horror .betb.main{background:radial-gradient(circle at 50% 30%,#ff8a8a,#c02
 .road i{width:15px;height:15px;border-radius:50%;font-size:8.5px;font-weight:800;color:#fff;display:grid;place-items:center;font-style:normal}
 .road i.P{background:#1f6fd1}.road i.B{background:#c8102e}.road i.T{background:#1f9d55}
 .roadwrap{display:flex;align-items:center;gap:10px}
+.roadcv{display:block;width:min(100%,900px);height:auto;border-radius:6px;box-shadow:0 3px 8px rgba(0,0,0,.4)}
+.roadwrap{width:100%;justify-content:center}
+.tlim{display:block;margin:3px auto 0;width:max-content;font-family:var(--ui);font-size:10px;font-weight:800;letter-spacing:.14em;color:#f6e7c0;padding:2px 10px;border-radius:999px;background:rgba(10,4,8,.75);border:1px solid rgba(233,199,106,.6);text-shadow:none}
+.rlTable>.tlim,.bacTable>.tlim{margin:4px auto}
+
 .roadlbl{font-size:9.5px;letter-spacing:.16em;color:rgba(255,255,255,.65);font-weight:800;writing-mode:vertical-rl;transform:rotate(180deg)}
 
 
@@ -718,7 +748,7 @@ body::before{display:none}
   box-shadow:inset 0 0 0 1px rgba(0,0,0,.35),inset 0 -2px 2px rgba(0,0,0,.3),0 3px 0 color-mix(in srgb,var(--c) 55%,#000),0 4px 0 rgba(0,0,0,.4),0 7px 12px rgba(0,0,0,.45)}
 .chip::after{display:none}
 .chip span{color:color-mix(in srgb,var(--c) 85%,#000);text-shadow:none;font-weight:800;font-size:13px;letter-spacing:-.02em}
-.c100 span{color:#1b1b1f}.c10{--c:#1f5fc4}.c25{--c:#1c8c4c}.c100{--c:#232328}.c500{--c:#6c34cf}.c1000{--c:#d26e12}
+.c100 span{color:#1b1b1f}.c10{--c:#1f5fc4}.c25{--c:#1c8c4c}.c100{--c:#232328}.c500{--c:#6c34cf}.c1000{--c:#d26e12}.c5000{--c:#8a5226}.c25000{--c:#d23c8c}
 .tray{background-image:radial-gradient(120% 140% at 50% 0%,rgba(255,255,255,.06),rgba(0,0,0,0)),var(--tx-felt),linear-gradient(#123d22,#0a2414);background-size:auto,192px 192px,auto;box-shadow:inset 0 3px 8px rgba(0,0,0,.85),inset 0 0 0 1px rgba(0,0,0,.6),0 0 0 3px #3a2112,0 0 0 4px rgba(0,0,0,.6),0 6px 14px rgba(0,0,0,.4)}
 /* --- chip stacks on the felt: each chip = side band (::before) + top face (::after) --- */
 .stk{--w:calc(var(--cr)*1.45);--E:calc(var(--cr)*.6);--T:calc(var(--cr)*.16)}
@@ -1126,8 +1156,8 @@ const SHOOT_TIME = 12000;   // roulette/baccarat: time the player whose turn it 
 // Table pace (host setting). FAST is GTA Online style: short timers, Myla spins and deals herself,
 // quick results, straight into the next round. RELAXED keeps the original longer timers.
 const PACE = {
-  fast:   {bet:15000, turn:15000, result:4000, peek:1000, spin:6500, bac:700, shoot:0, dStart:600, dStep:600, dEnd:450},
-  relaxed:{bet:BET_TIME, turn:TURN_TIME, result:RESULT_TIME, peek:PEEK_TIME, spin:SPIN_TIME, bac:BAC_STEP, shoot:SHOOT_TIME, dStart:900, dStep:850, dEnd:650},
+  fast:   {bet:15000, turn:15000, result:4000, peek:1000, spin:6500, bac:700, shoot:0, dStart:600, dStep:600, dEnd:450, insure:7000},
+  relaxed:{bet:BET_TIME, turn:TURN_TIME, result:RESULT_TIME, peek:PEEK_TIME, spin:SPIN_TIME, bac:BAC_STEP, shoot:SHOOT_TIME, dStart:900, dStep:850, dEnd:650, insure:11000},
 };
 const TM = k => PACE[G && G.settings && G.settings.pace === 'relaxed' ? 'relaxed' : 'fast'][k];
 const PREFIX = 'blackjack33-v1-';
@@ -1137,15 +1167,45 @@ const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const GAMES = {blackjack:'Blackjack', roulette:'Roulette', baccarat:'Baccarat', slots:'Slots', buckshot:'Buckshot', imposter:'Imposter'};
 const FREE_GAMES = ['imposter'];   // no chips needed to play
+// table limits (host setting): the smallest and biggest bet on any one spot, and the chips you play with
+const LIMITS = {regular:{min:10, max:1000, chips:[10,25,100,500,1000], name:'Regular'}, high:{min:100, max:25000, chips:[100,500,1000,5000,25000], name:'High Limit'}};
+const limitsOf = (st) => LIMITS[st && st.limits] || LIMITS.regular;
+const tMin = () => limitsOf(G && G.settings).min, tMax = () => limitsOf(G && G.settings).max;
 
 /* ---------- roulette (European, single zero) ---------- */
 const RL_ORDER = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
 const RL_RED = new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
 const RL_OUT = ['red','black','odd','even','low','high','d1','d2','d3','c1','c2','c3'];
 function rlColor(n){ return n === 0 ? 'green' : RL_RED.has(n) ? 'red' : 'black'; }
-function rlValidKey(k){ if(typeof k !== 'string') return false; if(/^n\d{1,2}$/.test(k)){ const n = +k.slice(1); return n >= 0 && n <= 36; } return RL_OUT.includes(k); }
+// inside bets: n17 straight, s5_8 split, t4 street (4-5-6), z1/z2 the 0-1-2 / 0-2-3 trios, q8 corner (8-9-11-12),
+// q0 first four (0-1-2-3), x4 six line (4..9). Outside bets: red/black, odd/even, low/high, dozens d1-3, columns c1-3.
+function rlNums(k){
+  if(typeof k !== 'string') return null;
+  let m;
+  if((m = /^n(\d{1,2})$/.exec(k))) return [+m[1]];
+  if((m = /^s(\d{1,2})_(\d{1,2})$/.exec(k))) return [+m[1], +m[2]];
+  if((m = /^t(\d{1,2})$/.exec(k))){ const a = +m[1]; return [a, a + 1, a + 2]; }
+  if(k === 'z1') return [0, 1, 2]; if(k === 'z2') return [0, 2, 3]; if(k === 'q0') return [0, 1, 2, 3];
+  if((m = /^q(\d{1,2})$/.exec(k))){ const a = +m[1]; return [a, a + 1, a + 3, a + 4]; }
+  if((m = /^x(\d{1,2})$/.exec(k))){ const a = +m[1]; return [a, a + 1, a + 2, a + 3, a + 4, a + 5]; }
+  return null;
+}
+function rlInside(k){
+  const ns = rlNums(k); if(!ns) return false;
+  const [a, b] = ns;
+  switch(k[0]){
+    case 'n': return a >= 0 && a <= 36;
+    case 's': return a < b && ((a === 0 && b >= 1 && b <= 3) || (a >= 1 && b === a + 3 && b <= 36) || (a >= 1 && b === a + 1 && a % 3 !== 0));
+    case 't': return a >= 1 && a <= 34 && a % 3 === 1;
+    case 'q': return k === 'q0' || (a >= 1 && a <= 32 && a % 3 !== 0);
+    case 'x': return a >= 1 && a <= 31 && a % 3 === 1;
+    case 'z': return true;
+  }
+  return false;
+}
+function rlValidKey(k){ return typeof k === 'string' && (RL_OUT.includes(k) || rlInside(k)); }
 function rlCovers(k, n){
-  if(k[0] === 'n') return +k.slice(1) === n;
+  const ns = rlNums(k); if(ns) return ns.includes(n);
   if(n === 0) return false;
   switch(k){
     case 'red': return RL_RED.has(n); case 'black': return !RL_RED.has(n);
@@ -1156,7 +1216,18 @@ function rlCovers(k, n){
   }
   return false;
 }
-function rlPays(k){ return k[0] === 'n' ? 35 : (k[0] === 'd' || k[0] === 'c') ? 2 : 1; }
+function rlPays(k){ const ns = rlNums(k); return ns ? 36/ns.length - 1 : (k[0] === 'd' || k[0] === 'c') ? 2 : 1; }
+// the racetrack: announced bets made of several chips (units per spot)
+const RL_CALLS = {
+  voisins:{name:'Voisins du Zéro', parts:[['z2', 2], ['s4_7', 1], ['s12_15', 1], ['s18_21', 1], ['s19_22', 1], ['s32_35', 1], ['q25', 2]]},
+  tiers:{name:'Tiers du Cylindre', parts:[['s5_8', 1], ['s10_11', 1], ['s13_16', 1], ['s23_24', 1], ['s27_30', 1], ['s33_36', 1]]},
+  orph:{name:'Orphelins', parts:[['n1', 1], ['s6_9', 1], ['s14_17', 1], ['s17_20', 1], ['s31_34', 1]]},
+  zero:{name:'Jeu Zéro', parts:[['s0_3', 1], ['s12_15', 1], ['n26', 1], ['s32_35', 1]]},
+};
+function rlCallParts(bet, n){
+  if(bet === 'nb'){ const i = RL_ORDER.indexOf(+n); if(i < 0) return null; return [-2, -1, 0, 1, 2].map(d => ['n' + RL_ORDER[(i + d + 37) % 37], 1]); }
+  return RL_CALLS[bet] ? RL_CALLS[bet].parts : null;
+}
 
 /* ---------- baccarat (Punto Banco) ---------- */
 const BAC_BETS = {P:'Player', B:'Banker', T:'Tie', PP:'Player Pair', BP:'Banker Pair'};
@@ -1288,16 +1359,25 @@ const conns = new Map();   // player id -> PeerJS connection
 let hostTimer = null, lastBroadcast = 0;
 
 function newGame(code){
-  return {code, round:0, phase:'lobby', settings:{game:'blackjack', target:33, doom:true, impHint:true, pace:'fast'}, bs:null, imp:null,
+  return {code, round:0, phase:'lobby', settings:{game:'blackjack', target:33, doom:true, impHint:true, pace:'fast', limits:'regular'}, bs:null, imp:null,
     players:[], dealer:{hand:[],hidden:true}, dealerBJ:false,
     say:"Welcome to Whylo's. I'm Myla, your dealer tonight. Take a seat.", sayId:1,
     turn:null, turnOrder:[], turnEnds:0, turnTotal:TURN_TIME, phaseEnds:0, phaseTotal:1,
-    shoe:newShoe(), cardSeq:0, events:[], evSeq:0, hostId:MY_ID, ghosts:{},
+    shoe:newShoe(), cutAt:Math.floor(DECKS*52*0.25), cutOut:false, shuffleId:0, cardSeq:0, events:[], evSeq:0, hostId:MY_ID, ghosts:{},
     rl:{result:null, spinId:0, history:[]},
-    bac:{seq:[], shown:0, nextAt:0, winner:null, pt:0, bt:0, history:[]}};
+    bac:{seq:[], shown:0, nextAt:0, winner:null, pt:0, bt:0, history:[], road:[]}};
 }
 function newShoe(){ const s=[]; for(let d=0;d<DECKS;d++) for(const su of SUITS) for(const r of RANKS) s.push({r,s:su}); return shuffle(s); }
-function draw(){ if(!G.shoe.length) G.shoe = newShoe(); const c = G.shoe.pop(); return {r:c.r, s:c.s, id:++G.cardSeq}; }
+function draw(){
+  if(!G.shoe.length) freshShoe();
+  const c = G.shoe.pop();
+  if(!G.cutOut && G.shoe.length <= (G.cutAt || 0)){ G.cutOut = true; note('The cut card is out! Last hand before Myla shuffles.'); }
+  return {r:c.r, s:c.s, id:++G.cardSeq};
+}
+function freshShoe(){
+  G.shoe = newShoe(); G.cutAt = Math.floor(DECKS*52*(0.2 + Math.random()*0.08)); G.cutOut = false; G.shuffleId = (G.shuffleId || 0) + 1;
+  if(G.bac) G.bac.road = [];    // a new shoe starts a new scoreboard
+}
 function P(id){ return G.players.find(p => p.id === id); }
 function addEvent(e){ e.id = ++G.evSeq; G.events.push(e); if(G.events.length > 40) G.events.shift(); }
 function note(text, extra = {}){ addEvent({type:'toast', text, ...extra}); }
@@ -1311,7 +1391,7 @@ function pv(p){ return handValue(p.hand, limitOf(p), activeCurse(p) === 'aces').
 function pNatural(p){ return isNatural(p.hand, activeCurse(p) === 'aces'); }
 function turnTime(p){ return activeCurse(p) === 'speed' ? Math.min(SPEED_TIME, TM('turn')) : TM('turn'); }
 function cleanName(n){ n = String(n || '').replace(/\s+/g,' ').trim().slice(0,14); return n || 'Player'; }
-const LOCKED = ['playing','peek','dealer','spinning','dealing','shotgun','imp','shooter'];
+const LOCKED = ['playing','insure','peek','dealer','spinning','dealing','shotgun','imp','shooter'];
 
 function handleJoin(msg, conn){
   if(!G) return;
@@ -1366,6 +1446,8 @@ function hostHandle(fromId, msg){
     case 'clearbets': changed = clearChips(p) || changed; break;
     case 'done': changed = doneBetting(p, !!msg.out) || changed; break;
     case 'act': changed = playerAct(p, msg.a) || changed; break;
+    case 'ins': changed = insureAct(p, msg.a) || changed; break;
+    case 'call': changed = callBet(p, msg.bet, msg.n, msg.amt) || changed; break;
     case 'shoot': if(G.phase === 'shooter' && G.turn === fromId) changed = shooterGo(false) || changed; break;
     case 'bs': changed = bsAct(p, msg) || changed; break;
     case 'imp': changed = impAct(p, msg) || changed; break;
@@ -1387,6 +1469,7 @@ function changeSettings(p, s){
   if(typeof s.doom === 'boolean'){ st.doom = s.doom; if(!st.doom) G.players.forEach(x => { x.curse = null; }); }
   if(typeof s.impHint === 'boolean') st.impHint = s.impHint;
   if(s.pace === 'fast' || s.pace === 'relaxed') st.pace = s.pace;
+  if(LIMITS[s.limits]) st.limits = s.limits;
   if(JSON.stringify(st) === before) return false;
   note(`Host switched the table to ${tableLabel(st)}.`);
   if(G.phase === 'betting' || G.phase === 'slots'){
@@ -1396,7 +1479,7 @@ function changeSettings(p, s){
   return true;
 }
 function tableLabel(st){
-  const g = st.game === 'blackjack' ? `Blackjack ${st.target}` : GAMES[st.game];
+  const g = (st.limits === 'high' && st.game !== 'imposter' ? 'High Limit ' : '') + (st.game === 'blackjack' ? `Blackjack ${st.target}` : GAMES[st.game]);
   if(st.game === 'imposter') return g + (st.doom ? ' with the Wheel of Doom' : '');
   return g + (st.doom ? ' with the Wheel of Doom' : ' (no punishments)');
 }
@@ -1408,28 +1491,28 @@ function startRound(){
   G.players = G.players.filter(p => !p.left);
   G.round++; G.phase = 'betting'; G.turn = null; G.turnOrder = [];
   G.dealer = {hand:[], hidden:true}; G.dealerBJ = false; G.bs = null; G.imp = null;
-  for(const p of G.players) Object.assign(p, {bet:0, bets:{}, betOrder:[], main:0, side:null, mainDelta:0, ready:false, inRound:false, hand:[], splits:null, si:0, status:'', result:'', delta:0, doubled:false, hits:0, finalTotal:null, finalLimit:null});
+  for(const p of G.players) Object.assign(p, {bet:0, bets:{}, betOrder:[], main:0, side:null, mainDelta:0, ready:false, inRound:false, hand:[], splits:null, si:0, status:'', result:'', delta:0, doubled:false, hits:0, finalTotal:null, finalLimit:null, ins:0, insNet:0, insDone:false, evenMoney:false, surrBack:0});
   const g = GAME();
   if(g === 'slots'){ slotsOpen(); return; }
-  if((g === 'blackjack' || g === 'baccarat') && G.shoe.length < DECKS*52*0.3){ G.shoe = newShoe(); note('Fresh shoe! Myla shuffles six decks.'); }
+  if((g === 'blackjack' || g === 'baccarat') && (G.cutOut || G.shoe.length < 40)){ freshShoe(); note('Fresh shoe! Myla shuffles six decks.'); }
   if(g === 'baccarat') Object.assign(G.bac, {seq:[], shown:0, winner:null, pt:0, bt:0});
   G.phaseTotal = TM('bet'); G.phaseEnds = Date.now() + G.phaseTotal;
   say(pick(LINES[{roulette:'rlBet', baccarat:'bacBet', buckshot:'bsBet', imposter:'impBet'}[g] || 'bjBet']));
 }
-function eligibleBettors(){ return G.players.filter(p => p.connected && !p.left && (p.ready || p.bet > 0 || p.chips >= MIN_BET || FREE_GAMES.includes(GAME()))); }
+function eligibleBettors(){ return G.players.filter(p => p.connected && !p.left && (p.ready || p.bet > 0 || p.chips >= tMin() || FREE_GAMES.includes(GAME()))); }
 function allBetsIn(){ const e = eligibleBettors(); return e.length > 0 && e.every(p => p.ready) && G.players.some(p => p.inRound); }
 function closeBetting(){
   const g0 = GAME();
   if(g0 === 'blackjack'){
-    for(const p of G.players.filter(p => p.inRound && (p.bets.main || 0) < MIN_BET)){
+    for(const p of G.players.filter(p => p.inRound && (p.bets.main || 0) < tMin())){
       p.chips += p.bet; p.bet = 0; p.bets = {}; p.betOrder = []; p.inRound = false;
-      addEvent({type:'toast', to:p.id, text:`Your chips came back: you need at least ${MIN_BET} on the main circle to play a hand.`, bad:true});
+      addEvent({type:'toast', to:p.id, text:`Your chips came back: you need at least ${fmt(tMin())} on the main circle to play a hand.`, bad:true});
     }
   }
   if(g0 === 'buckshot'){
-    for(const p of G.players.filter(p => p.inRound && (p.bets.stake || 0) < MIN_BET)){
+    for(const p of G.players.filter(p => p.inRound && (p.bets.stake || 0) < tMin())){
       p.chips += p.bet; p.bet = 0; p.bets = {}; p.betOrder = []; p.inRound = false;
-      addEvent({type:'toast', to:p.id, text:`Your chips came back: the minimum stake is ${MIN_BET}.`, bad:true});
+      addEvent({type:'toast', to:p.id, text:`Your chips came back: the minimum stake is ${fmt(tMin())}.`, bad:true});
     }
   }
   if(g0 === 'imposter' && G.players.filter(p => p.inRound).length < IMP_MIN){
@@ -1482,6 +1565,8 @@ function validSpot(k){
 function putChip(p, k, amt){
   amt = Math.floor(Number(amt) || 0);
   if(amt > p.chips) amt = p.chips;
+  const room = tMax() - (p.bets[k] || 0);
+  if(amt > room){ amt = room; if(amt < 1){ addEvent({type:'toast', to:p.id, text:`Table max is ${fmt(tMax())} on one spot.`, bad:true}); return true; } }
   if(amt < 1) return false;
   p.bets[k] = (p.bets[k] || 0) + amt; p.betOrder.push([k, amt]);
   p.chips -= amt; p.bet += amt; p.inRound = true;
@@ -1490,6 +1575,16 @@ function putChip(p, k, amt){
 function addChip(p, k, amt){
   if(G.phase !== 'betting' || p.ready || !validSpot(k)) return false;
   return putChip(p, k, amt);
+}
+// racetrack bets: several chips at once (neighbours of a number, or Voisins / Tiers / Orphelins / Jeu Zéro)
+function callBet(p, bet, n, amt){
+  if(G.phase !== 'betting' || p.ready || GAME() !== 'roulette') return false;
+  const parts = rlCallParts(bet, n); amt = Math.floor(Number(amt) || 0);
+  if(!parts || amt < 1) return false;
+  const cost = parts.reduce((a, [, u]) => a + u*amt, 0);
+  if(cost > p.chips){ addEvent({type:'toast', to:p.id, text:`That bet needs ${fmt(cost)} chips (${parts.reduce((a, [, u]) => a + u, 0)} x ${fmt(amt)}).`, bad:true}); return true; }
+  for(const [k, u] of parts) putChip(p, k, u*amt);
+  return true;
 }
 // Same bets as last round (only if they were on this game)
 function rebet(p){
@@ -1522,9 +1617,9 @@ function clearChips(p){
 function doneBetting(p, out){
   if(G.phase !== 'betting' || p.ready) return false;
   if(GAME() === 'imposter'){ p.ready = true; p.inRound = !out; return true; }
-  if(GAME() === 'buckshot' && p.bet && (p.bets.stake || 0) < MIN_BET){ addEvent({type:'toast', to:p.id, text:`The minimum stake is ${MIN_BET}.`, bad:true}); return true; }
-  if(GAME() === 'blackjack' && (p.bets.main || 0) < MIN_BET){
-    addEvent({type:'toast', to:p.id, text:p.bet ? `Put at least ${MIN_BET} on the main circle first.` : `Tap the main circle to bet first (minimum ${MIN_BET}).`, bad:true});
+  if(GAME() === 'buckshot' && p.bet && (p.bets.stake || 0) < tMin()){ addEvent({type:'toast', to:p.id, text:`The minimum stake is ${fmt(tMin())}.`, bad:true}); return true; }
+  if(GAME() === 'blackjack' && (p.bets.main || 0) < tMin()){
+    addEvent({type:'toast', to:p.id, text:p.bet ? `Put at least ${fmt(tMin())} on the main circle first.` : `Tap the main circle to bet first (minimum ${fmt(tMin())}).`, bad:true});
     return true;
   }
   p.ready = true; p.inRound = p.bet > 0;
@@ -1556,14 +1651,46 @@ function deal(){
   for(const p of ps) if(pNatural(p)){ p.status = 'blackjack'; note(`${p.name} has BLACKJACK!`, {delay:1900}); }
   G.turnOrder = ps.map(p => p.id); G.turn = null;
   const up = G.dealer.hand[0].r;
-  if(up === 'A' || isTen(up)){
+  if(up === 'A'){
+    // an Ace showing: everyone gets offered insurance (or even money with a blackjack) before Myla peeks
+    for(const p of ps){ p.ins = 0; p.insNet = 0; p.evenMoney = false; p.insDone = false; }
+    G.phase = 'insure'; G.phaseTotal = DEAL_ANIM + TM('insure'); G.phaseEnds = Date.now() + G.phaseTotal;
+    say(ps.some(p => p.status === 'blackjack') ? 'Ace showing. Insurance? Blackjacks can take even money.' : 'Ace showing. Insurance, anyone?');
+  } else if(isTen(up)){
     G.phase = 'peek'; G.phaseTotal = DEAL_ANIM + TM('peek'); G.phaseEnds = Date.now() + G.phaseTotal;
-    say(up === 'A' ? 'Ace showing. Let me check for blackjack...' : 'Ten showing. Let me check for blackjack...');
+    say('Ten showing. Let me check for blackjack...');
   } else { say(pick(LINES.bjDeal)); nextTurn(DEAL_ANIM); }
 }
+// insurance costs half your bet and pays 2:1 if Myla has blackjack; even money = take 1:1 on your blackjack right now
+function insureAct(p, a){
+  if(G.phase !== 'insure' || !p.inRound || p.insDone) return false;
+  const half = Math.floor(p.main/2);
+  if(a === 'even'){ if(p.status !== 'blackjack') return false; p.evenMoney = true; p.chips += p.main*2; note(`${p.name} takes even money.`); }
+  else if(a === 'yes'){
+    if(p.status === 'blackjack' || half < 1) return false;
+    if(p.chips < half){ addEvent({type:'toast', to:p.id, text:`Insurance costs ${fmt(half)}. Not enough chips.`, bad:true}); return true; }
+    p.ins = half; p.chips -= half; p.bet += half; note(`${p.name} takes insurance.`);
+  }
+  p.insDone = true;
+  if(G.players.filter(q => q.inRound && q.connected).every(q => q.insDone)) G.phaseEnds = Math.min(G.phaseEnds, Date.now() + 400);
+  return true;
+}
+function endInsurance(){
+  for(const p of G.players) if(p.inRound) p.insDone = true;
+  G.phase = 'peek'; G.phaseTotal = TM('peek'); G.phaseEnds = Date.now() + G.phaseTotal;
+  say('Insurance is closed. Let me check for blackjack...');
+}
 function endPeek(){
-  if(isNatural(G.dealer.hand)){ G.dealer.hidden = false; G.dealerBJ = true; say('Dealer blackjack! Sorry, everyone.'); finishBlackjack(); }
-  else { G.phase = 'playing'; say('No blackjack. Your move.'); nextTurn(); }
+  const insured = G.players.filter(p => p.inRound && p.ins > 0);
+  if(isNatural(G.dealer.hand)){
+    G.dealer.hidden = false; G.dealerBJ = true;
+    for(const p of insured){ p.chips += p.ins*3; p.insNet = p.ins*2; }
+    say(insured.length ? 'Dealer blackjack! Insurance pays 2 to 1.' : 'Dealer blackjack! Sorry, everyone.');
+    finishBlackjack();
+  } else {
+    for(const p of insured) p.insNet = -p.ins;
+    G.phase = 'playing'; say(insured.length ? 'No blackjack. Insurance loses. Your move.' : 'No blackjack. Your move.'); nextTurn();
+  }
 }
 function nextTurn(extra = 0){
   const order = G.turnOrder;
@@ -1650,6 +1777,12 @@ function playerAct(p, a){
     else { note(`${p.name} doubled down${handNo(p)}: ${v}.`); endHand(p, 'stand'); }
     return true;
   }
+  if(a === 'surrender'){
+    // late surrender: give up the hand on your first move and get half your bet back
+    if(p.splits || p.hand.length !== 2 || p.hits) return false;
+    const back = Math.floor(p.main/2); p.chips += back; p.surrBack = back;
+    note(`${p.name} surrenders and gets ${fmt(back)} back.`); p.status = 'surrender'; nextTurn(); return true;
+  }
   if(a === 'split'){
     if(!canSplit(p)) return false;
     if(!p.splits){ p.splits = [{hand:p.hand, main:p.main, hits:0, doubled:false, status:'playing', aces:false}]; p.si = 0; }
@@ -1669,7 +1802,7 @@ function playerAct(p, a){
 }
 function dealerPlay(){
   G.phase = 'dealer'; G.dealer.hidden = false; G.turn = null;
-  const live = G.players.some(p => p.inRound && p.status !== 'bust' && p.status !== 'blackjack');
+  const live = G.players.some(p => p.inRound && p.status !== 'bust' && p.status !== 'blackjack' && p.status !== 'surrender');
   const anyBJ = G.players.some(p => p.inRound && p.status === 'blackjack');
   say(live ? "Let's see what I've got..." : anyBJ ? 'Nothing left to play for. Let me flip my card.' : "Everybody busted? I didn't even have to try.");
   const g = G;
@@ -1690,7 +1823,9 @@ function finishBlackjack(){
     const v = pv(p);
     p.finalTotal = v; p.finalLimit = limitOf(p);
     let res;
-    if(p.status === 'blackjack') res = dBJ ? 'push' : 'bj';
+    if(p.evenMoney) res = 'even';
+    else if(p.status === 'surrender') res = 'surrender';
+    else if(p.status === 'blackjack') res = dBJ ? 'push' : 'bj';
     else if(dBJ) res = 'lose';
     else if(p.status === 'bust') res = 'lose';
     else if(dBust || v > d) res = (T === 33 && v === 33) ? 'win33' : 'win';
@@ -1702,9 +1837,11 @@ function finishBlackjack(){
     else if(res === 'win33'){ p.chips += m*3; delta = m*2; }
     else if(res === 'bj'){ const w = Math.floor(m*1.5); p.chips += m + w; delta = w; }
     else if(res === 'push'){ p.chips += m; delta = 0; }
+    else if(res === 'even') delta = m;                       // paid when they took it
+    else if(res === 'surrender'){ delta = -(m - (p.surrBack || 0)); res = 'lose'; }
     else delta = -m;
     const sideNet = p.side ? Object.values(p.side).reduce((a,x) => a + x.net, 0) : 0;
-    p.result = res; p.mainDelta = delta; p.delta = delta + sideNet;
+    p.result = res; p.mainDelta = delta; p.delta = delta + sideNet + (p.insNet || 0);
   }
   settle();
 }
@@ -1722,7 +1859,7 @@ function finishSplit(p, T, d, dBust, dBJ){
   }
   p.finalTotal = p.splits[0].total; p.finalLimit = limitOf(p);
   const sideNet = p.side ? Object.values(p.side).reduce((a,x) => a + x.net, 0) : 0;
-  p.result = delta > 0 ? 'win' : delta < 0 ? 'lose' : 'push'; p.mainDelta = delta; p.delta = delta + sideNet;
+  p.result = delta > 0 ? 'win' : delta < 0 ? 'lose' : 'push'; p.mainDelta = delta; p.delta = delta + sideNet + (p.insNet || 0);
 }
 
 /* ---------- roulette ---------- */
@@ -1786,6 +1923,7 @@ function bacFinish(){
   const pPair = PH[0].r === PH[1].r, bPair = BH[0].r === BH[1].r;
   Object.assign(b, {winner:w, pt, bt, pPair, bPair});
   b.history.push(w); if(b.history.length > 60) b.history.shift();
+  (b.road = b.road || []).push({w, pp:pPair, bp:bPair}); if(b.road.length > 120) b.road.shift();
   say(w === 'P' ? `Player wins, ${pt} over ${bt}.` : w === 'B' ? `Banker wins, ${bt} over ${pt}.` : `It's a tie, ${pt} all.`);
   for(const p of G.players.filter(p => p.inRound)){
     let ret = 0;
@@ -1848,7 +1986,7 @@ function applyCurse(p){
 }
 
 function beg(p){
-  if(p.chips >= MIN_BET || p.bet > 0 || p.ready || LOCKED.includes(G.phase)) return false;
+  if(p.chips >= tMin() || p.bet > 0 || p.ready || LOCKED.includes(G.phase)) return false;
   p.chips += BEG_AMOUNT; p.begs++;
   note(`${p.name} begged Myla for chips${p.begs > 1 ? ` (${p.begs} times now)` : ''}.`);
   say(pick(LINES.beg).replace('{n}', p.name));
@@ -1887,6 +2025,9 @@ function tick(){
     case 'betting':
       if(allBetsIn() && G.phaseEnds - now > 1000){ G.phaseEnds = now + 1000; ch = true; }
       if(now >= G.phaseEnds){ closeBetting(); ch = true; }
+      break;
+    case 'insure':
+      if(now >= G.phaseEnds){ endInsurance(); ch = true; }
       break;
     case 'peek':
       if(now >= G.phaseEnds){ endPeek(); ch = true; }
@@ -1936,6 +2077,7 @@ function viewFor(rid){
         pendingCurse:p.curse && !ac ? p.curse.id : null,
         connected:p.connected, begs:p.begs, hits:p.hits, main:p.main, side:p.side, mainDelta:p.mainDelta,
         canRebet:!!p.lastBets && p.lastGame === g,
+        ins:p.ins || 0, insNet:p.insNet || 0, insDone:!!p.insDone, evenMoney:!!p.evenMoney,
         si:p.si || 0, splits:p.splits ? p.splits.map(h => ({hand:blind ? h.hand.map(c => ({back:true, id:c.id})) : h.hand, total:blind ? null : (results && h.total != null ? h.total : hv(p, h.hand)),
           status:h.status, doubled:h.doubled, main:h.main, hits:h.hits || 0, aces:!!h.aces, result:h.result || null, delta:h.delta ?? null})) : null,
         slot:slotView(p)};
@@ -1945,12 +2087,13 @@ function viewFor(rid){
   if(g === 'buckshot') v.bs = bsView(rid);
   if(g === 'imposter') v.imp = impView(rid);
   if(g === 'slots') v.sl = {jp:slotJP()};
+  if(g === 'blackjack' || g === 'baccarat') v.shoe = {left:G.shoe.length, cut:!!G.cutOut, sid:G.shuffleId || 0};
   if(g === 'roulette') v.rl = {spinId:G.rl.spinId, result:(G.phase === 'spinning' || G.phase === 'results') ? G.rl.result : null, history:G.rl.history, by:G.rl.by || null};
   if(g === 'baccarat'){
     const shown = G.bac.seq.slice(0, G.bac.shown);
     v.bac = {player:shown.filter(x => x[0] === 'P').map(x => x[1]), banker:shown.filter(x => x[0] === 'B').map(x => x[1]),
       winner:G.phase === 'results' ? G.bac.winner : null, pPair:G.phase === 'results' && G.bac.pPair, bPair:G.phase === 'results' && G.bac.bPair,
-      history:G.bac.history.slice(-36), by:G.bac.by || null};
+      history:G.bac.history.slice(-36), road:(G.bac.road || []).slice(-120), by:G.bac.by || null};
   }
   return v;
 }
@@ -2484,7 +2627,7 @@ function slotSpin(p, betIn){
   if(!p.sl) p.sl = {pots:[0, 0, 0], fg:null};
   const st = p.sl, free = !!st.fg;
   const bet = free ? st.fg.bet : Math.floor(Number(betIn) || 0);
-  if(!free && !CHIP_VALS.includes(bet)) return false;
+  if(!free && !limitsOf(G.settings).chips.includes(bet)) return false;
   if(p.slot && now - p.slot.at < SLOT_MIN_GAP + (p.slot.extra || 0)) return false;
   if(!free && bet > p.chips){ addEvent({type:'toast', to:p.id, text:`Not enough chips for a ${fmt(bet)} spin.`, bad:true}); return true; }
   // a 'next round' curse at the slots wears off after a few spins
@@ -2689,6 +2832,15 @@ function setFlash(x, y){ const f = $('#flash'); f.style.setProperty('--mx', x + 
 window.addEventListener('pointermove', e => setFlash(e.clientX, e.clientY), {passive:true});
 window.addEventListener('pointerdown', e => setFlash(e.clientX, e.clientY), {passive:true});
 window.addEventListener('touchmove', e => { const t = e.touches[0]; if(t) setFlash(t.clientX, t.clientY); }, {passive:true});
+
+// Myla shuffles a fresh shoe (the classic view shows it on the felt; the 3D table animates her hands)
+function shuffleFx(){
+  if(SFX.on) for(let k = 0; k < 3; k++) for(let i = 0; i < 14; i++) setTimeout(() => noise(0.025, {freq:2400 + Math.random()*1800, vol:0.12}), 300 + k*700 + i*28);
+  if(typeof W3 !== 'undefined' && W3.enabled()) return;
+  const t = document.querySelector('#tbl'); if(!t) return;
+  const d = document.createElement('div'); d.className = 'shufx'; d.innerHTML = '<i class="a"></i><i class="b"></i><span>SHUFFLING A FRESH SHOE</span>';
+  t.appendChild(d); setTimeout(() => d.remove(), 2700);
+}
 /* =====================================================================
    MATERIALS: small tileable textures painted on a canvas at startup
    (felt nap, pebbled leather, wood grain, brushed steel, grime, casino
@@ -3011,6 +3163,7 @@ function transitions(prev, s){
   if(me && pm && me.splits && !pm.splits) sfx('chip');
   if(me && pm && me.status === 'blackjack' && pm.status !== 'blackjack') setTimeout(() => { banner('BLACKJACK!'); sfx('big'); confetti(90); }, 900);
   if(s.dealer.bj && !prev.dealer.bj) sfx('bust');
+  if(s.shoe && prev.shoe && s.shoe.sid !== prev.shoe.sid) shuffleFx();
   if(me && pm && me.side && !pm.side){   // side bet paid when the cards came out
     const w = Object.values(me.side).filter(x => x.net > 0).sort((a,b) => b.net - a.net)[0];
     if(w) setTimeout(() => { banner(w.name.toUpperCase() + '!', true); sfx(w.mult >= 25 ? 'big' : 'win'); confetti(w.mult >= 25 ? 120 : 60); }, me.status === 'blackjack' ? 3000 : 1900);
@@ -3216,12 +3369,14 @@ function runAnims(){
 
 /* ---------- chips ---------- */
 const CHIP_VALS = [10,25,100,500,1000];
-const CHIPC = {1000:'#d26e12', 500:'#6c34cf', 100:'#232328', 25:'#1c8c4c', 10:'#1f5fc4'};
-const chipColor = t => t >= 1000 ? CHIPC[1000] : t >= 500 ? CHIPC[500] : t >= 100 ? CHIPC[100] : t >= 25 ? CHIPC[25] : CHIPC[10];
+const CHIPC = {25000:'#d23c8c', 5000:'#8a5226', 1000:'#d26e12', 500:'#6c34cf', 100:'#232328', 25:'#1c8c4c', 10:'#1f5fc4'};
+// the chips and minimum bet of this table (regular or high limit)
+const chipVals = () => limitsOf(S && S.settings).chips, tableMin = () => limitsOf(S && S.settings).min, tableMax = () => limitsOf(S && S.settings).max;
+const chipColor = t => t >= 25000 ? CHIPC[25000] : t >= 5000 ? CHIPC[5000] : t >= 1000 ? CHIPC[1000] : t >= 500 ? CHIPC[500] : t >= 100 ? CHIPC[100] : t >= 25 ? CHIPC[25] : CHIPC[10];
 const short = t => t >= 1000 ? (t/1000).toFixed(t % 1000 >= 100 ? 1 : 0) + 'K' : String(t);
 function chipStack(amount, below){
   const list = []; let left = amount;
-  for(const d of [1000,500,100,25,10]) while(left >= d && list.length < 7){ list.push(d); left -= d; }
+  for(const d of [25000,5000,1000,500,100,25,10]) while(left >= d && list.length < 7){ list.push(d); left -= d; }
   if(!list.length) list.push(10);
   return `<div class="stk">${list.map((d,i) => `<i class="sc" style="--c:${CHIPC[d]};--i:${i};--dx:${[0,1,-1,.5,-1.5,1,-.5][i]}px"></i>`).join('')}</div><span class="amt${below ? ' b' : ''}">${fmt(amount)}</span>`;
 }
@@ -3236,7 +3391,7 @@ function gameLabel(st){
   return st.game.toUpperCase();
 }
 function waitingNames(){
-  const w = S.players.filter(p => p.connected && !p.ready && (p.chips >= MIN_BET || p.bet > 0) && p.id !== MY_ID).map(p => esc(p.name));
+  const w = S.players.filter(p => p.connected && !p.ready && (p.chips >= tableMin() || p.bet > 0) && p.id !== MY_ID).map(p => esc(p.name));
   return w.length ? w.join(', ') : 'the deal';
 }
 function turnName(){ const p = S.players.find(x => x.id === S.turn); return p ? esc(p.name) : 'Myla'; }
@@ -3608,7 +3763,8 @@ function startSpin(rl, wr, br, ball){
 let skelKey = '', bubSay = null;
 function ensureSkeleton(){
   const st = S.settings, wide = isWide(), vw = document.documentElement.clientWidth || innerWidth;
-  let key = st.game + '|' + (wide ? 'w' : 'n') + '|' + vw + '|' + (W3.enabled() ? '3d' : '2d');
+  let key = st.game + '|' + (wide ? 'w' : 'n') + '|' + vw + '|' + (W3.enabled() ? '3d' : '2d') + '|' + (st.limits || 'regular');
+  const LIM = limitsOf(st), limTag = `<span class="tlim">MIN ${fmt(LIM.min)} &middot; MAX ${fmt(LIM.max)}</span>`;
   if(st.game === 'blackjack'){ GEO = computeGeo(); key += '|' + GEO.key + '|' + st.target; }
   if(screen === 'table' && key === skelKey) return;
   skelKey = key; screen = 'table'; bubSay = null; lastConsole = '';
@@ -3618,7 +3774,7 @@ function ensureSkeleton(){
     mid = `<div class="table${g.phone ? ' phone' : ''}" id="tbl" style="width:${g.W}px;height:${g.H}px"><div class="feltLayer">${buildFelt(g, st)}${g.showBanner ? rackHTML(g) : ''}
       <div class="shoe" id="shoe" style="left:${g.W - sw - (g.wide ? Math.max(60, g.W*0.16) : 16)}px;top:${g.rt + (g.wide ? 10 : 6)}px;width:${sw}px;height:${Math.round(sw*.74)}px"><i></i></div>
       <div class="discard" style="left:${g.wide ? Math.max(60, g.W*0.16) : 12}px;top:${g.rt + (g.wide ? 10 : 6)}px;width:${Math.round(sw*.8)}px;height:${Math.round(sw*.62)}px"><i></i></div>
-      <div class="pays${g.wide ? '' : ' two'}" style="top:${g.showBanner ? g.bannerY : g.rt + 4 + g.rackH/2}px"><span>BLACKJACK ${g.wide ? '' : '<br>'}PAYS 3 TO 2</span></div></div><div class="dyn" id="dyn"></div></div>${g.phone ? '<div class="myPanel" id="myPanel"></div>' : ''}`;
+      <div class="pays${g.wide ? '' : ' two'}" style="top:${g.showBanner ? g.bannerY : g.rt + 4 + g.rackH/2}px"><span>BLACKJACK ${g.wide ? '' : '<br>'}PAYS 3 TO 2</span>${limTag}</div></div><div class="dyn" id="dyn"></div></div>${g.phone ? '<div class="myPanel" id="myPanel"></div>' : ''}`;
   } else if(st.game === 'buckshot'){
     mid = `<div class="bsTable" id="tbl"><div class="bsTop" id="bsTop"></div><div class="bsMid"><div class="gunWrap" id="gun">${shotgunSVG()}</div><div class="shellInfo" id="shells"></div></div><div class="bsSeats" id="bsSeats"></div></div>`;
   } else if(st.game === 'imposter'){
@@ -3626,11 +3782,11 @@ function ensureSkeleton(){
   } else if(st.game === 'slots'){
     mid = `<div class="slotsRoom" id="slotsRoom" style="padding-top:${studioDims().ov + 6}px"></div>`;
   } else if(st.game === 'roulette'){
-    mid = `<div class="railbox rb-rl"><div class="feltbox rlTable" id="tbl"><div class="rlTop"><div class="wheelBox" style="--wh:${wide ? 240 : 150}px">${wheelSVG()}</div><div class="rlSide" id="rlside"></div></div><div class="board ${wide ? 'h' : 'v'}" id="board"></div><div class="pstrip" id="pstrip"></div></div></div>`;
+    mid = `<div class="railbox rb-rl"><div class="feltbox rlTable" id="tbl"><div class="rlTop"><div class="wheelBox" style="--wh:${wide ? 240 : 150}px">${wheelSVG()}</div><div class="rlSide" id="rlside"></div></div>${limTag}<div class="board ${wide ? 'h' : 'v'}" id="board"></div><div class="pstrip" id="pstrip"></div></div></div>`;
     wAnim = bAnim = dAnim = null; lastSpinId = null;
   } else {
     const sw = wide ? 60 : 44;
-    mid = `<div class="railbox rb-bac"><div class="feltbox bacTable" id="tbl"><div class="shoe" id="shoe" style="width:${sw}px;height:${Math.round(sw*.74)}px"><i></i></div><div class="bacPrint" id="bprint"></div><div class="bacHands" id="bhands"></div><div class="bacBets" id="bbets"></div><div class="roadwrap"><span class="roadlbl">BEAD ROAD</span><div class="road" id="road"></div></div><div class="pstrip" id="pstrip"></div></div></div>`;
+    mid = `<div class="railbox rb-bac"><div class="feltbox bacTable" id="tbl"><div class="shoe" id="shoe" style="width:${sw}px;height:${Math.round(sw*.74)}px"><i></i></div><div class="bacPrint" id="bprint"></div>${limTag}<div class="bacHands" id="bhands"></div><div class="bacBets" id="bbets"></div><div class="roadwrap"><span class="roadlbl">BEAD PLATE &middot; BIG ROAD</span><canvas class="roadcv" id="roadcv"></canvas></div><div class="pstrip" id="pstrip"></div></div></div>`;
   }
   $('#stage').dataset.game = st.game;
   lastTbar = '';
@@ -3681,7 +3837,7 @@ function dealerSpotHTML(){
 }
 function seatNote(p){
   if(!p.connected) return 'away';
-  if(S.phase === 'betting') return p.ready ? '' : (p.chips < MIN_BET && !p.bet ? 'broke' : 'betting...');
+  if(S.phase === 'betting') return p.ready ? '' : (p.chips < tableMin() && !p.bet ? 'broke' : 'betting...');
   if(S.phase === 'lobby') return '';
   if(!p.inRound) return S.phase === 'results' ? '' : 'next hand';
   return '';
@@ -3690,10 +3846,11 @@ function resultTag(p){
   const d = p.mainDelta ?? p.delta;
   switch(p.result){
     case 'bj': return `<div class="rtag bj">BLACKJACK +${fmt(d)}</div>`;
+    case 'even': return `<div class="rtag bj">EVEN MONEY +${fmt(d)}</div>`;
     case 'win33': return `<div class="rtag win33">33! +${fmt(d)}</div>`;
     case 'win': return `<div class="rtag win">WIN +${fmt(d)}</div>`;
     case 'push': return `<div class="rtag push">PUSH</div>`;
-    case 'lose': return `<div class="rtag lose">${p.status === 'bust' ? 'BUST' : 'LOST'} -${fmt(-d)}</div>`;
+    case 'lose': return `<div class="rtag lose">${p.status === 'bust' ? 'BUST' : p.status === 'surrender' ? 'SURRENDER' : 'LOST'} -${fmt(-d)}</div>`;
   }
   return '';
 }
@@ -3738,12 +3895,13 @@ function seatHTML(p, pos, mine){
   let tb = '';
   if(cards && !split){
     const L = late(p.hand);
-    if(p.status === 'blackjack') tb = `<span class="tb bj${L.c}"${L.s}>BJ</span>`;
+    if(p.status === 'blackjack') tb = `<span class="tb bj${L.c}"${L.s}>${p.evenMoney ? 'EVEN $' : 'BJ'}</span>`;
+    else if(p.status === 'surrender') tb = `<span class="tb">SURR</span>`;
     else if(p.total == null) tb = `<span class="tb${L.c}"${L.s}>?</span>`;
     else tb = `<span class="tb${L.c}${p.status === 'bust' ? ' bust' : ''}${p.total === S.settings.target && S.settings.target === 33 ? ' t33' : ''}"${L.s}>${p.status === 'bust' ? 'BUST' : p.total}</span>`;
     if(compact && S.phase === 'results'){
       const r = p.result, d = p.delta;
-      tb = r === 'bj' ? '<span class="tb bj">BJ</span>' : r === 'win33' ? '<span class="tb t33">33!</span>' : d > 0 ? `<span class="tb rw">+${short(d)}</span>` : d === 0 ? '<span class="tb rp">PUSH</span>' : `<span class="tb rl">${p.status === 'bust' ? 'BUST' : '-' + short(-d)}</span>`;
+      tb = r === 'bj' || r === 'even' ? '<span class="tb bj">BJ</span>' : r === 'win33' ? '<span class="tb t33">33!</span>' : d > 0 ? `<span class="tb rw">+${short(d)}</span>` : d === 0 ? '<span class="tb rp">PUSH</span>' : `<span class="tb rl">${p.status === 'bust' ? 'BUST' : '-' + short(-d)}</span>`;
     }
   }
   const c = p.curse && CURSES[p.curse], pc = p.pendingCurse && CURSES[p.pendingCurse];
@@ -3769,7 +3927,7 @@ function seatHTML(p, pos, mine){
   return `<div class="seat${mine ? ' me' : ''}${panel ? ' zoom' : ''}${self ? ' self' : ''}${compact ? ' cpt' : ''}${isTurn ? ' turn' : ''}${!p.connected ? ' away' : ''}" style="${place}">
     ${S.phase === 'results' && p.inRound && !compact ? resultTag(p) : ''}
     <div class="sh${split ? ' split' : ''}">${cards ? handStr : (note && !panel ? `<div class="snote">${note}</div>` : '')}${tb}</div>
-    ${spots}
+    ${spots}${p.ins && S.phase !== 'betting' ? `<i class="insb${p.insNet > 0 ? ' won' : p.insNet < 0 ? ' lost' : ''}">INS ${short(p.ins)}</i>` : ''}
     ${plaque}
     ${compact || panel ? '' : curseB}
   </div>`;
@@ -3834,9 +3992,59 @@ function pstripHTML(){
     return `<div class="pp${p.id === MY_ID ? ' me' : ''}${!p.connected ? ' away' : ''}">${S.phase === 'betting' && p.ready ? '<i class="ok">&#10003;</i>' : ''}<b>${esc(p.name)}</b><span>${fmt(p.chips)}</span>${em}${c ? `<em class="lose" title="${esc(c.desc)}">${c.name}</em>` : ''}</div>`;
   }).join('');
 }
+// tap spots for inside bets laid over the number grid: splits on the lines, corners where four numbers meet,
+// streets on the outside edge of a row, six lines between two streets, trios and first four on the zero line
+function rlHotspots(board){
+  if(!board) return;
+  board.querySelectorAll('.hs').forEach(e => e.remove());
+  const br = board.getBoundingClientRect(); if(!br.width) return;
+  const cell = {};
+  board.querySelectorAll('.rc[data-k^="n"]').forEach(el => { const r = el.getBoundingClientRect(); cell[+el.dataset.k.slice(1)] = [r.left - br.left, r.top - br.top, r.right - br.left, r.bottom - br.top]; });
+  if(!cell[0] || !cell[36]) return;
+  const C = n => [(cell[n][0] + cell[n][2])/2, (cell[n][1] + cell[n][3])/2], mid = (a, b) => [(a[0] + b[0])/2, (a[1] + b[1])/2];
+  const z = cell[0], onZero = (p) => [Math.min(Math.max(p[0], z[0]), z[2]), Math.min(Math.max(p[1], z[1]), z[3])];
+  const street = (a) => { const c = C(a), d = C(a + 1); return [c[0]*1.5 - d[0]*0.5, c[1]*1.5 - d[1]*0.5]; };
+  const spots = [];
+  for(let n = 1; n <= 36; n++){ if(n + 3 <= 36) spots.push(['s' + n + '_' + (n + 3), mid(C(n), C(n + 3))]); if(n % 3 !== 0) spots.push(['s' + n + '_' + (n + 1), mid(C(n), C(n + 1))]); }
+  for(const n of [1, 2, 3]) spots.push(['s0_' + n, onZero(C(n))]);
+  for(let a = 1; a <= 34; a += 3){ spots.push(['t' + a, street(a)]); if(a <= 31) spots.push(['x' + a, mid(street(a), street(a + 3))]); }
+  for(let n = 1; n <= 32; n++) if(n % 3 !== 0) spots.push(['q' + n, mid(C(n), C(n + 4))]);
+  spots.push(['z1', onZero(mid(C(1), C(2)))], ['z2', onZero(mid(C(2), C(3)))], ['q0', onZero(street(1))]);
+  const {tot, mine} = betTotals(), res = S.phase === 'results' && S.rl && S.rl.result != null ? S.rl.result : null;
+  const frag = document.createDocumentFragment();
+  for(const [k, [x, y]] of spots){
+    const t = tot[k], b = document.createElement('button');
+    b.className = 'hs' + (t ? ' on' : '') + (t && res != null && rlCovers(k, res) ? ' win' : '');
+    b.dataset.act = 'rk'; b.dataset.k = k; b.style.left = x + 'px'; b.style.top = y + 'px';
+    b.setAttribute('aria-label', `${{s:'Split', t:'Street', x:'Six line', q:'Corner', z:'Trio'}[k[0]] || 'Bet'} ${rlNums(k).join('-')} pays ${rlPays(k)} to 1`);
+    if(t) b.innerHTML = `<span class="mk${mine[k] ? ' mine' : ''}" style="--c:${chipColor(t)}">${short(t)}</span>`;
+    frag.appendChild(b);
+  }
+  board.appendChild(frag);
+}
+// the racetrack: the numbers in wheel order. Tap a number = it and 2 neighbours each side; or a named section
+function trackHTML(){
+  const W = 1000, Hh = 320, r = 118, x0 = 170, x1 = 830, cy = 160, straight = x1 - x0, per = 2*straight + 2*Math.PI*r;
+  const at = (s) => { s = ((s % per) + per) % per;
+    const q = Math.PI*r;
+    if(s < q/2){ const a = s/r; return [x1 + Math.cos(a)*r, cy - Math.sin(a)*r]; }
+    s -= q/2; if(s < straight) return [x1 - s, cy - r];
+    s -= straight; if(s < q){ const a = Math.PI/2 + s/r; return [x0 + Math.cos(a)*r, cy - Math.sin(a)*r]; }
+    s -= q; if(s < straight) return [x0 + s, cy + r];
+    s -= straight; const a = -Math.PI/2 + s/r; return [x1 + Math.cos(a)*r, cy - Math.sin(a)*r]; };
+  const {tot, mine} = betTotals();
+  const nums = RL_ORDER.map((n, i) => { const [x, y] = at(i/37*per), t = tot['n' + n];
+    return `<g class="tn" data-act="call" data-bet="nb" data-n="${n}" role="button" aria-label="Neighbours of ${n}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="26" class="${rlColor(n)}"/><text x="${x.toFixed(1)}" y="${(y + 8).toFixed(1)}">${n}</text>${t ? `<circle cx="${(x + 18).toFixed(1)}" cy="${(y - 18).toFixed(1)}" r="11" fill="${chipColor(t)}" stroke="${mine['n' + n] ? '#e9c76a' : '#fff'}" stroke-width="3"/>` : ''}</g>`; }).join('');
+  const sec = (bet, xa, xb, label, sub) => `<g class="ts" data-act="call" data-bet="${bet}" role="button" aria-label="${RL_CALLS[bet].name}"><rect x="${xa}" y="${cy - r + 34}" width="${xb - xa}" height="${2*r - 68}" rx="14"/><text x="${(xa + xb)/2}" y="${cy - 2}">${label}</text><text class="sub" x="${(xa + xb)/2}" y="${cy + 26}">${sub}</text></g>`;
+  return `<svg class="track" viewBox="0 0 ${W} ${Hh}" xmlns="http://www.w3.org/2000/svg">
+    <path d="M${x0} ${cy - r} H${x1} A${r} ${r} 0 0 1 ${x1} ${cy + r} H${x0} A${r} ${r} 0 0 1 ${x0} ${cy - r} Z" class="tbg"/>
+    ${sec('tiers', x0 - 60, 360, 'TIERS', '6 chips')}${sec('orph', 368, 548, 'ORPHELINS', '5 chips')}${sec('voisins', 556, 790, 'VOISINS DU ZÉRO', '9 chips')}${sec('zero', 798, x1 + 70, 'ZERO', '4 chips')}
+    ${nums}</svg>`;
+}
 function renderRoulette(){
   $('#rlside').innerHTML = rlSideHTML();
   $('#board').innerHTML = boardHTML(!isWide());
+  rlHotspots($('#board'));
   $('#pstrip').innerHTML = pstripHTML();
   syncWheel();
 }
@@ -3854,10 +4062,60 @@ function renderBaccarat(){
   const won = k => w && ((k === 'P' && w === 'P') || (k === 'B' && w === 'B') || (k === 'T' && w === 'T') || (k === 'PP' && b.pPair) || (k === 'BP' && b.bPair));
   const z = (k, cls, label, sub) => { const t = tot[k]; return `<button class="bz ${cls}${won(k) ? ' won' : ''}" data-act="rk" data-k="${k}">${label}<small>${sub}</small>${t ? `<span class="mk${mine[k] ? ' mine' : ''}" style="--c:${chipColor(t)}">${short(t)}</span>` : ''}</button>`; };
   $('#bbets').innerHTML = `<div class="pairs">${z('PP','pair','P PAIR','11 TO 1')}${z('T','tie','TIE','8 TO 1')}${z('BP','pair','B PAIR','11 TO 1')}</div>${z('B','banker','BANKER','PAYS 0.95 TO 1')}${z('P','player','PLAYER','PAYS 1 TO 1')}`;
-  const cols = isWide() ? 14 : 10, hist = b.history.slice(-(cols*6));
-  $('#road').innerHTML = hist.map(x => `<i class="${x}">${x}</i>`).join('') + '<i class="e"></i>'.repeat(cols*6 - hist.length);
+  const cv = $('#roadcv'), road = b.road || [];
+  if(cv){ const key = road.length + ':' + (road.length ? JSON.stringify(road[road.length - 1]) : '') + ':' + isWide();
+    if(cv._k !== key){ cv._k = key; const cell = isWide() ? 18 : 13; cv.width = Math.min(cv.parentElement.clientWidth || 600, 900)*2; cv.height = cell*6*2 + 8; BacRoad.draw(cv.getContext('2d'), cv.width, cv.height, road); } }
   $('#pstrip').innerHTML = pstripHTML();
 }
+/* the scoreboard every baccarat table has: Bead Plate (every hand in order) and the Big Road (streaks) */
+const BacRoad = (() => {
+  const COL = {B:'#d0283c', P:'#1f6fe0', T:'#1f9d55'};
+  function big(road){
+    const occ = new Set(), cells = []; let lead = 0, sx = -1, x = 0, y = 0, last = null, cur = null, turned = false;
+    for(const e of road){
+      if(e.w === 'T'){ if(cur) cur.ties++; else lead++; continue; }
+      if(e.w !== last){ sx++; while(occ.has(sx + ',0')) sx++; x = sx; y = 0; turned = false; }
+      else if(!turned && y + 1 < 6 && !occ.has(x + ',' + (y + 1))) y++;
+      else { x++; turned = true; }
+      occ.add(x + ',' + y); cur = {x, y, w:e.w, ties:0, pp:e.pp, bp:e.bp}; cells.push(cur); last = e.w;
+    }
+    return {cells, lead};
+  }
+  function dots(x, cx, cy, r, e){
+    if(e.bp){ x.fillStyle = COL.B; x.beginPath(); x.arc(cx - r*0.72, cy - r*0.72, r*0.3, 0, Math.PI*2); x.fill(); }
+    if(e.pp){ x.fillStyle = COL.P; x.beginPath(); x.arc(cx + r*0.72, cy + r*0.72, r*0.3, 0, Math.PI*2); x.fill(); }
+  }
+  // draws both roads into a canvas: bead plate on the left, big road on the right
+  function draw(x, W, H, road, opt = {}){
+    const pad = 4, cell = (H - pad*2)/6, beadCols = Math.max(6, Math.floor((W*0.36 - pad)/cell)), bigX = pad + beadCols*cell + 10, bigCols = Math.floor((W - bigX - pad)/cell);
+    x.clearRect(0, 0, W, H);
+    x.fillStyle = opt.bg || '#f6f2e8'; x.fillRect(0, 0, W, H);
+    x.strokeStyle = 'rgba(0,0,0,0.12)'; x.lineWidth = 1;
+    for(const [x0, n] of [[pad, beadCols], [bigX, bigCols]]){ for(let c = 0; c <= n; c++){ x.beginPath(); x.moveTo(x0 + c*cell, pad); x.lineTo(x0 + c*cell, pad + 6*cell); x.stroke(); }
+      for(let r = 0; r <= 6; r++){ x.beginPath(); x.moveTo(x0, pad + r*cell); x.lineTo(x0 + n*cell, pad + r*cell); x.stroke(); } }
+    x.fillStyle = 'rgba(0,0,0,0.25)'; x.fillRect(bigX - 6, pad, 2, 6*cell);
+    // bead plate: the last hands, column by column
+    const bead = road.slice(-(beadCols*6)), rr = cell*0.42;
+    bead.forEach((e, i) => { const cx = pad + Math.floor(i/6)*cell + cell/2, cy = pad + (i % 6)*cell + cell/2;
+      x.fillStyle = COL[e.w]; x.beginPath(); x.arc(cx, cy, rr, 0, Math.PI*2); x.fill();
+      x.fillStyle = '#fff'; x.font = `bold ${Math.round(cell*0.5)}px Arial`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(e.w, cx, cy + 1); dots(x, cx, cy, rr, e); });
+    // big road: hollow rings, a new column every time the winner changes, ties as a green slash
+    const B = big(road), maxX = B.cells.reduce((m, c) => Math.max(m, c.x), 0), off = Math.max(0, maxX - bigCols + 2);
+    if(B.lead && !B.cells.length){ x.strokeStyle = COL.T; x.lineWidth = cell*0.12; x.beginPath(); x.moveTo(bigX + cell*0.2, pad + cell*0.8); x.lineTo(bigX + cell*0.8, pad + cell*0.2); x.stroke(); }
+    for(const c of B.cells){ if(c.x < off) continue;
+      const cx = bigX + (c.x - off)*cell + cell/2, cy = pad + c.y*cell + cell/2;
+      x.strokeStyle = COL[c.w]; x.lineWidth = cell*0.14; x.beginPath(); x.arc(cx, cy, cell*0.36, 0, Math.PI*2); x.stroke();
+      if(c.ties){ x.strokeStyle = COL.T; x.lineWidth = cell*0.12; x.beginPath(); x.moveTo(cx - cell*0.3, cy + cell*0.3); x.lineTo(cx + cell*0.3, cy - cell*0.3); x.stroke();
+        if(c.ties > 1){ x.fillStyle = COL.T; x.font = `bold ${Math.round(cell*0.42)}px Arial`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(String(c.ties), cx, cy + 1); } }
+      dots(x, cx, cy, cell*0.36, c); }
+    // counts
+    if(opt.counts !== false){ const n = k => road.filter(e => e.w === k).length;
+      x.font = `bold ${Math.round(cell*0.5)}px Arial`; x.textAlign = 'right'; x.textBaseline = 'top';
+      const t = `B ${n('B')}  P ${n('P')}  T ${n('T')}`; const tw = x.measureText(t).width + 10;
+      x.fillStyle = 'rgba(255,255,255,0.85)'; x.fillRect(W - pad - tw, pad + 1, tw, cell*0.7); x.fillStyle = '#333'; x.fillText(t, W - pad - 5, pad + 3); }
+  }
+  return {big, draw};
+})();
 
 /* =====================================================================
    CONSOLE (your controls)
@@ -3871,12 +4129,13 @@ const IC = {
   ok:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   plus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>',
   minus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>',
+  flag:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4M6 4h11l-2.5 4L17 12H6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   split:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20v-7M12 13L6 6M12 13l6-7M6 6v4M6 6h4M18 6v4M18 6h-4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
 const rbtn = (act, cls, icon, label, dis, extra = '') => `<div class="rb ${cls}"><button class="rbtn" data-act="${act}" ${dis ? 'disabled' : ''} aria-label="${label}"${extra}>${icon}</button><span>${label}</span></div>`;
 function chipTray(me){
-  if(!CHIP_VALS.includes(selChip)) selChip = 25;
-  return `<div class="tray">${CHIP_VALS.map(v => `<button class="chip c${v}${selChip === v ? ' sel' : ''}" data-act="sel" data-v="${v}" ${me.chips < v && selChip !== v ? 'data-short="1"' : ''} aria-label="Use ${v} chips"><span>${short(v)}</span></button>`).join('')}</div>`;
+  const cv = chipVals(); if(!cv.includes(selChip)) selChip = cv[1];
+  return `<div class="tray">${cv.map(v => `<button class="chip c${v}${selChip === v ? ' sel' : ''}" data-act="sel" data-v="${v}" ${me.chips < v && selChip !== v ? 'data-short="1"' : ''} aria-label="Use ${v} chips"><span>${short(v)}</span></button>`).join('')}</div>`;
 }
 // bet buttons: pick a chip, then press where it goes (nothing on the table needs clicking)
 const BET_BTNS = {
@@ -3884,29 +4143,33 @@ const BET_BTNS = {
   buckshot: [['stake', 'STAKE', '', 'main']],
   baccarat: [['P', 'PLAYER', '1:1', 'pl'], ['B', 'BANKER', '0.95:1', 'bk'], ['T', 'TIE', '8:1', 'tie'], ['PP', 'P PAIR', '11:1', 'side'], ['BP', 'B PAIR', '11:1', 'side']],
   roulette: [['red', 'RED', '1:1', 'red'], ['black', 'BLACK', '1:1', 'blk'], ['odd', 'ODD', '1:1', ''], ['even', 'EVEN', '1:1', ''], ['low', '1-18', '1:1', ''], ['high', '19-36', '1:1', ''],
-    ['d1', '1ST 12', '2:1', ''], ['d2', '2ND 12', '2:1', ''], ['d3', '3RD 12', '2:1', ''], ['@board', 'NUMBERS', '35:1', 'num']],
+    ['d1', '1ST 12', '2:1', ''], ['d2', '2ND 12', '2:1', ''], ['d3', '3RD 12', '2:1', ''], ['@board', 'NUMBERS', 'UP TO 35:1', 'num'], ['@track', 'RACETRACK', 'CALL BETS', 'num']],
 };
 function betButtons(){
   const g = S.settings.game, list = BET_BTNS[g]; if(!list) return '';
   const {mine} = betTotals();
   return `<div class="betbs g-${g}">${list.map(([k, lbl, pay, cls]) => {
-    const a = k === '@board' ? Object.entries(mine).filter(([kk]) => /^[nc]\d/.test(kk)).reduce((t, [, v]) => t + v, 0) : (mine[k] || 0);
-    const act = k === '@board' ? 'data-act="rlboard"' : `data-act="rk" data-k="${k}"`;
-    return `<button class="betb ${cls}" ${act} aria-label="${k === '@board' ? 'Bet on single numbers' : `Put ${short(selChip)} on ${lbl}`}"><span>${lbl}</span>${pay ? `<small>${pay}</small>` : ''}${a ? `<b>${short(a)}</b>` : ''}</button>`;
+    const a = k === '@board' ? Object.entries(mine).filter(([kk]) => rlNums(kk) || /^c\d/.test(kk)).reduce((t, [, v]) => t + v, 0) : k === '@track' ? 0 : (mine[k] || 0);
+    const act = k === '@board' ? 'data-act="rlboard"' : k === '@track' ? 'data-act="rltrack"' : `data-act="rk" data-k="${k}"`;
+    return `<button class="betb ${cls}" ${act} aria-label="${k === '@board' ? 'Bet on numbers' : k === '@track' ? 'Racetrack call bets' : `Put ${short(selChip)} on ${lbl}`}"><span>${lbl}</span>${pay ? `<small>${pay}</small>` : ''}${a ? `<b>${short(a)}</b>` : ''}</button>`;
   }).join('')}</div>`;
 }
 function openRlBoard(){
-  openModal(`<div class="dlg rlpick"><h3>Bet on numbers</h3><p class="hint">Each tap puts your <b>${short(selChip)}</b> chip on that spot. Single numbers pay 35:1, columns 2:1.</p><div class="board ${innerWidth >= 760 ? 'h' : 'v'}" id="rlPick">${boardHTML(innerWidth < 760)}</div><div class="btnrow"><button class="btn" data-act="closemodal">Done</button></div></div>`, 'rlpick');
+  openModal(`<div class="dlg rlpick"><h3>Bet on numbers</h3><p class="hint">Each tap puts your <b>${short(selChip)}</b> chip down. A number pays 35:1. Tap a <b>line</b> between two numbers for a split (17:1), a <b>corner</b> for four numbers (8:1), the <b>outside edge</b> of a row for a street (11:1) or between two rows for a six line (5:1). Columns pay 2:1.</p><div class="board ${innerWidth >= 760 ? 'h' : 'v'}" id="rlPick">${boardHTML(innerWidth < 760)}</div><div class="btnrow"><button class="btn" data-act="closemodal">Done</button></div></div>`, 'rlpick');
+  requestAnimationFrame(() => rlHotspots($('#rlPick')));
+}
+function openRlTrack(){
+  openModal(`<div class="dlg rltrack"><h3>Racetrack</h3><p class="hint">Your chip: <b>${short(selChip)}</b>. Tap a number for <b>neighbours</b>: that number and 2 either side on the wheel (5 chips). Or tap a section of the wheel: <b>Voisins du Zéro</b> (9 chips), <b>Tiers</b> (6), <b>Orphelins</b> (5), <b>Zero</b> (4).</p><div id="rlTrack">${trackHTML()}</div><div class="btnrow"><button class="btn" data-act="closemodal">Done</button></div></div>`, 'rltrack');
 }
 // chip tray + Undo / Clear / Rebet or 2x / Deal (all games)
 function shooterNext(){ const id = S.nextShooter; if(id === MY_ID) return 'your'; if(!id) return "the next player's"; const p = S.players.find(x => x.id === id); return p ? esc(p.name) + "'s" : "the next player's"; }
 function bettingHTML(me){
   const g = S.settings.game, has = me.bet > 0;
   const okLabel = g === 'buckshot' ? 'PLAY' : g === 'blackjack' ? 'DEAL' : 'READY';
-  const canGo = g === 'blackjack' ? (me.bets.main || 0) >= MIN_BET : true;
+  const canGo = g === 'blackjack' ? (me.bets.main || 0) >= tableMin() : true;
   const rebetBtn = has ? rbtn('x2', 'x2', '<b>2&times;</b>', 'DOUBLE', me.chips < me.bet) : rbtn('rebet', 'rebet', IC.rebet, 'REBET', !me.canRebet);
   const hint = g === 'blackjack'
-    ? (has ? (canGo ? 'Add more or a side bet, then press DEAL.' : `Main bet needs at least ${MIN_BET}.`) : 'Pick a chip, then press BET.')
+    ? (has ? (canGo ? 'Add more or a side bet, then press DEAL.' : `Main bet needs at least ${fmt(tableMin())}.`) : 'Pick a chip, then press BET.')
     : g === 'buckshot' ? (has ? 'Add more, or press PLAY. You can lose it all.' : 'Pick a chip, then press STAKE.')
     : (has ? (S.nextShooter ? `Add more, or press READY. Then it's ${shooterNext()} turn to ${g === 'roulette' ? 'spin' : 'deal'}.` : `Add more, or press READY. Then Myla ${g === 'roulette' ? 'spins' : 'deals'}.`) : `Pick a chip, then press a bet${g === 'roulette' ? ' (NUMBERS for single numbers)' : ''}.`);
   const goBtn = g === 'blackjack'
@@ -3926,28 +4189,39 @@ function bjControls(me){
   switch(S.phase){
     case 'betting': {
       if(me.ready) return `<div class="msg">You're in for <b>${fmt(me.bet)}</b>. Waiting for ${waitingNames()}...</div>${timerBar('phase')}`;
-      if(me.chips < MIN_BET && !me.bet) return begHTML();
+      if(me.chips < tableMin() && !me.bet) return begHTML();
       return bettingHTML(me);
+    }
+    case 'insure': {
+      if(!me.inRound) return sitOut;
+      const half = Math.floor(me.main/2);
+      if(me.insDone) return `<div class="msg">${me.evenMoney ? `You took <b>even money</b>: +${fmt(me.main)}.` : me.ins ? `You're insured for <b>${fmt(me.ins)}</b>.` : 'No insurance.'} Waiting for the others...</div>${timerBar('phase')}`;
+      if(me.status === 'blackjack') return `<div class="result bj">BLACKJACK!</div><div class="msg">Myla shows an Ace. Take <b>even money</b> (1:1, paid now) or play on for 3:2?</div>
+        <div class="insbtns"><button class="btn" data-act="ins" data-v="even">EVEN MONEY +${fmt(me.main)}</button><button class="btn ghost" data-act="ins" data-v="no">NO, PLAY ON</button></div>${timerBar('phase')}`;
+      return `<div class="msg">Myla shows an Ace. <b>Insurance</b> costs ${fmt(half)} and pays 2:1 if she has blackjack.</div>
+        <div class="insbtns"><button class="btn" data-act="ins" data-v="yes" ${me.chips < half || half < 1 ? 'disabled' : ''}>INSURANCE ${fmt(half)}</button><button class="btn ghost" data-act="ins" data-v="no">NO THANKS</button></div>${timerBar('phase')}`;
     }
     case 'peek': {
       if(!me.inRound) return sitOut;
       const L = late(me.hand);
-      return (me.status === 'blackjack' ? `<div class="result bj${L.c}"${L.s}>BLACKJACK!</div>` : '') + `<div class="msg">Myla is checking for blackjack...</div>`;
+      return (me.status === 'blackjack' ? `<div class="result bj${L.c}"${L.s}>${me.evenMoney ? 'EVEN MONEY' : 'BLACKJACK!'}</div>` : '') + `<div class="msg">${me.ins ? `Insured for <b>${fmt(me.ins)}</b>. ` : ''}Myla is checking for blackjack...</div>`;
     }
     case 'playing': {
       if(!me.inRound) return sitOut;
       const L = late(me.hand);
-      if(me.status === 'blackjack') return `<div class="result bj${L.c}"${L.s}>BLACKJACK!</div><div class="msg">Waiting for the others...</div>`;
+      if(me.status === 'blackjack') return `<div class="result bj${L.c}"${L.s}>${me.evenMoney ? 'EVEN MONEY' : 'BLACKJACK!'}</div><div class="msg">Waiting for the others...</div>`;
+      if(me.status === 'surrender') return `<div class="msg">You surrendered and got <b>${fmt(Math.floor(me.main/2))}</b> back. Waiting for <b>${turnName()}</b>...</div>`;
       if(S.turn === MY_ID && me.status === 'playing'){
         const h = me.splits ? me.splits[me.si] : me, cs = h.hand || [];
         const canDbl = cs.length === 2 && !h.hits && me.chips >= h.main;
         const pk = (c) => ['10', 'J', 'Q', 'K'].includes(c.r) ? '10' : c.r;
         const canSplit = cs.length === 2 && !h.hits && !h.aces && !cs.some(c => c.back) && pk(cs[0]) === pk(cs[1]) && (me.splits ? me.splits.length : 1) < 4 && me.chips >= h.main;
+        const canSurr = !me.splits && cs.length === 2 && !me.hits;
         const chicken = me.curse === 'nochicken' && !h.hits;
         const which = me.splits ? `Hand ${me.si + 1} of ${me.splits.length}: you` : 'You';
         return `${chicken ? '<div class="note">NO CHICKENS: you have to hit before you can stand.</div>' : ''}
           ${me.curse === 'blind' ? '<div class="note">BLINDFOLDED: ask your friends what you have...</div>' : ''}
-          <div class="acts" id="actRow">${rbtn('double', 'dbl', '<b>2&times;</b>', 'DOUBLE', !canDbl)}${rbtn('split', 'split', IC.split, 'SPLIT', !canSplit)}${rbtn('hit', 'hit', IC.plus, 'HIT', false)}${rbtn('stand', 'stand', IC.minus, 'STAND', false)}</div>
+          <div class="acts" id="actRow">${rbtn('double', 'dbl', '<b>2&times;</b>', 'DOUBLE', !canDbl)}${rbtn('split', 'split', IC.split, 'SPLIT', !canSplit)}${rbtn('hit', 'hit', IC.plus, 'HIT', false)}${rbtn('stand', 'stand', IC.minus, 'STAND', false)}${canSurr ? rbtn('surrender', 'surr', IC.flag, 'SURRENDER', false) : ''}</div>
           <div class="msg">${which} have <b>${(me.splits ? me.splits[me.si].total : me.total) ?? '?'}</b>.${canSplit ? ' You can <b>split</b> this pair.' : ' Your move.'}</div>
           ${timerBar('turn')}`;
       }
@@ -3965,14 +4239,17 @@ function bjControls(me){
       const md = me.mainDelta ?? me.delta;
       let txt, cls = me.result;
       if(me.result === 'bj') txt = `BLACKJACK! +${fmt(md)}`;
+      else if(me.result === 'even') txt = `EVEN MONEY +${fmt(md)}`;
+      else if(me.status === 'surrender') txt = `SURRENDERED -${fmt(-md)}`;
       else if(me.result === 'win33') txt = `THIRTY-THREE! +${fmt(md)}`;
       else if(me.result === 'win') txt = `YOU WIN +${fmt(md)}`;
       else if(me.result === 'push') txt = 'PUSH &middot; BET BACK';
       else txt = `${me.status === 'bust' ? 'BUSTED' : S.dealer.bj ? 'DEALER BLACKJACK' : 'YOU LOST'} -${fmt(-md)}`;
       if(me.splits) txt = md > 0 ? `YOU WIN +${fmt(md)}` : md < 0 ? `${me.status === 'bust' ? 'BUSTED' : 'YOU LOST'} -${fmt(-md)}` : 'EVEN &middot; BETS BACK';
       const hands = me.splits ? `<div class="msg sm">${me.splits.map((h, i) => `Hand ${i + 1}: ${h.status === 'bust' ? 'bust' : h.total} <b class="${h.delta > 0 ? 'g' : h.delta < 0 ? 'r' : ''}">${h.result === 'push' ? 'push' : (h.delta > 0 ? '+' : '-') + fmt(Math.abs(h.delta || 0))}</b>`).join(' &middot; ')}</div>` : '';
-      const net = me.side && Object.keys(me.side).length ? `<div class="msg">Total this hand: <b class="${me.delta > 0 ? 'g' : me.delta < 0 ? 'r' : ''}">${me.delta > 0 ? '+' : me.delta < 0 ? '-' : ''}${fmt(Math.abs(me.delta))}</b></div>` : '';
-      return `<div class="result ${cls}">${txt}</div>${hands}${sideSummary(me)}${net}<div class="msg">Next hand in <b data-count="phase"></b>...</div>`;
+      const insLine = me.ins ? `<div class="msg sm">Insurance: <b class="${me.insNet > 0 ? 'g' : 'r'}">${me.insNet > 0 ? '+' + fmt(me.insNet) : '-' + fmt(me.ins)}</b></div>` : '';
+      const net = (me.side && Object.keys(me.side).length) || me.ins ? `<div class="msg">Total this hand: <b class="${me.delta > 0 ? 'g' : me.delta < 0 ? 'r' : ''}">${me.delta > 0 ? '+' : me.delta < 0 ? '-' : ''}${fmt(Math.abs(me.delta))}</b></div>` : '';
+      return `<div class="result ${cls}">${txt}</div>${hands}${insLine}${sideSummary(me)}${net}<div class="msg">Next hand in <b data-count="phase"></b>...</div>`;
     }
   }
   return '';
@@ -3982,7 +4259,7 @@ function multiControls(me){
   switch(S.phase){
     case 'betting': {
       if(me.ready) return `<div class="msg">${me.bet ? `You're in for <b>${fmt(me.bet)}</b>.` : 'Sitting this one out.'} Waiting for ${waitingNames()}...</div>${timerBar('phase')}`;
-      if(me.chips < MIN_BET && !me.bet) return begHTML();
+      if(me.chips < tableMin() && !me.bet) return begHTML();
       return bettingHTML(me);
     }
     case 'shooter': {
@@ -4010,6 +4287,7 @@ function settingsHTML(editable){
     <div class="srow gamerow"><label>Game</label>${seg('setgame', [['blackjack','Blackjack'],['roulette','Roulette'],['baccarat','Baccarat'],['slots','Slots'],['buckshot','&#9760; Buckshot'],['imposter','Imposter']], st.game)}</div>
     ${st.game === 'blackjack' ? `<div class="srow"><label>Play to</label>${seg('settarget', [[21,'21 (classic)'],[33,'33']], st.target)}</div>` : ''}
     ${st.game === 'imposter' ? `<div class="srow"><label>Imposter hint</label>${seg('sethint', [['on','Category'],['off','Nothing']], st.impHint ? 'on' : 'off')}</div>` : ''}
+    ${st.game !== 'imposter' ? `<div class="srow"><label>Table limits</label>${seg('setlimits', [['regular','Regular 10-1K'],['high','High limit 100-25K']], st.limits || 'regular')}</div>` : ''}
     <div class="srow"><label>Pace</label>${seg('setpace', [['fast','Fast (GTA style)'],['relaxed','Relaxed']], st.pace === 'relaxed' ? 'relaxed' : 'fast')}</div>
     <div class="srow"><label>Wheel of Doom</label>${seg('setdoom', [['on','On'],['off','Off (normal)']], st.doom ? 'on' : 'off')}</div>
   </div>`;
@@ -4062,7 +4340,7 @@ function rulesText(){
   if(st.game === 'blackjack'){
     t = `Get closer to <b>${st.target}</b> than Myla without going over. Everyone gets 2 cards; Myla's second card stays face-down until everyone's done (she peeks for blackjack when she shows an Ace or a 10).<br><br>An Ace + a 10/J/Q/K as your first two cards is a <b>Blackjack</b> and pays 3:2. Myla stands on <b>${st.target === 21 ? 17 : 29}</b>.${st.target === 33 ? ' Hitting exactly 33 pays 2:1.' : ''} Double = double your main bet and take exactly one more card. <b>Split</b> = got a pair (any two 10s count)? Add the same bet again and play them as two hands. You can split again up to 4 hands and double after splitting; split aces get one card each, and 21 after a split isn't a blackjack.<br><br><b>Side bets</b> (optional, need a main bet): <b>Perfect Pairs</b> wins if your first two cards are a pair: mixed colors 6:1, same color 12:1, same suit 25:1. <b>21+3</b> uses your two cards + Myla's face-up card as a poker hand: flush 5:1, straight 10:1, three of a kind 30:1, straight flush 40:1, suited trips 100:1.`;
   } else if(st.game === 'roulette'){
-    t = `Pick a chip, then press a bet button (as many as you like). NUMBERS opens the full layout for single numbers and columns. A single number pays <b>35:1</b>. Red/Black, Odd/Even, 1-18/19-36 pay <b>1:1</b>. Dozens and columns pay <b>2:1</b>. Green zero beats every outside bet.`;
+    t = `Pick a chip, then press a bet button (as many as you like). NUMBERS opens the full layout: a single number pays <b>35:1</b>, a split (line between two numbers) <b>17:1</b>, a street (edge of a row) <b>11:1</b>, a corner <b>8:1</b>, a six line <b>5:1</b>. RACETRACK has the call bets: neighbours, Voisins du Zéro, Tiers, Orphelins and Zero. Red/Black, Odd/Even, 1-18/19-36 pay <b>1:1</b>. Dozens and columns pay <b>2:1</b>. Green zero beats every outside bet.`;
   } else if(st.game === 'slots'){
     t = `Everyone gets their own machine and spins whenever they like: no waiting for anyone. Pick a chip for your bet, then press <b>SPIN</b>${matchMedia('(pointer:coarse)').matches ? '' : ' (or Space)'}. 5 reels, 4 rows, 40 lines; stacked wilds can turn 2x or 3x.<br><br>Coins fill the three <b>pots</b>. When one pops you get free games: <b>Nudging Wilds</b>, <b>Jackpot Wilds</b> or <b>Expanded Reels</b> (5 games for one pot, 8 for two, 12 for all three). Collect 3 jackpot wilds of a kind to win the <b>Mini, Minor, Major or Grand</b>.${st.doom ? '<br><br><b>Skulls on reels 1, 3 and 5</b> spin the <b>Wheel of Doom</b>.' : ''} Big wins pop up for the whole table.`;
   } else if(st.game === 'buckshot'){
@@ -4271,7 +4549,7 @@ function bsControls(me){
   const b = S.bs;
   if(S.phase === 'betting'){
     if(me.ready) return `<div class="msg">${me.bet ? `You're in for <b>${fmt(me.bet)}</b>.` : 'Sitting this one out.'} Waiting for ${waitingNames()}...</div>`;
-    if(me.chips < MIN_BET && !me.bet) return begHTML();
+    if(me.chips < tableMin() && !me.bet) return begHTML();
     return bettingHTML(me);
   }
   if(!b || !b.order.includes(MY_ID)) return `<div class="msg">You're watching this one. Next game soon.</div>`;
@@ -4461,6 +4739,8 @@ function tbarStatus(p, isTurn){
     return p.delta > 0 ? ['ok', '+' + short(p.delta)] : p.delta < 0 ? ['bad', '-' + short(-p.delta)] : ['dim', 'PUSH'];
   }
   if(!p.inRound) return ['dim', 'WATCHING'];
+  if(g === 'blackjack' && S.phase === 'insure' && p.inRound) return p.insDone ? (p.evenMoney ? ['ok', 'EVEN MONEY'] : p.ins ? ['ok', 'INSURED'] : ['dim', 'NO INSURANCE']) : ['turn', 'DECIDING'];
+  if(g === 'blackjack' && p.status === 'surrender') return ['dim', 'SURRENDERED'];
   if(g === 'blackjack' && p.status === 'bust') return ['bad', 'BUST'];
   if(g === 'blackjack' && p.status === 'blackjack') return ['ok', 'BLACKJACK'];
   if(g === 'blackjack' && S.phase === 'playing' && p.status === 'stand') return ['dim', p.splits ? p.splits.length + ' HANDS' : 'STANDS ' + (p.total || '')];
@@ -5009,8 +5289,8 @@ const SL = (() => {
     if(I.a && (!I.done || I.t < (SLOT_MIN_GAP + (I.L.extra || 0))/1000 + 0.05)) return;
     if(pending && nowMs() - pending < 2500) return;
     if(!fg){
-      if(!CHIP_VALS.includes(selChip)) selChip = 25;
-      if(selChip > me.chips){ toast(me.chips >= MIN_BET ? 'Not enough chips for that bet. Pick a smaller chip.' : "You're out of chips. Beg Myla for more.", 'bad'); return; }
+      if(!chipVals().includes(selChip)) selChip = chipVals()[1];
+      if(selChip > me.chips){ toast(me.chips >= tableMin() ? 'Not enough chips for that bet. Pick a smaller chip.' : "You're out of chips. Beg Myla for more.", 'bad'); return; }
     }
     pending = nowMs(); actx(); if(!auto) sfx('chip');
     send({t:'slot', bet:fg ? fg.bet : selChip});
@@ -5078,7 +5358,7 @@ const SL = (() => {
   /* ---------- your controls ---------- */
   function controls(me){
     const I = info(me), L = I.L, fg = me.slot && me.slot.fg, spinning = busy();
-    if(!fg && me.chips < MIN_BET && !spinning) return `<div class="msg">You're broke. Myla might take pity on you...</div><button class="btn xl" data-act="beg">Beg Myla for ${BEG_AMOUNT} chips</button>`;
+    if(!fg && me.chips < tableMin() && !spinning) return `<div class="msg">You're broke. Myla might take pity on you...</div><button class="btn xl" data-act="beg">Beg Myla for ${BEG_AMOUNT} chips</button>`;
     let line;
     const names = (fs) => fs.map(f => `<b>${SL_FEAT_NAMES[f].toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</b>`).join(' + ');
     if(fg) line = `<b class="g">FREE GAMES</b>: ${fg.left} left with ${names(SL_FEATS.filter(f => fg.feats[f]))}. Won so far <b class="g">${fmt(fg.won)}</b>.`;
@@ -5178,8 +5458,13 @@ function render(){
   if(modalKind === 'settings'){ const b = $('#setBody'); if(b) b.innerHTML = settingsBody(); }
   if(modalKind === 'rlpick'){
     if(S.phase !== 'betting' || g !== 'roulette' || (me && me.ready)) closeModal();
-    else { const b = $('#rlPick'), h = boardHTML(innerWidth < 760); if(b && b._h !== h){ b._h = h; b.innerHTML = h; } }
+    else { const b = $('#rlPick'), h = boardHTML(innerWidth < 760); if(b && b._h !== h){ b._h = h; b.innerHTML = h; } rlHotspots(b); }
   }
+  if(modalKind === 'rltrack'){
+    if(S.phase !== 'betting' || g !== 'roulette' || (me && me.ready)) closeModal();
+    else { const b = $('#rlTrack'), h = trackHTML(); if(b && b._h !== h){ b._h = h; b.innerHTML = h; } }
+  }
+  { const sh = $('#shoe'); if(sh) sh.classList.toggle('cut', !!(S.shoe && S.shoe.cut)); }
   W3.sync();
 }
 // timer bars, countdowns and turn rings, updated every frame without re-rendering
@@ -5228,6 +5513,8 @@ function act(a, b){
   switch(a){
     case 'sel': selChip = Number(v); store.set('chip', selChip); sfx('chip'); render(); break;
     case 'rlboard': if(S.phase === 'betting' && me && !me.ready) openRlBoard(); break;
+    case 'rltrack': if(S.phase === 'betting' && me && !me.ready) openRlTrack(); break;
+    case 'call': if(S.phase === 'betting' && me && !me.ready){ send({t:'call', bet:b.dataset.bet, n:+b.dataset.n, amt:selChip}); sfx('chip'); } break;
     case 'zoom': W3.cycleZoom(); break;
     case 'rebet': send({t:'rebet'}); sfx('chip'); break;
     case 'x2': send({t:'x2'}); sfx('chip'); break;
@@ -5247,7 +5534,8 @@ function act(a, b){
     case 'clearbets': send({t:'clearbets'}); break;
     case 'done': send({t:'done'}); sfx('chip'); break;
     case 'shoot': send({t:'shoot'}); sfx('chip'); b.disabled = true; break;
-    case 'hit': case 'stand': case 'double': case 'split': {
+    case 'ins': send({t:'ins', a:v}); sfx('chip'); break;
+    case 'hit': case 'stand': case 'double': case 'split': case 'surrender': {
       const now = Date.now(); if(now - lastActAt < 280) return; lastActAt = now;
       send({t:'act', a}); break;
     }
@@ -5267,6 +5555,7 @@ function act(a, b){
     case 'settarget': send({t:'settings', target:Number(v)}); break;
     case 'setdoom': send({t:'settings', doom:v === 'on'}); break;
     case 'setpace': send({t:'settings', pace:v}); break;
+    case 'setlimits': send({t:'settings', limits:v}); break;
     case 'sound': SFX.on = !SFX.on; store.set('sound', SFX.on); if(!SFX.on && 'speechSynthesis' in window) speechSynthesis.cancel(); render(); break;
     case 'leave':
       dialog({title:'Leave the table?', danger:true, ok:'Leave', cancel:'Stay',
@@ -6895,10 +7184,10 @@ const W3A = (() => {
   }
 
   /* ---------- chips ---------- */
-  const CHIP_COL = {1000:'#d26e12', 500:'#6c34cf', 100:'#232328', 25:'#1c8c4c', 10:'#1f5fc4', 5:'#c41230', 1:'#e8e4da'};
-  const DENOMS = [1000, 500, 100, 25, 10, 5, 1];
+  const CHIP_COL = {25000:'#d23c8c', 5000:'#8a5226', 1000:'#d26e12', 500:'#6c34cf', 100:'#232328', 25:'#1c8c4c', 10:'#1f5fc4', 5:'#c41230', 1:'#e8e4da'};
+  const DENOMS = [25000, 5000, 1000, 500, 100, 25, 10, 5, 1];
   // chip faces use the uploaded clay-chip photos once they're decoded (until then, a drawn chip)
-  const CHIP_IMG = {1000:['chip1', null, '#e3b021', '#8f1d1d'], 500:['chip5', '#8b55e0', '#7a4bd0', '#e9e4f6'], 100:['chip3', null, '#26232a', '#6b4d8a'],
+  const CHIP_IMG = {25000:['chip5', '#e0559c', '#c23d84', '#fbe6f1'], 5000:['chip5', '#a0602a', '#8a5226', '#f4e8d8'], 1000:['chip1', null, '#e3b021', '#8f1d1d'], 500:['chip5', '#8b55e0', '#7a4bd0', '#e9e4f6'], 100:['chip3', null, '#26232a', '#6b4d8a'],
     25:['chip4', null, '#14955a', '#1d1d1d'], 10:['chip5', '#3f7be0', '#2f69cf', '#e6eefc'], 5:['chip2', null, '#e8521c', '#a8b8d0'], 1:['chip5', null, '#ededed', '#9a9a9a']};
   const IMGS = {}; let imgsReady = false; const imgWaiters = [];
   function loadImgs(){
@@ -8108,7 +8397,70 @@ const W3T = (() => {
     }
     return out; })();
 
-  return {TOP, blackjack, stool, arcText, yawTo, woodM, leatherM, brass, chrome, blackPad, SEATS_BJ};
+  /* ---------- table furniture shared by the card + roulette tables ---------- */
+  // the little acrylic sign every real table has: game + minimum and maximum bet
+  function limitSign(title, line){
+    const root = new Node();
+    const tex = canvasTex(320, 200, (x, W, H) => {
+      const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#24101a'); g.addColorStop(1, '#060306'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+      x.strokeStyle = '#e9c76a'; x.lineWidth = 6; x.strokeRect(6, 6, W - 12, H - 12);
+      x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillStyle = '#e9c76a'; x.font = 'bold 34px Georgia, serif'; x.fillText(title, W/2, 54);
+      x.fillStyle = '#ffffff'; x.font = 'bold 30px Arial'; x.fillText(line, W/2, 118);
+      x.fillStyle = 'rgba(233,199,106,0.8)'; x.font = '20px Georgia, serif'; x.fillText("WHYLO'S CASINO", W/2, 162);
+    });
+    const face = new Node(geo.quad(0.17, 0.106), mat({color:[1.05, 1.05, 1.05], map:tex, unlit:true}));
+    face.pos = [0, 0.066, 0]; face.q = qEuler(-0.22, 0, 0);
+    const back = new Node(cg('signBack', () => geo.roundBox(0.18, 0.116, 0.008, 0.004, 2)), cg('signBackM', () => mat({color:'#151018', rough:0.15, metal:0.3, coat:0.9})));
+    back.pos = [0, 0.066, -0.005]; back.q = face.q;
+    const base = new Node(cg('signBase', () => geo.roundBox(0.18, 0.012, 0.06, 0.004, 2)), brass());
+    base.pos = [0, 0.006, 0.0];
+    root.add(back, face, base);
+    root.setText = null;
+    return root;
+  }
+  // a screen on a pole (baccarat scoreboard, race odds...)
+  function poleScreen(w, h, cw, ch, height = 1.25){
+    const root = new Node(), tex = canvasTex(cw, ch, () => {});
+    const pole = new Node(cg('poleG', () => geo.cylinder(0.022, 0.026, 1, 14)), chrome()); pole.scl = [1, height, 1]; pole.pos = [0, height/2, -0.02];
+    const foot = new Node(cg('poleFoot', () => geo.cylinder(0.16, 0.18, 0.025, 24)), blackPad()); foot.pos = [0, 0.012, -0.02];
+    const box = new Node(cg('scrBox' + w + 'x' + h, () => geo.roundBox(w + 0.04, h + 0.04, 0.05, 0.012, 2)), blackPad()); box.pos = [0, height + h/2, -0.03];
+    const face = new Node(cg('scrFace' + w + 'x' + h, () => geo.quad(w, h)), mat({color:[1, 1, 1], map:tex, unlit:true, fog:false})); face.pos = [0, height + h/2, -0.004];
+    root.add(pole, foot, box, face); root.tex = tex;
+    return root;
+  }
+  // the shoe's cut card + Myla shuffling a fresh shoe
+  function shoeFx(X, T, D){
+    let sid = null, cut = null, cutOut = false;
+    const cardM = mat({color:'#f2d13a', rough:0.5});
+    cut = new Node(cg('cutCard', () => geo.box(0.063, 0.0012, 0.088)), cardM); X.scene.add(cut);
+    const place = (out) => { cutOut = out;
+      if(out){ cut.pos = [T.shoe[0] - 0.09, TOP + 0.002, T.shoe[2] + 0.08]; cut.q = qEuler(0, 0.4, 0); }
+      else { cut.pos = V.add(T.shoe, [0, 0.035, -0.02]); cut.q = qEuler(-1.1, 0, 0); } };
+    place(false);
+    const handQ = (fx, fz) => W3H.handQ(V.norm([fx, -0.25, fz]), [0, 1, 0]);
+    async function shuffle(){
+      const stM = mat({color:'#f4efe4', rough:0.6}), mk = () => { const n = new Node(cg('deckStack', () => geo.roundBox(0.064, 0.05, 0.09, 0.004, 2)), stM); X.scene.add(n); return n; };
+      const z = T.dealer.pos[2] + 0.36, L = mk(), R = mk(); L.pos = [-0.11, TOP + 0.025, z]; R.pos = [0.11, TOP + 0.025, z];
+      const al = D.arms.L, ar = D.arms.R;
+      for(let k = 0; k < 3; k++){
+        await Promise.all([X.arm(al, [-0.13, TOP + 0.06, z], {dur:0.18, pose:'cup', q:handQ(0.4, 1)}), X.arm(ar, [0.13, TOP + 0.06, z], {dur:0.18, pose:'cup', q:handQ(-0.4, 1)})]);
+        await Promise.all([X.fly(L, [-0.035, TOP + 0.03, z], {dur:0.22, lift:0.02}), X.fly(R, [0.035, TOP + 0.03, z], {dur:0.22, lift:0.02}),
+          X.arm(al, [-0.05, TOP + 0.06, z], {dur:0.22}), X.arm(ar, [0.05, TOP + 0.06, z], {dur:0.22})]);
+        await G3.wait(0.12);
+        if(k < 2) await Promise.all([X.fly(L, [-0.11, TOP + 0.025, z], {dur:0.18}), X.fly(R, [0.11, TOP + 0.025, z], {dur:0.18})]);
+      }
+      await Promise.all([X.fly(L, V.add(T.shoe, [0, 0.01, 0]), {dur:0.4, lift:0.06}), X.fly(R, V.add(T.shoe, [0, 0.01, 0]), {dur:0.4, lift:0.06}), X.arm(ar, V.add(T.shoe, [0, 0.06, 0.05]), {dur:0.4})]);
+      X.forget(L); X.forget(R); place(false);
+    }
+    return {sync(S){
+      const sh = S.shoe; if(!sh) return;
+      if(sid !== null && sh.sid !== sid) X.gesture(D, shuffle);
+      sid = sh.sid;
+      if(sh.cut !== cutOut) place(sh.cut);
+    }};
+  }
+  return {TOP, blackjack, stool, arcText, yawTo, woodM, leatherM, brass, chrome, blackPad, SEATS_BJ, limitSign, poleScreen, shoeFx};
 })();
 /* =====================================================================
    3D DIRECTOR: canvas + loop, actors with animated arms, first-person
@@ -8558,7 +8910,8 @@ W3.games.blackjack = (() => {
   let cards = new Map(), piles = new Map(), seen = {round:null, phase:null};
   const handFor = (fx, fz) => W3H.handQ(V.norm([fx, -0.25, fz]), [0, 1, 0]);
 
-  function key(S){ return S.settings.target; }
+  function key(S){ return S.settings.target + '|' + (S.settings.limits || 'regular'); }
+  let FX = null;
   // fill the middle seats first so everyone gets a good view of Myla
   const ORDER = [2, 3, 1, 4, 0, 5];
   const seatIx = (n) => n < ORDER.length ? ORDER[n] : null;
@@ -8569,12 +8922,16 @@ W3.games.blackjack = (() => {
     T = W3T.blackjack(S.settings.target); ctx.scene.add(T.root);
     D = ctx.actor('myla', null, {standing:true, special:'myla'}); ctx.place(D, V.add(T.dealer.pos, [0, -0.07, 0]), 0);
     restDealer(true);
+    const L = limitsOf(S.settings), sign = W3T.limitSign(`BLACKJACK ${S.settings.target}`, `MIN ${fmt(L.min)} · MAX ${fmt(L.max)}`);
+    sign.pos = [-0.66, TOP, T.dealer.pos[2] + 0.32]; sign.q = qEuler(0, 0.35, 0); ctx.scene.add(sign);
+    FX = W3T.shoeFx(ctx, T, D);
     return {env:room.env, T};
   }
   /* ---------- positions ---------- */
   const seatAt = (s, r, da = 0) => [T.C[0] + Math.cos(s.ang + da)*r, TOP, T.C[1] + Math.sin(s.ang + da)*r];
   const spotPos = (s, k) => k === 'main' ? seatAt(s, 0.9) : k === 'pp' ? seatAt(s, 1.02, 0.075) : k === 'p21' ? seatAt(s, 1.02, -0.075)
-    : k === 'pay' ? seatAt(s, 0.86, 0.1) : k === 'payPP' ? seatAt(s, 1.0, 0.15) : k === 'pay21' ? seatAt(s, 1.0, -0.15) : seatAt(s, 1.12, -0.03);
+    : k === 'pay' ? seatAt(s, 0.86, 0.1) : k === 'payPP' ? seatAt(s, 1.0, 0.15) : k === 'pay21' ? seatAt(s, 1.0, -0.15)
+    : k === 'ins' ? seatAt(s, 0.76, -0.07) : k === 'payIns' ? seatAt(s, 0.74, -0.15) : seatAt(s, 1.12, -0.03);
   const cardYaw = (owner) => owner === 'D' ? 0 : T.seats[owner].yaw + Math.PI;
 
   /* ---------- people ---------- */
@@ -8759,7 +9116,7 @@ W3.games.blackjack = (() => {
   }
   function clearPiles(id){ const P = piles.get(id); if(!P) return; for(const k in P) if(P[k].node) X.forget(P[k].node); piles.delete(id); }
   function wantPiles(p){
-    const w = {main:0, pp:0, p21:0, pay:0, payPP:0, pay21:0};
+    const w = {main:0, pp:0, p21:0, pay:0, payPP:0, pay21:0, ins:0, payIns:0};
     const b = p.bets || {};
     if(S.phase === 'betting' || S.phase === 'lobby' || !p.inRound){ if(S.phase === 'betting'){ w.main = b.main || 0; w.pp = b.pp || 0; w.p21 = b.p21 || 0; } return w; }
     w.main = p.main || b.main || 0;
@@ -8767,6 +9124,7 @@ W3.games.blackjack = (() => {
       const amt = b[k] || 0, r = p.side && p.side[k];
       w[k] = r && r.net < 0 ? 0 : amt; if(r && r.net > 0) w[pk] = r.net;
     }
+    if(p.ins && !(p.insNet < 0)) w.ins = p.ins; if(p.insNet > 0) w.payIns = p.insNet;
     if(S.phase === 'results' && p.result){ const d = p.mainDelta ?? 0; if(d < 0) w.main = 0; else w.pay = d; }
     return w;
   }
@@ -8774,7 +9132,7 @@ W3.games.blackjack = (() => {
     for(const p of S.players){
       const A = X.actors.get(p.id); if(!A || A.seat == null) continue;
       const P = pilesOf(p.id), w = wantPiles(p), collect = [];
-      for(const k of ['main', 'pp', 'p21', 'pay', 'payPP', 'pay21']){
+      for(const k of ['main', 'pp', 'p21', 'pay', 'payPP', 'pay21', 'ins', 'payIns']){
         const cur = P[k] || {amt:0, sched:0};
         const target = w[k];
         if(cur.sched === target) continue;
@@ -8865,8 +9223,8 @@ W3.games.blackjack = (() => {
         });
       } else if(mineCards.length){
         const v = shownValue(mineCards); const res = S.phase === 'results' && p.inRound && p.result;
-        let html = v == null ? '' : p.status === 'blackjack' && mineCards.every(r => r.landed) ? 'BJ' : p.status === 'bust' && mineCards.every(r => r.landed) ? 'BUST' : String(v), cls = 'w3tot';
-        if(res){ const d = p.delta; html = p.result === 'bj' ? `BJ +${short(d)}` : d > 0 ? `+${short(d)}` : d < 0 ? `${p.status === 'bust' ? 'BUST' : 'LOST'} ${short(-d)}` : 'PUSH'; cls += d > 0 ? ' win' : d < 0 ? ' lose' : ' push'; }
+        let html = v == null ? '' : p.status === 'blackjack' && mineCards.every(r => r.landed) ? (p.evenMoney ? 'EVEN $' : 'BJ') : p.status === 'bust' && mineCards.every(r => r.landed) ? 'BUST' : p.status === 'surrender' ? 'SURR' : String(v), cls = 'w3tot';
+        if(res){ const d = p.delta; html = p.result === 'bj' ? `BJ +${short(d)}` : d > 0 ? `+${short(d)}` : d < 0 ? `${p.status === 'bust' ? 'BUST' : p.status === 'surrender' ? 'SURR' : 'LOST'} ${short(-d)}` : 'PUSH'; cls += d > 0 ? ' win' : d < 0 ? ' lose' : ' push'; }
         else if(p.status === 'bust') cls += ' bust';
         if(turn) cls += ' turn';
         if(html) L.push({key:'t' + p.id, at:V.add(s.cards(0, 1), [0, 0.035, 0]), html, cls});
@@ -8884,6 +9242,7 @@ W3.games.blackjack = (() => {
     reactions(prevS);
     syncCards();
     syncPiles();
+    if(FX) FX.sync(S);
     refreshLabels();
     prevS = S;
   }
@@ -8961,6 +9320,7 @@ W3.games.roulette = (() => {
   const ORDER = [2, 3, 1, 4, 0, 5];
   let X = null, D = null, wheel = null, ball = null, spin = null, W = 0, lastSpin = null, dolly = null;
   let piles = new Map();
+  function key(S){ return S.settings.limits || 'regular'; }
 
   /* ---------- layout geometry ---------- */
   const DZ = ['1st 12', '2nd 12', '3rd 12'], OUTS = [['low', '1-18'], ['even', 'EVEN'], ['red', ''], ['black', ''], ['odd', 'ODD'], ['high', '19-36']];
@@ -8969,8 +9329,22 @@ W3.games.roulette = (() => {
     if(k[0] === 'n'){ const n = +k.slice(1), j = Math.floor((n - 1)/3), r = 2 - (n - 1) % 3; const x = LX0 + CW0 + j*CW, z = LZ0 + r*RH; return [x, z, x + CW, z + RH]; }
     if(k[0] === 'c'){ const r = 3 - +k[1]; const x = LX0 + CW0 + 12*CW, z = LZ0 + r*RH; return [x, z, x + CW0, z + RH]; }
     if(k[0] === 'd'){ const i = +k[1] - 1, x = LX0 + CW0 + i*4*CW, z = LZ0 + 3*RH; return [x, z, x + 4*CW, z + RH2]; }
+    const pt = insidePoint(k); if(pt) return [pt[0] - 0.03, pt[1] - 0.03, pt[0] + 0.03, pt[1] + 0.03];
     const i = OUTS.findIndex(o => o[0] === k); if(i < 0) return null;
     const x = LX0 + CW0 + i*2*CW, z = LZ0 + 3*RH + RH2; return [x, z, x + 2*CW, z + RH2];
+  }
+  // where an inside bet's chips sit: on the line between numbers (split), on the corner (corner),
+  // on the outside edge of the row (street), between two streets (six line), on the zero line (trios, first four)
+  function insidePoint(k){
+    if(k[0] === 'n' || !rlInside(k)) return null;
+    const ns = rlNums(k), cen = (n) => { const r = cellRect('n' + n); return [(r[0] + r[2])/2, (r[1] + r[3])/2]; };
+    const zx = LX0 + CW0, edge = LZ0 + 3*RH;
+    if(k[0] === 's' && ns[0] === 0) return [zx, cen(ns[1])[1]];
+    if(k === 'z1' || k === 'z2'){ const a = cen(ns[1]), b = cen(ns[2]); return [zx, (a[1] + b[1])/2]; }
+    if(k === 'q0') return [zx, edge];
+    if(k[0] === 't'){ const a = cen(ns[0]); return [a[0], edge]; }
+    if(k[0] === 'x'){ const a = cen(ns[0]), b = cen(ns[3]); return [(a[0] + b[0])/2, edge]; }
+    const c = ns.map(cen); return [c.reduce((s, p) => s + p[0], 0)/c.length, c.reduce((s, p) => s + p[1], 0)/c.length];
   }
   const ALL_KEYS = ['n0', ...Array.from({length:36}, (_, i) => 'n' + (i + 1)), 'c1', 'c2', 'c3', 'd1', 'd2', 'd3', ...OUTS.map(o => o[0])];
   function keyAt(p){
@@ -9070,6 +9444,8 @@ W3.games.roulette = (() => {
     for(const s of SEATS){ const st = W3T.stool(); st.pos = s.chair.slice(); st.q = qEuler(0, s.yaw, 0); root.add(st); }
     D = ctx.actor('myla', null, {standing:true, special:'myla'}); ctx.place(D, MYLA, MYAW);
     restDealer(true);
+    const LM = limitsOf(S.settings), sign = W3T.limitSign('ROULETTE', `MIN ${fmt(LM.min)} · MAX ${fmt(LM.max)}`);
+    sign.pos = [TX + 0.42, TOP, TZ - 0.02]; sign.q = qEuler(0, -0.2, 0); root.add(sign);
     return {env:room.env};
   }
   const seatIx = (n) => n < ORDER.length ? ORDER[n] : null;
@@ -9304,7 +9680,7 @@ W3.games.roulette = (() => {
     /* bets go through the bet buttons under the chips now */
   }
   function hover(ctx, ray){ return false; }
-  return {build, sync, frame, idle, camera, tap, hover, keyAt, cellRect};
+  return {key, build, sync, frame, idle, camera, tap, hover, keyAt, cellRect};
 })();
 /* =====================================================================
    CHARACTER CREATOR: pick skin, face, hair, outfit and extras, with a
@@ -9463,7 +9839,8 @@ W3.games.baccarat = (() => {
   const ZONES = {P:[0.97, 0, 0.085], B:[0.81, 0, 0.075], T:[0.67, 0, 0.055], PP:[1.07, 0.085, 0.04], BP:[1.07, -0.085, 0.04]};
   const PAYS = {P:1, B:0.95, T:8, PP:11, BP:11};
   const LBL = {P:'PLAYER', B:'BANKER', T:'TIE', PP:'P PAIR', BP:'B PAIR'};
-  let X = null, T = null, D = null, piles = new Map(), cards = new Map(), prevS = null;
+  let X = null, T = null, D = null, piles = new Map(), cards = new Map(), prevS = null, FX = null, board = null, boardKey = '';
+  function key(S){ return S.settings.limits || 'regular'; }
   const seats = () => T.seats;
   const zonePos = (s, k) => { const [r, da] = ZONES[k]; return [C[0] + Math.cos(s.ang + da)*r, TOP, C[1] + Math.sin(s.ang + da)*r]; };
   const HAND = {P:[-0.2, C[1] + 0.33], B:[0.2, C[1] + 0.33]};
@@ -9500,6 +9877,10 @@ W3.games.baccarat = (() => {
     T = W3T.blackjack(21, feltTex()); ctx.scene.add(T.root);
     D = ctx.actor('myla', null, {standing:true, special:'myla'}); ctx.place(D, V.add(T.dealer.pos, [0, -0.07, 0]), 0);
     restDealer(true);
+    const LM = limitsOf(S.settings), sign = W3T.limitSign('BACCARAT', `MIN ${fmt(LM.min)} · MAX ${fmt(LM.max)}`);
+    sign.pos = [-0.66, TOP, T.dealer.pos[2] + 0.32]; sign.q = qEuler(0, 0.35, 0); ctx.scene.add(sign);
+    FX = W3T.shoeFx(ctx, T, D);
+    board = W3T.poleScreen(0.62, 0.22, 744, 264, 1.18); board.pos = [1.32, 0, C[1] - 0.1]; board.q = qEuler(0, -0.75, 0); ctx.scene.add(board); boardKey = '';
     return {env:room.env};
   }
   const seatIx = (n) => n < ORDER.length ? ORDER[n] : null;
@@ -9676,6 +10057,9 @@ W3.games.baccarat = (() => {
   function sync(ctx){
     X = ctx;
     syncPlayers(); syncCards(); syncPiles(); refreshLabels();
+    if(FX) FX.sync(S);
+    const road = (S.bac && S.bac.road) || [], bk = road.length + ':' + JSON.stringify(road[road.length - 1] || null);
+    if(board && bk !== boardKey){ boardKey = bk; const t = board.tex; BacRoad.draw(t.ctx, t.canvas.width, t.canvas.height, road); t.dirty = true; }
     if(prevS && S.sayId !== prevS.sayId) W3P.talk(D.av, Math.min(3.5, 0.8 + (S.say || '').length*0.045));
     if(prevS && S.phase === 'results' && prevS.phase !== 'results') for(const p of S.players){ const A = X.actors.get(p.id); if(A && p.inRound) W3P.setExpression(A.av, p.delta > 0 ? 'happy' : p.delta < 0 ? 'sad' : 'smile', 3); }
     prevS = S;
@@ -9714,7 +10098,7 @@ W3.games.baccarat = (() => {
     /* bets go through the bet buttons under the chips now */
   }
   function hover(ctx, ray){ return false; }
-  return {build, sync, frame, idle, camera, tap, hover};
+  return {key, build, sync, frame, idle, camera, tap, hover};
 })();
 /* =====================================================================
    3D BUCKSHOT: the basement, The Dealer, a real pump shotgun that
