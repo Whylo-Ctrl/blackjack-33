@@ -2912,15 +2912,15 @@ function socialView(p, now){
 }
 /* =====================================================================
    LUCKY WHEEL (host side): one free spin a day on each device.
-   20 equal slices; how often each one comes up is set by its weight.
+   21 equal slices; how often each one comes up is set by its weight.
    ===================================================================== */
 const LUCKY = [
   {k:'c', v:500, w:14}, {k:'c', v:1000, w:9}, {k:'shield', w:6}, {k:'c', v:750, w:11}, {k:'c', v:2500, w:3.5},
-  {k:'drink', w:7}, {k:'c', v:500, w:14}, {k:'myst', w:5}, {k:'c', v:1000, w:9}, {k:'c', v:5000, w:1.2},
+  {k:'drink', w:7}, {k:'c', v:500, w:14}, {k:'myst', w:5}, {k:'c', v:1000, w:9}, {k:'big', v:10000, w:1}, {k:'c', v:5000, w:1.2},
   {k:'c', v:750, w:11}, {k:'drink', w:7}, {k:'c', v:500, w:14}, {k:'c', v:1500, w:6}, {k:'shield', w:6},
   {k:'c', v:1000, w:9}, {k:'myst', w:5}, {k:'c', v:2000, w:4.5}, {k:'c', v:750, w:11}, {k:'jp', v:25000, w:0.25},
 ];
-const luckyLabel = (s) => s.k === 'c' ? short(s.v) : s.k === 'jp' ? 'JACKPOT' : s.k === 'shield' ? 'SHIELD' : s.k === 'drink' ? 'DRINK' : '?';
+const luckyLabel = (s) => s.k === 'c' || s.k === 'big' ? short(s.v) : s.k === 'jp' ? 'JACKPOT' : s.k === 'shield' ? 'SHIELD' : s.k === 'drink' ? 'DRINK' : '?';
 function wheelAct(p, day){
   day = String(day || '').slice(0, 10);
   if(!/^\d{4}-\d{2}-\d{2}$/.test(day)) return false;
@@ -2929,7 +2929,7 @@ function wheelAct(p, day){
   const tot = LUCKY.reduce((a, s) => a + s.w, 0); let r = Math.random()*tot, i = 0;
   for(; i < LUCKY.length - 1; i++){ r -= LUCKY[i].w; if(r <= 0) break; }
   const s = LUCKY[i]; let text, amt = 0;
-  if(s.k === 'c' || s.k === 'jp'){ amt = s.v; text = s.k === 'jp' ? `THE JACKPOT! ${fmt(amt)} chips` : `${fmt(amt)} chips`; }
+  if(s.k === 'c' || s.k === 'jp' || s.k === 'big'){ amt = s.v; text = s.k === 'jp' ? `THE JACKPOT! ${fmt(amt)} chips` : s.k === 'big' ? `the HUGE prize! ${fmt(amt)} chips` : `${fmt(amt)} chips`; }
   else if(s.k === 'shield'){ p.shield = (p.shield || 0) + 1; text = 'a Doom Shield (blocks your next Wheel of Doom)'; }
   else if(s.k === 'drink'){ p.freeDrinks = (p.freeDrinks || 0) + 1; text = 'a free drink from the bar'; }
   else {
@@ -2941,6 +2941,7 @@ function wheelAct(p, day){
   p.chips += amt;
   addEvent({type:'wheel', pid:p.id, name:p.name, i, text, amt, k:s.k});
   if(s.k === 'jp') say(`${p.name} hit the JACKPOT on the Lucky Wheel! ${fmt(amt)} chips!`);
+  else if(s.k === 'big') say(`Ten thousand chips for ${p.name}! The Lucky Wheel loves you tonight.`);
   return true;
 }
 /* =====================================================================
@@ -6122,7 +6123,7 @@ const LuckyWheel = (() => {
   const today = () => new Date().toLocaleDateString('en-CA');
   const ready = () => store.get('wheelDay', '') !== today();
   const N = LUCKY.length, SL = Math.PI*2/N;
-  const COL = {c:['#b3122e', '#16161a'], shield:'#1f5fc4', drink:'#1c8c4c', myst:'#6c34cf', jp:'#e8c060'};
+  const COL = {c:['#b3122e', '#16161a'], shield:'#1f5fc4', drink:'#1c8c4c', myst:'#6c34cf', jp:'#e8c060', big:'#d23c8c'};
   let cv = null, ang = 0, raf = 0, mode = 'idle', anim = null, lastTick = 0, tickT = 0, waitT = null, pending = null;
   function untilTomorrow(){ const n = new Date(), t = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1); const m = Math.ceil((t - n)/60000); return m >= 60 ? `${Math.floor(m/60)}h ${m % 60}m` : `${m}m`; }
   function draw(){
@@ -6138,9 +6139,9 @@ const LuckyWheel = (() => {
       x.fillStyle = s.k === 'c' ? COL.c[i % 2] : COL[s.k]; x.fill();
       x.strokeStyle = 'rgba(243,211,107,.85)'; x.lineWidth = 3; x.stroke();
       x.save(); x.rotate(i*SL); x.translate(0, -R*0.62); x.rotate(-Math.PI/2);
-      x.fillStyle = s.k === 'jp' ? '#2a1d00' : '#fff'; x.textAlign = 'center'; x.textBaseline = 'middle';
-      const lbl = luckyLabel(s); x.font = `800 ${lbl.length > 5 ? 22 : 30}px Rubik, Arial, sans-serif`;
-      x.shadowColor = 'rgba(0,0,0,.5)'; x.shadowBlur = s.k === 'jp' ? 0 : 4; x.fillText(lbl, 0, 0); x.restore();
+      x.fillStyle = s.k === 'jp' ? '#2a1d00' : s.k === 'big' ? '#fff3c4' : '#fff'; x.textAlign = 'center'; x.textBaseline = 'middle';
+      const lbl = luckyLabel(s); x.font = `800 ${s.k === 'big' ? 36 : lbl.length > 5 ? 22 : 30}px Rubik, Arial, sans-serif`;
+      x.shadowColor = s.k === 'big' ? 'rgba(255,220,120,.95)' : 'rgba(0,0,0,.5)'; x.shadowBlur = s.k === 'jp' ? 0 : s.k === 'big' ? 12 : 4; x.fillText(lbl, 0, 0); x.restore();
     }
     x.restore();
     for(let i = 0; i < N; i++){ const a = -Math.PI/2 + i*SL - SL/2, on = (Math.floor(performance.now()/300) + i) % 2;
@@ -6162,7 +6163,7 @@ const LuckyWheel = (() => {
   function start(){ if(!raf) raf = requestAnimationFrame(loop); }
   function html(){
     const r = ready();
-    return `<div class="dlg lucky"><h3>Lucky Wheel</h3><p class="lwSub">${r ? 'One free spin every day. Chips, free drinks, Doom Shields, mystery prizes, and a <b>25,000</b> jackpot.' : `You've had today's spin. Next free spin in <b>${untilTomorrow()}</b>.`}</p>
+    return `<div class="dlg lucky"><h3>Lucky Wheel</h3><p class="lwSub">${r ? 'One free spin every day. Chips, free drinks, Doom Shields, mystery prizes, a huge <b>10,000</b> prize, and a <b>25,000</b> jackpot.' : `You've had today's spin. Next free spin in <b>${untilTomorrow()}</b>.`}</p>
       <div class="lwWrap"><canvas id="lwcv" width="560" height="560" aria-label="The Lucky Wheel"></canvas><i class="lwPtr"></i></div>
       <div class="lwRes" id="lwRes" aria-live="polite"></div>
       <div class="btnrow"><button class="btn xl" data-act="lwspin" id="lwSpin" ${r ? '' : 'disabled'}>${r ? 'SPIN' : 'COME BACK TOMORROW'}</button><button class="btn ghost" data-act="closemodal">Close</button></div></div>`;
@@ -6191,7 +6192,7 @@ const LuckyWheel = (() => {
     const big = e.k === 'jp' || e.amt >= 2500;
     const r = $('#lwRes'); if(r) r.innerHTML = `<b>You won ${esc(e.text)}!</b>`;
     const b = $('#lwSpin'); if(b){ b.textContent = 'SEE YOU TOMORROW'; }
-    if(big){ sfx('big'); confetti(e.k === 'jp' ? 220 : 120); if(e.k === 'jp') banner('JACKPOT!'); } else sfx('win');
+    if(big){ sfx('big'); confetti(e.k === 'jp' ? 220 : e.k === 'big' ? 180 : 120); if(e.k === 'jp') banner('JACKPOT!'); else if(e.k === 'big') banner('HUGE WIN!'); } else sfx('win');
     if(modalKind !== 'lucky') toast(`Lucky Wheel: you won <b>${esc(e.text)}</b>!`, '', true);
   }
   function event(e){
